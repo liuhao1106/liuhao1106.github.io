@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国传统文化 · 2025秋</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 导航栏 -->
+    <nav class="nav-bar">
+      <a href="/index.html#course-grid">← 返回开设课程</a>
+      <div class="nav-links">
+        <a href="#course-info">课程信息</a>
+        <a href="#course-requirements">课程考核</a>
+        <a href="#course-history">课程沿革</a>
+        <a href="#course-syllabus">课程大纲</a>
+        <a href="#course-books">参考书目</a>
+      </div>
+    </nav>
+
+    <!-- 便当盒网格布局 -->
+    <div class="bento-grid">
+      <!-- 课程标题Banner - 占满4列 -->
+      <header class="home-header bento-item span-4" style="min-height: 280px; position: relative;">
+        <!-- 背景图片层 -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('/images/banner-lighthouse.jpg'); background-size: cover; background-position: center; opacity: 0.75; filter: blur(4px); transform: scale(1.05);"></div>
+        <div class="header-content">
+          <h1>中国传统文化</h1>
+          <p class="subtitle">2025秋季学期 · 周三9-10节 · 南410</p>
+        </div>
+      </header>
+
+      <!-- 课程简介 - 占3列 -->
+      <div class="bento-item span-3" id="course-info">
+        <h2 class="section-title">课程内容</h2>
+        <p style="color: var(--text-secondary); line-height: 1.8;">
+          阅读生命——中国历史中的个人书写。本课程会带领大家阅读中国历史中有关个人生命的记述，尤其是一般人的。
+        </p>
+        <ul style="list-style: none; padding: 0; margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+          <li style="padding: 12px; background: rgba(139, 157, 195, 0.08); border-radius: 8px;">
+            <p style="color: var(--text-secondary); line-height: 1.6;">（1）读懂其中的生命历程，从中理解中国文化的内涵。</p>
+          </li>
+          <li style="padding: 12px; background: rgba(139, 157, 195, 0.08); border-radius: 8px;">
+            <p style="color: var(--text-secondary); line-height: 1.6;">（2）体会中国传统文化是如何影响、塑造了个体的生命历史。</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 课程信息卡片 - 占1列 -->
+      <div class="bento-item" id="course-meta">
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--morandi-1);">基本信息</h3>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div>
+            <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 4px;">课号</p>
+            <p style="font-weight: 600; color: var(--text-primary);">07127101</p>
+          </div>
+          <div>
+            <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 4px;">时间</p>
+            <p style="font-weight: 600; color: var(--text-primary);">周三9-10节</p>
+          </div>
+          <div>
+            <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 4px;">地点</p>
+            <p style="font-weight: 600; color: var(--text-primary);">南410</p>
+          </div>
+          <div>
+            <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 4px;">学分</p>
+            <p style="font-weight: 600; color: var(--text-primary);">1.5学分</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 考核要求 - 占2列 -->
+      <div class="bento-item span-2" id="course-assessment">
+        <h2 class="section-title">考核要求</h2>
+        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+          <li style="display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(135deg, rgba(139, 157, 195, 0.1) 0%, rgba(168, 181, 196, 0.1) 100%); border-radius: 12px;">
+            <span style="font-size: 1.5rem;">📝</span>
+            <div>
+              <p style="font-weight: 700; color: var(--text-primary);">平时成绩 55%</p>
+              <p style="color: var(--text-secondary); font-size: 0.9rem;">考勤10% + 作业45%</p>
+            </div>
+          </li>
+          <li style="display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(135deg, rgba(196, 164, 164, 0.1) 0%, rgba(212, 196, 176, 0.1) 100%); border-radius: 12px;">
+            <span style="font-size: 1.5rem;">📋</span>
+            <div>
+              <p style="font-weight: 700; color: var(--text-primary);">期末作业 45%</p>
+              <p style="color: var(--text-secondary); font-size: 0.9rem;">读书报告或小论文</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 课程作业说明 - 占2列 -->
+      <div class="bento-item span-2" id="course-assignments">
+        <h2 class="section-title">课程作业</h2>
+        <p style="color: var(--text-secondary); line-height: 1.8;">
+          课上会随机留3次课程作业（另附加1次），下一次课交。内容有关历史人物的个人书写文本，回答若干开放性的问题。
+        </p>
+        <div style="margin-top: 16px; padding: 12px; background: rgba(201, 184, 168, 0.15); border-radius: 12px; border-left: 4px solid var(--morandi-sand);">
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">💡 期末作业二选一：①以课上作业文本为中心撰写1000字小论文；②提交课程读书报告一篇</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 课程详细内容 -->
+    <main style="margin-top: 48px;">
+
+    <!-- 课程考核 -->
+    <section id="course-requirements" class="section" style="margin-bottom: 32px;">
+      <h2 class="section-title">课程考核与作业</h2>
+      
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--morandi-1);">作业要求</h3>
+        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+          <li style="padding: 12px; background: rgba(139, 157, 195, 0.08); border-radius: 8px;">
+            <p style="color: var(--text-secondary); line-height: 1.6;">（1）课上会随机留3次课程作业（另附加1次），下一次课交。内容有关历史人物的个人书写文本，回答若干开放性的问题（本学期改革之处）。</p>
+          </li>
+          <li style="padding: 12px; background: rgba(139, 157, 195, 0.08); border-radius: 8px;">
+            <p style="color: var(--text-secondary); line-height: 1.6;">（2）基于作业提供的文本，在下一次课上将有课程报告的机会，每次约5-6人，每人5-10分钟，带领我们深入阅读和讲解作业中的文本，还需要结合文本的历史背景和内涵进行解读。在上一次留作业的课上报名。</p>
+          </li>
+          <li style="padding: 12px; background: rgba(139, 157, 195, 0.08); border-radius: 8px;">
+            <p style="color: var(--text-secondary); line-height: 1.6;">（3）期末作业有两种选择（二选一）。一、以课上作业的文本为中心，撰写一篇小论文，1000字左右，1500字以内。二、提交课程读书报告一篇，1000字左右，1500字以内。根据规定的书目。</p>
+          </li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--morandi-rose);">课程分数构成</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+          <div style="padding: 16px; background: linear-gradient(135deg, rgba(196, 164, 164, 0.1) 0%, rgba(212, 196, 176, 0.1) 100%); border-radius: 12px; text-align: center;">
+            <p style="font-size: 2rem; font-weight: 800; color: var(--morandi-rose);">10%</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">考勤</p>
+          </div>
+          <div style="padding: 16px; background: linear-gradient(135deg, rgba(139, 157, 195, 0.1) 0%, rgba(168, 181, 196, 0.1) 100%); border-radius: 12px; text-align: center;">
+            <p style="font-size: 2rem; font-weight: 800; color: var(--morandi-blue);">15%</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">作业一</p>
+          </div>
+          <div style="padding: 16px; background: linear-gradient(135deg, rgba(156, 175, 136, 0.1) 0%, rgba(183, 198, 165, 0.1) 100%); border-radius: 12px; text-align: center;">
+            <p style="font-size: 2rem; font-weight: 800; color: var(--morandi-sage);">15%</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">作业二</p>
+          </div>
+          <div style="padding: 16px; background: linear-gradient(135deg, rgba(201, 184, 168, 0.1) 0%, rgba(212, 196, 176, 0.1) 100%); border-radius: 12px; text-align: center;">
+            <p style="font-size: 2rem; font-weight: 800; color: var(--morandi-sand);">15%</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">作业三</p>
+          </div>
+          <div style="padding: 16px; background: linear-gradient(135deg, rgba(196, 164, 164, 0.15) 0%, rgba(139, 157, 195, 0.15) 100%); border-radius: 12px; text-align: center; grid-column: span 2;">
+            <p style="font-size: 2rem; font-weight: 800; color: var(--text-primary);">45%</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">读书报告或小论文</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding: 16px; background: rgba(139, 157, 195, 0.1); border-radius: 12px; border-left: 4px solid var(--morandi-blue);">
+        <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">附加分规则（从下列活动中二选一）</h4>
+        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+          <li style="color: var(--text-secondary);">课程报告解读文本，在微信群中接龙报名，先到先得，赋分4-6分，原则上就高。</li>
+          <li style="color: var(--text-secondary);">未在课上报告的同学，选做附加作业4，赋分3-5分。课上报告过的同学不用做。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 课程沿革 -->
+    <section id="course-history" class="section" style="margin-bottom: 32px;">
+      <h2 class="section-title">课程沿革</h2>
+      <div style="display: grid; gap: 24px;">
+        <div style="display: flex; gap: 16px; align-items: flex-start;">
+          <div style="min-width: 80px; text-align: center;">
+            <span style="display: inline-block; padding: 8px 16px; background: var(--gradient-1); color: white; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">2024</span>
+          </div>
+          <div>
+            <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">课程开设</h4>
+            <p style="color: var(--text-secondary); line-height: 1.6;">从2024年春季学期开始开设本门课程，春秋学期均开设，以"阅读生命：中国历史中的个人书写"为主题，通过阅读家谱、墓志铭、行状、书信、日记等个人书写文本，理解中国传统文化的内涵。</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: flex-start;">
+          <div style="min-width: 80px; text-align: center;">
+            <span style="display: inline-block; padding: 8px 16px; background: var(--gradient-2); color: white; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">2026</span>
+          </div>
+          <div>
+            <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">课程暂停</h4>
+            <p style="color: var(--text-secondary); line-height: 1.6;">从2026年春季学期开始暂停开设。</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 分页导航 -->
+
+    <!-- 课程大纲 -->
+    <section id="course-syllabus" class="section" style="margin-bottom: 32px;">
+      <h2 class="section-title">课程专题安排</h2>
+      
+      <!-- 顶部横向导航 -->
+      <nav class="syllabus-top-nav" style="margin-bottom: 24px;">
+        <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border-radius: 12px; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.5);">
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px;">
+            <li><a href="#topic1" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; display: block; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; background: rgba(139, 157, 195, 0.1); white-space: nowrap;">一、导论</a></li>
+            <li><a href="#topic2" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; display: block; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; background: rgba(139, 157, 195, 0.1); white-space: nowrap;">二、身份认同</a></li>
+            <li><a href="#topic3" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; display: block; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; background: rgba(139, 157, 195, 0.1); white-space: nowrap;">三、成长道路</a></li>
+            <li><a href="#topic4" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; display: block; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; background: rgba(139, 157, 195, 0.1); white-space: nowrap;">四、上升通道</a></li>
+            <li><a href="#topic5" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; display: block; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; background: rgba(139, 157, 195, 0.1); white-space: nowrap;">五、精神世界</a></li>
+            <li><a href="#topic6" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; display: block; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; background: rgba(139, 157, 195, 0.1); white-space: nowrap;">六、日常生活</a></li>
+            <li><a href="#topic7" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; display: block; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; background: rgba(139, 157, 195, 0.1); white-space: nowrap;">七、以书为业</a></li>
+            <li><a href="#topic8" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; display: block; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; background: rgba(139, 157, 195, 0.1); white-space: nowrap;">八、人生归宿</a></li>
+            <li><a href="#topic9" style="color: var(--text-secondary); font-size: 0.85rem; text-decoration: none; display: block; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; background: rgba(139, 157, 195, 0.1); white-space: nowrap;">九、近代变局</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- 专题内容 -->
+      <div class="syllabus-detail" style="width: 100%;">
+
+        <div class="syllabus-week" id="topic1">
+          <h3 class="week-title">一、导论：阅读生命——中国历史中的个人书写</h3>
+          <div class="week-content">
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <li style="color: var(--text-secondary);">课程讲什么？</li>
+              <li style="color: var(--text-secondary);">课程考核方式</li>
+              <li style="color: var(--text-secondary);">关于个人书写的例子</li>
+              <li style="color: var(--text-secondary);">课程专题介绍</li>
+              <li style="color: var(--text-secondary);">中国历史文化中"一般人"的设定</li>
+              <li style="color: var(--text-secondary);">课程的观念框架</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="syllabus-week" id="topic2">
+          <h3 class="week-title">二、身份认同的起源：家世与地缘</h3>
+          <div class="week-content">
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <li style="color: var(--text-secondary);">地域与身份变迁的意义：宝山复旦，杨浦同济</li>
+              <li style="color: var(--text-secondary);">籍贯对古人的意义</li>
+              <li style="color: var(--text-secondary);">户籍与职业、阶层的关联</li>
+              <li style="color: var(--text-secondary);">人口迁移与地域身份认同</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="syllabus-week" id="topic3">
+          <h3 class="week-title">三、成长道路的规训：读书与举业</h3>
+          <div class="week-content">
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <li style="color: var(--text-secondary);">向上流动的前提：人才选拔制度</li>
+              <li style="color: var(--text-secondary);">科举考试的闯关历程</li>
+              <li style="color: var(--text-secondary);">科举考试究竟要选拔什么样的人？究竟怎么准备？</li>
+              <li style="color: var(--text-secondary);">从人物传记看不同人的科举经历</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="syllabus-week" id="topic4">
+          <h3 class="week-title">四、上升通道的困境：士绅与县官</h3>
+          <div class="week-content">
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <li style="color: var(--text-secondary);">举人的出路是什么？</li>
+              <li style="color: var(--text-secondary);">从科举考试，怎么到真正去做官？中间经历了什么过程？</li>
+              <li style="color: var(--text-secondary);">县官每天做什么?</li>
+              <li style="color: var(--text-secondary);">他的治理团队都有一些什么人？</li>
+              <li style="color: var(--text-secondary);">工资多少？</li>
+              <li style="color: var(--text-secondary);">考不上科举的士绅在基层做什么？</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="syllabus-week" id="topic5">
+          <h3 class="week-title">五、精神世界的构成：思想与信仰</h3>
+          <div class="week-content">
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <li style="color: var(--text-secondary);"><strong>底色：</strong>儒家的内圣外王——经史、性理之学</li>
+              <li style="color: var(--text-secondary);"><strong>身份：</strong>文人传统——书画、诗赋、修身皆具</li>
+              <li style="color: var(--text-secondary);"><strong>日用：</strong>"卜筮""相术""命理""风水"</li>
+              <li style="color: var(--text-secondary);"><strong>经世：</strong>舆地、河渠、水利</li>
+              <li style="color: var(--text-secondary);"><strong>信仰：</strong>佛教、道教，民间信仰</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="syllabus-week" id="topic6">
+          <h3 class="week-title">六、日常生活的痕迹：书信与日记</h3>
+          <div class="week-content">
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <li style="color: var(--text-secondary);">书信：人际交往的基本中介</li>
+              <li style="color: var(--text-secondary);">字里行间的传情：传统书信、家信的礼仪与内容</li>
+              <li style="color: var(--text-secondary);">中国古代的日记传统</li>
+              <li style="color: var(--text-secondary);">日记作为修身的文化意义</li>
+              <li style="color: var(--text-secondary);">日记与明末功过格运动</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="syllabus-week" id="topic7">
+          <h3 class="week-title">七、以书为业的世界：阅读与著述</h3>
+          <div class="week-content">
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <li style="color: var(--text-secondary);">明清士人的阅读世界</li>
+              <li style="color: var(--text-secondary);">文化下移与通俗读物的普及</li>
+              <li style="color: var(--text-secondary);">书籍的出版过程和细节</li>
+              <li style="color: var(--text-secondary);">商业出版与权力世界</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="syllabus-week" id="topic8">
+          <h3 class="week-title">八、人生旅程的归宿：身后与追忆</h3>
+          <div class="week-content">
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <li style="color: var(--text-secondary);">归葬的情景与意义</li>
+              <li style="color: var(--text-secondary);">墓志铭由谁来写？措辞又有什么讲究?</li>
+              <li style="color: var(--text-secondary);">年谱的撰写、删改与竞争记忆</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="syllabus-week" id="topic9">
+          <h3 class="week-title">九、近代变局的效应：鼎革与延续</h3>
+          <div class="week-content">
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <li style="color: var(--text-secondary);">科举兴废与士大夫的命运</li>
+              <li style="color: var(--text-secondary);">古代书院与传统士人的转型</li>
+              <li style="color: var(--text-secondary);">近代学科分制与传统文化的延续和留存</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 参考书目 -->
+    <section id="course-books" class="section" style="margin-bottom: 32px;">
+      <h2 class="section-title">课程读书报告参考书目</h2>
+      <ul class="resource-list">
+        <li class="resource-item">
+          <div class="resource-title">沈艾娣《梦醒子》</div>
+        </li>
+        <li class="resource-item">
+          <div class="resource-title">阎云翔《中国社会的个体化》</div>
+        </li>
+        <li class="resource-item">
+          <div class="resource-title">许烺光《祖荫下》</div>
+        </li>
+        <li class="resource-item">
+          <div class="resource-title">程美宝《遇见黄东：18-19世纪珠江口的小人物与大世界》</div>
+        </li>
+        <li class="resource-item">
+          <div class="resource-title">柯文《历史三调：作为事件、经历和神话的义和团》</div>
+        </li>
+        <li class="resource-item">
+          <div class="resource-title">王笛《茶馆》</div>
+        </li>
+        <li class="resource-item">
+          <div class="resource-title">罗新《漫长的余生》</div>
+        </li>
+        <li class="resource-item">
+          <div class="resource-title">李贞德《公主之死》</div>
+        </li>
+        <li class="resource-item">
+          <div class="resource-title">苏成捷《中华帝国晚期的性、法律与社会》</div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 分页导航 -->
+    <nav class="pagination">
+      <a href="/index.html#course-grid" class="prev">返回开设课程</a>
+    </nav>
+
+    <footer>
+      <p>同济大学人文学院 · 刘昊</p>
+      <p><a href="mailto:liuhao1106@tongji.edu.cn">联系邮箱</a></p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国思想原典选读 · 2024秋</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .course-layout {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    .sidebar-nav {
+      position: sticky;
+      top: 100px;
+      width: 220px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(139, 157, 195, 0.15);
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+
+    .sidebar-nav h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--morandi-1);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--morandi-1);
+    }
+
+    .sidebar-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-nav li a {
+      display: block;
+      padding: 8px 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .sidebar-nav li a:hover {
+      background: rgba(139, 157, 195, 0.1);
+      color: var(--morandi-1);
+    }
+
+    .main-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .syllabus-week {
+      scroll-margin-top: 100px;
+    }
+
+    @media (max-width: 1024px) {
+      .course-layout {
+        flex-direction: column;
+      }
+
+      .sidebar-nav {
+        position: relative;
+        top: 0;
+        width: 100%;
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 导航栏 -->
+    <nav class="nav-bar">
+      <a href="../index.html">← 返回课程主页</a>
+      <div class="nav-links">
+        <a href="#course-info">课程信息</a>
+        <a href="#course-syllabus">课程大纲</a>
+      </div>
+    </nav>
+
+    <!-- 课程标题Banner -->
+    <header class="home-header bento-item span-4" style="min-height: 280px; position: relative; margin-bottom: 32px;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('/images/banner-lighthouse.jpg'); background-size: cover; background-position: center; opacity: 0.75; filter: blur(4px); transform: scale(1.05);"></div>
+      <div class="header-content">
+        <h1>中国思想原典选读</h1>
+        <p class="subtitle">2024秋季学期 · 周三7-8节 · 1-17周</p>
+      </div>
+    </header>
+
+    <div class="course-layout">
+      <!-- 左侧导航栏 -->
+      <aside class="sidebar-nav">
+        <h3>课程周次导航</h3>
+        <ul>
+          <li><a href="#week1">第一周 · 学位论文写作</a></li>
+          <li><a href="#week2">第二周 · 经典文本与现代学术研究</a></li>
+          <li><a href="#week3">第三周 · 朱子学研究回顾</a></li>
+          <li><a href="#week4">第四周 · 朱子学的问题意识</a></li>
+          <li><a href="#week6">第六周 · 朱子学理气论</a></li>
+          <li><a href="#week7">第七周 · 宋元朱子学的发展</a></li>
+          <li><a href="#week8">第八周 · 明初理学的思想特点</a></li>
+          <li><a href="#week9">第九周 · 阳明学研究的兴盛</a></li>
+          <li><a href="#week10">第十周 · 良知何以为良</a></li>
+          <li><a href="#week11">第十一周 · 知行合一</a></li>
+          <li><a href="#week12">第十二周 · 明代中期思想的多元格局</a></li>
+          <li><a href="#week13">第十三周 · 船山思想的定位</a></li>
+          <li><a href="#week14">第十四周 · 《读四书大全说》</a></li>
+          <li><a href="#week15">第十五周 · 《张子正蒙注》</a></li>
+          <li><a href="#week16">第十六周 · 理学、心学、气学三分法</a></li>
+          <li><a href="#week17">第十七周 · 思想史与社会史</a></li>
+        </ul>
+      </aside>
+
+      <!-- 主内容区 -->
+      <div class="main-content">
+        <!-- 课程信息 -->
+        <section id="course-info" class="section" style="margin-bottom: 32px;">
+          <h2 class="section-title">基本信息</h2>
+          <div class="info-list">
+            <li>
+              <span class="label">课程名称</span>
+              <span class="value">中国思想原典选读（宋明理学研究的方法与文献）</span>
+            </li>
+            <li>
+              <span class="label">授课教师</span>
+              <span class="value">刘昊（同济大学哲学系助理教授）</span>
+            </li>
+            <li>
+              <span class="label">开课时间</span>
+              <span class="value">1-17周 周三 7-8节</span>
+            </li>
+            <li>
+              <span class="label">学时学分</span>
+              <span class="value">34学时，2学分</span>
+            </li>
+            <li>
+              <span class="label">授课方式</span>
+              <span class="value">教师主讲+学生主题发言+教师评议+开放式讨论</span>
+            </li>
+          </div>
+        </section>
+
+        <!-- 课程简介 -->
+        <section class="section" style="margin-bottom: 32px;">
+          <h2 class="section-title">课程简介</h2>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+            宋明理学是宋代以降具有普遍影响力的哲学思想，其影响一直延续到清末民初。宋明理学研究是20世纪八十年代以来中国哲学研究发展最快的领域之一，在朱子学、阳明学、船山学等多个领域均取得了里程碑式的进展，并且已经形成了较为成熟的基本研究范式。在大规模的文献整理和发掘基础上，重视经典文本、哲学概念分析、中西比较视野，哲学史与思想史、社会史融合是代表性的研究方法。
+          </p>
+          <p style="color: var(--text-secondary); line-height: 1.8;">
+            本课程旨在引导学生从中国哲学史研究的基本方法出发，从朱子学、朱子学在宋元明的发展、明代的阳明学、船山学以及明中后期理学思想的多元格局等方面，掌握宋明理学研究的基本方法与文献，理解理学经典文本的脉络与现代学术研究之间的张力，从研究视野、方法等角度进一步反思宋明理学乃至中国哲学研究的得失。
+          </p>
+        </section>
+
+        <!-- 课程要求 -->
+        <section class="section" style="margin-bottom: 32px;">
+          <h2 class="section-title">课程要求</h2>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+            每次课程先由教师主讲，然后由1名同学围绕必读材料，结合参考材料做20分钟主题报告，教师与其他同学参与自由讨论。
+          </p>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+            <li style="display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(135deg, rgba(139, 157, 195, 0.1) 0%, rgba(168, 181, 196, 0.1) 100%); border-radius: 12px;">
+              <span style="font-size: 1.5rem;">📝</span>
+              <div>
+                <p style="font-weight: 700; color: var(--text-primary);">主题报告</p>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">主题报告的选题可参考教师提供的题目，也可在每节课程的范围内自由选择主题</p>
+              </div>
+            </li>
+            <li style="display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(135deg, rgba(196, 164, 164, 0.1) 0%, rgba(212, 196, 176, 0.1) 100%); border-radius: 12px;">
+              <span style="font-size: 1.5rem;">📄</span>
+              <div>
+                <p style="font-weight: 700; color: var(--text-primary);">期末作业</p>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">期末撰写一篇5000字左右的读书报告或学术书评，与课程内容相关</p>
+              </div>
+            </li>
+          </ul>
+          <div style="margin-top: 16px; padding: 12px; background: rgba(201, 184, 168, 0.15); border-radius: 12px; border-left: 4px solid var(--morandi-sand);">
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+              <strong>阅读要求：</strong>阅读所有必读材料，泛读参考材料。
+            </p>
+          </div>
+        </section>
+
+        <!-- 课程大纲 -->
+        <section id="course-syllabus" class="section" style="margin-bottom: 32px;">
+          <h2 class="section-title">课程安排</h2>
+          <div class="syllabus-detail">
+
+            <div class="syllabus-week" id="week1">
+              <h3 class="week-title">9月4日，第一周，学位论文写作与学术生涯规划（无讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>王汎森：《如果讓我重做一次研究生》，2005年演讲</li>
+                    <li>李修建：《博士学位论文：我们这样写》，文化艺术出版社，2023年3月。</li>
+                    <li>[美] 扎卡里·肖尔：《带一本书去读研》，新华出版社，2023年。</li>
+                    <li>蒋竹山：《如何写一篇评论性的学术书评》</li>
+                    <li>葛兆光：《从学术书评到研究综述》</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week2">
+              <h3 class="week-title">9月11日，第二周，经典文本与现代学术研究之间的张力——以中国哲学史的学科属性为例（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>陈来：《中国哲学史的学科属性与方法》，《中国哲学史》2021年第4期。</li>
+                    <li>彭国翔：《中国哲学研究方法论的再反思——"援西入中"及其两种模式》，《南京大学学报》2007年第4期。</li>
+                    <li>彭国翔：《中国哲学研究的三个自觉——以〈有无之境〉为例》，收于《中国哲学方法论——如何治中国哲学》，上海三联书店，2020年。</li>
+                    <li>张岱年：《中国哲学中的本体观念》，《安徽大学学报》1983年第1期。</li>
+                    <li>李存山：《"气"概念几个层次意义的分殊》，《哲学研究》2006年第9期。</li>
+                    <li>刘昊：《道兼理气：朱子学理气论的经典诠释背景及其影响》，《哲学研究》，2023年第7期。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>桑兵：《"中国哲学"探源》，收于《学术江湖：晚清民国的学人与学风》，广西师范大学出版社2017年。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告参考题目：如何看待中国哲学中的本体、形而上，气？中国有没有哲学？今天我们如何做中国哲学？结合上述问题和材料谈谈自己的想法</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week3">
+              <h3 class="week-title">9月18日，第三周，成熟范式的文献基础与研究回顾：以朱子学研究为例（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>乐爱国、陈昊：《民国时期朱熹哲学研究中的日本影响》，《武汉大学学报(人文科学版)》2016年第6期。</li>
+                    <li>杨儒宾：《战后台湾的朱子学研究》，《汉学研究通讯》，总第76期，2000年。</li>
+                    <li>方旭东：《1980 年代以来大陆的朱子学研究》，《鉴往瞻来——儒学文化研究的回顾与展望》，复旦大学出版社，2006年。</li>
+                    <li>刘昊、吴震：《十年来宋明理学研究的回顾与展望——以朱子学和阳明学为中心》，《孔子研究》，2018年第4期。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>石立善：《战后日本的朱子学研究史述评：1946—2006》，《鉴往瞻来——儒学文化研究的回顾与展望》，复旦大学出版社，2006年。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告参考题目：请搜集相关文献，论述近六年朱子学研究的新动向（重要基础文献出版、专著、代表性论文、以及港台及海外研究）</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week4">
+              <h3 class="week-title">9月25日，第四周，朱子学的问题意识：思想筹划的内在动机与文本呈现之间的关系（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>朱熹：《中庸章句序》，见于《四书章句集注》，中华书局，1983年。</li>
+                    <li>朱熹：《太极通书后序》《再定太极通书后序》《通书后记》（《又》），见于《周敦颐集》。</li>
+                    <li>朱熹：《太极解义》（《太极图解》《太极图说解》），见于《周敦颐集》。</li>
+                    <li>汤元宋：《周程授受说的回顾与再探——以〈颜子所好何学论〉为中心的考察》，《哲学研究》2023年第9期。</li>
+                    <li>陈来：《朱子〈太极解义〉的成书过程与文本修订》，《文史哲》2018年第4期。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>陈来：《朱子〈太极解义〉的哲学建构》，《哲学研究》2018年第2期。</li>
+                    <li>土田健次郎：《道学之形成》，上海古籍出版社，2010年。</li>
+                    <li>陈植锷：《周、程授受辨》，《文献》1994年第2期。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：朱熹为什么如此重视周敦颐？在哲学义理上，对《太极图说》作了哪些阐释？</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week6">
+              <h3 class="week-title">10月9日，第六周，典范研究的形成及其问题：以朱子学理气论为例（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>朱子学理气论选读材料</li>
+                    <li>陈来：《朱子哲学研究》（理气论部分），北京大学出版社，2023年。或者其他版本也可以。</li>
+                    <li>陈来：《朱子理气论研究的比较哲学视野》，《船山学刊》，2022年第2期。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>陈来：《朱子书信编年考证》，生活·读书·新知三联书店，2007年。</li>
+                    <li>陈来：《朱子〈太极解义〉的哲学建构》，《哲学研究》2018年第2期。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：西方哲学的视野如何影响了我们对理气论的理解？它符合《太极解义》原本想解释的世界观吗？</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week7">
+              <h3 class="week-title">10月16日，第七周，如何认识宋元朱子学的发展:文献与思想之间（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>陈淳：《北溪字义》"道"、"理"、"太极"条目，中华书局，1983年。</li>
+                    <li>陈荣捷：《朱门之特色及其意义》，《朱学论集》，华东师范大学出版社，2007年。</li>
+                    <li>陈荣捷：《元代之朱子学》，《朱学论集》，华东师范大学出版社，2007年。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>许家星：《理學範疇詮釋之演變：以「字義」體為中心》，《哲學與文化》2017年第2期。</li>
+                    <li>何俊：《南宋儒学建构》第五章，上海人民出版社，2013年。</li>
+                    <li>王宇：《师统与学统的调适——宋元两浙朱子学研究》，社会科学文献出版社，2019年。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：结合上述文本，谈谈宋元朱子后学的思想特色与发展。</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week8">
+              <h3 class="week-title">10月23日，第八周，明初理学的思想特点:朱子学的延续与变化（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>明初朱子学文献选读</li>
+                    <li>陈荣捷：《早期明代之程朱学派》，《朱学论集》，华东师范大学出版社，2007年。</li>
+                    <li>古清美：《明代前半期理学的变化与发展》，《明代理学论文集》，大安出版社，1990年。</li>
+                    <li>佐野公治：《明代前期的思想动向》，《日本学者论中国哲学史》，华东师范大学出版社，2010年。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：如何理解明初朱子学对朱子理气论的修正？请举例说明</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week9">
+              <h3 class="week-title">10月30日，第九周，阳明学研究的兴盛和瓶颈：基本范式与困境（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>陈来：《有无之境：王阳明的哲学精神》，北京大学出版社，2013年。</li>
+                    <li>彭国翔：《中国哲学研究的三个自觉——以〈有无之境〉为例》，收于《中国哲学方法论——如何治中国哲学》，上海三联书店，2020年。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>张新民：《回顾与前瞻:阳明学研究的百年经验总结》，《贵州大学学报（社会科学版）》，2014年第6期。</li>
+                    <li>张宏敏：《1949年以来的阳明后学文献整理》，《王学研究(第七辑)》。</li>
+                    <li>刘昊、吴震：《十年来宋明理学研究的回顾与展望——以朱子学和阳明学为中心》，《孔子研究》，2018年第4期。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：请论述近六年阳明学研究的新动向（重要文献出版、专著、代表性论文、港台及海外研究）</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week10">
+              <h3 class="week-title">11月6日，第十周，良知何以为良：阳明学的根本旨趣及其深层问题（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>参考《传习录》相关文本</li>
+                    <li>陈来：《有无之境：王阳明的哲学精神》论"良知"部分。</li>
+                    <li>吴震、刘昊：《论阳明学的良知实体化》，《学术月刊》2019年第10期。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>耿宁：《人生第一等事：王阳明及其后学论"致良知"》，商务印书馆，2014年。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：如何保证良知的客观性和普遍性？结合上述材料，并以《传习录》相关文本为基础，谈谈对这个问题的理解。</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week11">
+              <h3 class="week-title">11月13日，第十一周，阳明学的当代视野："知行合一"说的经典语境与当代讨论（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>《传习录》论"知行合一"文本</li>
+                    <li>黄勇、崔雅琴：《论王阳明的良知概念：命题性知识，能力之知，抑或动力之知？》，《学术月刊》2016年第1期。</li>
+                    <li>郁振华：《再论道德的能力之知——评黄勇教授的良知诠释》，《学术月刊》2016年第12期。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>郁振华:《论道德 - 形上学的能力之知：基于赖尔和王阳明的探讨》,《中国社会科学》2014 年第12 期。</li>
+                    <li>李明輝：《從康德的實踐哲學論王陽明的 [知行合一] 說》，《中國文哲研究集刊》1994年第4期。</li>
+                    <li>吴震：《作为良知伦理学的"知行合一"论——以"一念动处便是知亦便是行"为中心》，《学术月刊》2018年第5期。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：西方哲学对阳明学研究的介入，请举例说明其优势与弊端。</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week12">
+              <h3 class="week-title">11月20日，第十二周，明代中期思想的多元格局：朱子学、气论与阳明学的互动（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>罗钦顺《困知记》节选，王廷相《雅述》《慎言》节选</li>
+                    <li>杨儒宾：《检证气学——理学史脉络下的观点》，《汉学研究》第25卷，2007年第1期。</li>
+                    <li>刘昊：《"形而上者"的双重视野：经典诠释下的理本与气本》，《哲学门》，2024年，第45期。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>刘昊：《理气虽不相离，亦不曾相杂——明代朱子学理气论的一项新了解》，《中国哲学史》，2020年第5期，第99-104页。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：罗钦顺、王廷相 文本选读，主题自选</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week13">
+              <h3 class="week-title">11月27日，第十三周，船山思想的定位与不同研究进路（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>陈来：《诠释与重建：王船山的哲学精神》的《绪言》，生活·读书·新知三联书店，2010年。</li>
+                    <li>王兴国：《走着一条否定之否定的道路 ———关于船山学术身份定性研究的历史回顾》，《船山学刊》2022年第2期。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>陈焱：《发现王夫之：晚清以来的船山升格运动（1864-1982）》，上海人民出版社，2022年。</li>
+                    <li>刘昊：《王船山"生"的思想研究》，中国社会科学出版社，2024年6月。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：近代以来对船山思想不同定位的成因</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week14">
+              <h3 class="week-title">12月4日，第十四周，船山学思想著作选读（一）：《读四书大全说》章节选读（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>《读四书大全说》选读，中华书局，2009年。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：文本选读，主题自选</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week15">
+              <h3 class="week-title">12月11日，第十五周，船山学思想著作选读（二）：《张子正蒙注》章节选读（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>《张子正蒙注》第一章。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：文本选读，主题自选</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week16">
+              <h3 class="week-title">12月18日，第十六周，元明以来理学的展开:理学、心学、气学三分法及其问题所在（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>张岱年：《中国哲学大纲》中的《本根论》，商务印书馆，2015年。</li>
+                    <li>杨儒宾：《两种气学，两种儒学》，《台湾东亚文明研究学刊》第3卷第2期（总第6期），2006年。</li>
+                    <li>林月惠：《"异议"的再议——近世东亚的"理学"与"气学"》，《东吴哲学学报》第三十四期，2016年。</li>
+                    <li>杨儒宾：《异议也可是教义——回应〈"异议"的再议〉》，《东吴哲学学报》第三十六期，2017年。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>林月惠：《理学的第三系？——气学的商榷》，林月惠主编《中国哲学的当代议题：气与身体》，台北："中央研究院中国文哲研究所"，2019年，第49-92页。</li>
+                    <li>杨儒宾：《重审理学第三系说》，林月惠主编：《中国哲学的当代议题：气与身体》，第93-132页。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：如何看待当代的理学、气学之争？谈谈自己的看法</p>
+              </div>
+            </div>
+
+            <div class="syllabus-week" id="week17">
+              <h3 class="week-title">12月25日，第十七周，思想史与社会史：宋明理学研究的多元范式（有讨论）</h3>
+              <div class="week-content">
+                <div class="reading-section">
+                  <h4>必读材料</h4>
+                  <ul>
+                    <li>包弼德：《历史上的理学》，浙江大学出版社，2010年。</li>
+                    <li>许齐雄、王昌伟：《評包弼德〈歷史上的理學〉—兼論北美學界近五十年的宋明理學研究》，《新史学》第二十一卷第二期，2010年6月。</li>
+                    <li>吕妙芬：《評包弼德〈歷史上的理學〉—— 兼論北美學界近五十年的宋明理學研究》一文審查人意見，《新史学》第二十一卷第二期，2010年6月。</li>
+                  </ul>
+                </div>
+                <div class="reading-section">
+                  <h4>参考材料</h4>
+                  <ul>
+                    <li>吕妙芬：《阳明学士人社群: 历史、思想与实践》，北京师范大学出版社，2017年。</li>
+                  </ul>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 12px;"><strong>学生报告，其他学生参与讨论</strong></p>
+                <p style="color: var(--text-secondary);">报告题目：以《历史上的理学》作主题报告，分析其研究方法的优劣。</p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- 分页导航 -->
+        <nav class="pagination">
+          <a href="../index.html" class="prev">返回课程主页</a>
+        </nav>
+
+        <footer>
+          <p>同济大学哲学系 · 刘昊</p>
+          <p><a href="mailto:liuhao1106@tongji.edu.cn">联系邮箱</a></p>
+        </footer>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
