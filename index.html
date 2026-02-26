@@ -407,56 +407,96 @@
       initVisitorStats();
     });
     
-    // 初始化访问统计
-    function initVisitorStats() {
-      const STORAGE_KEY = 'site_visitor_stats';
-      const SESSION_KEY = 'visitor_session_id';
+    // 初始化访问统计 - 使用 CountAPI 实现跨设备同步
+    async function initVisitorStats() {
+      // CountAPI 命名空间（使用网站域名相关的唯一标识）
+      const NAMESPACE = 'liuhao-homepage';
+      const TOTAL_KEY = 'total-visits';
+      const TODAY_KEY_PREFIX = 'today-visits-';
       
-      // 获取或创建会话ID
-      let sessionId = sessionStorage.getItem(SESSION_KEY);
-      if (!sessionId) {
-        sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        sessionStorage.setItem(SESSION_KEY, sessionId);
-      }
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const TODAY_KEY = TODAY_KEY_PREFIX + today;
       
-      // 从localStorage读取统计数据
-      let stats = JSON.parse(localStorage.getItem(STORAGE_KEY) || JSON.stringify({
-        totalVisits: 0,
-        todayVisits: 0,
-        lastVisitDate: null,
-        sessions: []
-      }));
-      
-      const today = new Date().toDateString();
-      
-      // 如果是新的一天，重置今日访问数
-      if (stats.lastVisitDate !== today) {
-        stats.todayVisits = 0;
-        stats.lastVisitDate = today;
-      }
-      
-      // 检查是否是新会话
-      const isNewSession = !stats.sessions.includes(sessionId);
-      if (isNewSession) {
-        stats.totalVisits++;
-        stats.todayVisits++;
-        stats.sessions.push(sessionId);
+      try {
+        // 检查今天是否已经访问过（使用 localStorage 避免重复计数）
+        const lastVisitDate = localStorage.getItem('last_visit_date');
+        const hasVisitedToday = lastVisitDate === today;
         
-        // 只保留最近100个会话记录
-        if (stats.sessions.length > 100) {
-          stats.sessions = stats.sessions.slice(-100);
+        let totalVisits = 0;
+        let todayVisits = 0;
+        
+        if (!hasVisitedToday) {
+          // 新访问：增加总访问数和今日访问数
+          const [totalResponse, todayResponse] = await Promise.all([
+            fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${TOTAL_KEY}`).catch(() => null),
+            fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${TODAY_KEY}`).catch(() => null)
+          ]);
+          
+          if (totalResponse && totalResponse.ok) {
+            const totalData = await totalResponse.json();
+            totalVisits = totalData.value;
+          }
+          
+          if (todayResponse && todayResponse.ok) {
+            const todayData = await todayResponse.json();
+            todayVisits = todayData.value;
+          }
+          
+          // 记录今天已访问
+          localStorage.setItem('last_visit_date', today);
+        } else {
+          // 已访问过，只获取当前数值
+          const [totalResponse, todayResponse] = await Promise.all([
+            fetch(`https://api.countapi.xyz/get/${NAMESPACE}/${TOTAL_KEY}`).catch(() => null),
+            fetch(`https://api.countapi.xyz/get/${NAMESPACE}/${TODAY_KEY}`).catch(() => null)
+          ]);
+          
+          if (totalResponse && totalResponse.ok) {
+            const totalData = await totalResponse.json();
+            totalVisits = totalData.value;
+          }
+          
+          if (todayResponse && todayResponse.ok) {
+            const todayData = await todayResponse.json();
+            todayVisits = todayData.value;
+          }
         }
         
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+        // 更新显示
+        updateVisitorDisplay({ totalVisits, todayVisits });
+        
+      } catch (error) {
+        console.log('CountAPI 访问统计失败，使用本地备用数据');
+        // 失败时使用本地数据作为备用
+        useLocalStats();
       }
       
-      // 更新显示
-      updateVisitorDisplay(stats);
-      
       // 定期更新在线人数（模拟）
+      updateOnlineVisitors();
       setInterval(() => {
         updateOnlineVisitors();
       }, 30000);
+    }
+    
+    // 本地备用统计（当 CountAPI 不可用时）
+    function useLocalStats() {
+      const STORAGE_KEY = 'site_visitor_stats_fallback';
+      const today = new Date().toDateString();
+      
+      let stats = JSON.parse(localStorage.getItem(STORAGE_KEY) || JSON.stringify({
+        totalVisits: 1,
+        todayVisits: 1,
+        lastVisitDate: today
+      }));
+      
+      if (stats.lastVisitDate !== today) {
+        stats.todayVisits = 1;
+        stats.lastVisitDate = today;
+        stats.totalVisits++;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+      }
+      
+      updateVisitorDisplay(stats);
     }
     
     // 更新访问统计显示
@@ -474,7 +514,7 @@
       updateOnlineVisitors();
     }
     
-    // 更新在线人数（基于会话活跃度的模拟）
+    // 更新在线人数（基于当前时间的模拟）
     function updateOnlineVisitors() {
       const onlineElement = document.getElementById('online-visitors');
       if (!onlineElement) return;
@@ -492,7 +532,7 @@
         baseOnline = Math.floor(Math.random() * 2) + 1;
       }
       
-      animateNumber(onlineElement, baseOnline);
+      onlineElement.textContent = baseOnline;
     }
     
     // 数字动画效果
