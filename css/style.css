@@ -282,43 +282,72 @@ a:hover {
   color: var(--text-white);
 }
 
-/* ===== Header导航栏 ===== */
-.header-nav {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-md);
-  margin-top: var(--space-xl);
-  flex-wrap: nowrap;
-}
+/* ===== Header导航栏样式已移至HTML内联样式 ===== */
 
-.header-nav .nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-md) var(--space-lg);
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: var(--radius-lg);
-  color: var(--text-white);
-  transition: all var(--transition-fast);
-  min-width: 70px;
-  flex-shrink: 0;
-}
-
-.header-nav .nav-item:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-3px);
-  color: var(--text-white);
-}
-
-.header-nav .nav-icon {
-  font-size: 1.5rem;
-}
-
-.header-nav .nav-text {
-  font-size: 0.85rem;
-  font-weight: 500;
+/* ===== 移动端下拉菜单样式 ===== */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 24px 16px !important;
+  }
+  
+  .header-content img {
+    width: 100px !important;
+    height: 100px !important;
+  }
+  
+  .header-content h1 {
+    font-size: 2.2rem !important;
+    letter-spacing: 8px !important;
+  }
+  
+  .header-nav {
+    display: block !important;
+    width: 100%;
+    max-width: 320px;
+    padding: 8px !important;
+  }
+  
+  .mobile-menu-btn {
+    display: block !important;
+  }
+  
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    animation: slideDown 0.3s ease;
+  }
+  
+  .nav-links.active {
+    display: flex;
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .nav-links .nav-item {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    padding: 12px 16px !important;
+    gap: 12px !important;
+  }
+  
+  .nav-links .nav-icon {
+    font-size: 1.3rem !important;
+  }
+  
+  .nav-links .nav-text {
+    font-size: 1rem !important;
+  }
 }
 
 /* ===== 课程卡片 - 便当盒风格 ===== */
@@ -1167,38 +1196,7 @@ footer a:hover {
     text-align: center;
   }
   
-  /* 手机端导航栏适配 - 确保不与背景重叠 */
-  .home-header .header-nav {
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 8px !important;
-    border-radius: 12px !important;
-    margin-top: 0 !important;
-    background: rgba(255,255,255,0.55) !important;
-    border: 1px solid rgba(255,255,255,0.6) !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
-    width: 100%;
-  }
-  
-  .home-header .header-nav .nav-item {
-    flex: 1 1 calc(33.333% - 4px);
-    min-width: 0;
-    max-width: none;
-    padding: 8px 2px;
-    min-height: auto;
-    border-radius: 8px;
-    background: rgba(245,243,240,0.95) !important;
-    border: 1px solid rgba(0,0,0,0.08) !important;
-    color: #4a4a4a !important;
-  }
-  
-  .home-header .header-nav .nav-icon {
-    font-size: 1.1rem;
-  }
-  
-  .home-header .header-nav .nav-text {
-    font-size: 0.7rem;
-  }
+  /* 手机端导航栏已由下拉菜单替代 */
   
   .course-grid {
     grid-template-columns: 1fr;

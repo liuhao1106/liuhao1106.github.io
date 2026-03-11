@@ -54,46 +54,68 @@
           </style>
         </div>
         
-        <div class="header-content" style="position: relative; z-index: 2; text-align: center; padding: 30px 20px;">
-          <!-- 照片和标题 -->
-          <div style="display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 24px; flex-wrap: wrap;">
+        <div class="header-content" style="position: relative; z-index: 2; text-align: center; padding: 40px 20px;">
+          <!-- 照片和标题并排 -->
+          <div style="display: flex; align-items: center; justify-content: center; gap: 32px; margin-bottom: 28px; flex-wrap: wrap;">
             <!-- 照片 -->
-            <div style="flex-shrink: 0; position: relative;" class="avatar-container">
-              <img src="/images/profile-photo.png" alt="刘昊" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            <div style="flex-shrink: 0;">
+              <div style="display: inline-block; position: relative;" class="avatar-container">
+                <img src="/images/profile-photo.png" alt="刘昊" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.8); box-shadow: 0 6px 24px rgba(0,0,0,0.12);">
+              </div>
             </div>
-            <!-- 文字信息 -->
+            
+            <!-- 标题 -->
             <div style="text-align: left;">
               <h1 style="font-size: 2.8rem; font-weight: 700; color: #3d3d3d; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(255,255,255,0.8); letter-spacing: 12px;">刘昊</h1>
               <div style="display: flex; flex-direction: column; gap: 4px;">
-                <p style="font-size: 1.1rem; color: #4a4a4a; text-shadow: 0 1px 2px rgba(255,255,255,0.8); font-weight: 500;">同济大学哲学系</p>
+                <p style="font-size: 1.15rem; color: #4a4a4a; text-shadow: 0 1px 2px rgba(255,255,255,0.8); font-weight: 500;">同济大学哲学系</p>
                 <p style="font-size: 0.95rem; color: #5a5a5a; text-shadow: 0 1px 2px rgba(255,255,255,0.8);">助理教授 · 副系主任</p>
               </div>
             </div>
           </div>
           
           <!-- 导航栏 -->
-          <nav class="header-nav" style="background: rgba(255,255,255,0.55); backdrop-filter: blur(10px); border-radius: 16px; padding: 12px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-            <a href="cv.html" class="nav-item" style="background: rgba(255,255,255,0.9); color: #4a4a4a; border: 1px solid rgba(0,0,0,0.05);">
-              <span class="nav-icon">👤</span>
-              <span class="nav-text">简历</span>
-            </a>
-            <a href="publications.html" class="nav-item" style="background: rgba(255,255,255,0.9); color: #4a4a4a; border: 1px solid rgba(0,0,0,0.05);">
-              <span class="nav-icon">📄</span>
-              <span class="nav-text">成果</span>
-            </a>
-            <a href="#course-grid" class="nav-item" style="background: rgba(255,255,255,0.9); color: #4a4a4a; border: 1px solid rgba(0,0,0,0.05);">
-              <span class="nav-icon">📚</span>
-              <span class="nav-text">课程</span>
-            </a>
-            <a href="gallery.html" class="nav-item" style="background: rgba(255,255,255,0.9); color: #4a4a4a; border: 1px solid rgba(0,0,0,0.05);">
-              <span class="nav-icon">📷</span>
-              <span class="nav-text">足迹</span>
-            </a>
-            <a href="events.html" class="nav-item" style="background: rgba(255,255,255,0.9); color: #4a4a4a; border: 1px solid rgba(0,0,0,0.05);">
-              <span class="nav-icon">📅</span>
-              <span class="nav-text">活动</span>
-            </a>
+          <nav class="header-nav" id="main-nav" style="display: inline-block; background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-radius: 50px; padding: 8px; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+            <!-- 移动端菜单按钮 -->
+            <button class="mobile-menu-btn" id="mobile-menu-btn" style="display: none; width: 100%; padding: 12px 24px; background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.05); border-radius: 50px; cursor: pointer; font-size: 1rem; color: #4a4a4a;">
+              <span style="margin-right: 8px;">☰</span> 菜单
+            </button>
+            <!-- 导航链接 -->
+            <div class="nav-links" id="nav-links" style="display: flex; gap: 4px;">
+              <a href="cv.html" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+                简历
+              </a>
+              <a href="publications.html" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+                成果
+              </a>
+              <a href="#course-grid" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+                课程
+              </a>
+              <a href="gallery.html" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+                足迹
+              </a>
+              <a href="events.html" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+                活动
+              </a>
+            </div>
           </nav>
+          
+          <!-- 移动端菜单脚本 -->
+          <script>
+            (function() {
+              const menuBtn = document.getElementById('mobile-menu-btn');
+              const navLinks = document.getElementById('nav-links');
+              
+              if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                  navLinks.classList.toggle('active');
+                  menuBtn.innerHTML = navLinks.classList.contains('active') ? 
+                    '<span style="margin-right: 8px;">✕</span> 关闭' : 
+                    '<span style="margin-right: 8px;">☰</span> 菜单';
+                });
+              }
+            })();
+          </script>
         </div>
       </header>
 
@@ -101,7 +123,7 @@
       <div class="bento-item span-2">
         <h3 class="section-title">自我介绍</h3>
         <p style="color: var(--text-secondary); line-height: 1.8;">
-          欢迎来到我的个人主页！我是刘昊，同济大学哲学系助理教授，硕士生导师，副系主任；研究方向为宋明理学、明清思想史。本网站收录了我的简历、学术成果以及我开设的课程资料，以及媒体报道、学术会议、项目（利用vibe coding的数字人文项目）等内容，刚刚上线了一个宋明理学知识图谱项目，详情请见"活动"。
+          欢迎来到我的个人主页！我是刘昊，同济大学哲学系助理教授，硕士生导师，副系主任；研究方向为宋明理学、明清思想史。本网站收录了我的简历、学术成果以及我开设的课程资料，以及媒体报道、学术会议、项目（利用vibe coding的数字人文项目）等内容，刚刚上线了一个宋明理学知识图谱项目，详情请见"活动"。同时也记录了一些"足迹"。
         </p>
       </div>
 
