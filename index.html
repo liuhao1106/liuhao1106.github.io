@@ -25,6 +25,51 @@
         <!-- 莫兰迪色调遮罩层 -->
         <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(212,196,176,0.3) 0%, rgba(196,184,168,0.4) 50%, rgba(184,169,154,0.3) 100%);"></div>
         
+        <!-- Banner左上角移动端菜单 -->
+        <div style="position: absolute; top: 16px; left: 16px; z-index: 4;" class="banner-menu-container">
+          <nav class="header-nav" id="main-nav" style="display: inline-block;">
+            <!-- 移动端菜单按钮 -->
+            <button class="mobile-menu-btn" id="mobile-menu-btn" style="display: none; padding: 10px 18px; background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.05); border-radius: 50px; cursor: pointer; font-size: 0.95rem; color: #4a4a4a; box-shadow: 0 2px 12px rgba(0,0,0,0.15);">
+              <span style="margin-right: 6px;">☰</span> 菜单
+            </button>
+            <!-- 导航链接 -->
+            <div class="nav-links" id="nav-links" style="display: flex; gap: 4px; background: rgba(255,255,255,0.95); padding: 8px; border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+              <a href="cv.html" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+                简历
+              </a>
+              <a href="publications.html" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+                成果
+              </a>
+              <a href="#course-grid" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+                课程
+              </a>
+              <a href="gallery.html" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+                足迹
+              </a>
+              <a href="events.html" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+                活动
+              </a>
+            </div>
+          </nav>
+          
+          <!-- 移动端菜单脚本 -->
+          <script>
+            (function() {
+              const menuBtn = document.getElementById('mobile-menu-btn');
+              const navLinks = document.getElementById('nav-links');
+              
+              if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                  navLinks.classList.toggle('active');
+                  menuBtn.innerHTML = navLinks.classList.contains('active') ? 
+                    '<span style="margin-right: 6px;">✕</span> 关闭' : 
+                    '<span style="margin-right: 6px;">☰</span> 菜单';
+                });
+              }
+            })();
+          </script>
+        </div>
+
         <!-- Banner右上角相机按钮 -->
         <div style="position: absolute; top: 16px; right: 16px; z-index: 3;" class="banner-photo-btn">
           <div style="width: 36px; height: 36px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,0.15); transition: all 0.3s;" title="背景图片信息">
@@ -54,7 +99,7 @@
           </style>
         </div>
         
-        <div class="header-content" style="position: relative; z-index: 2; text-align: center; padding: 40px 20px;">
+        <div class="header-content" style="position: relative; z-index: 2; text-align: center; padding: 60px 20px 40px;">
           <!-- 照片和标题并排 -->
           <div style="display: flex; align-items: center; justify-content: center; gap: 32px; margin-bottom: 28px; flex-wrap: wrap;">
             <!-- 照片 -->
@@ -74,13 +119,8 @@
             </div>
           </div>
           
-          <!-- 导航栏 -->
-          <nav class="header-nav" id="main-nav" style="display: inline-block; background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-radius: 50px; padding: 8px; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-            <!-- 移动端菜单按钮 -->
-            <button class="mobile-menu-btn" id="mobile-menu-btn" style="display: none; width: 100%; padding: 12px 24px; background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.05); border-radius: 50px; cursor: pointer; font-size: 1rem; color: #4a4a4a;">
-              <span style="margin-right: 8px;">☰</span> 菜单
-            </button>
-            <!-- 导航链接 -->
+          <!-- 桌面端导航栏 -->
+          <nav class="header-nav desktop-nav" id="main-nav" style="display: inline-block; background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-radius: 50px; padding: 8px; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
             <div class="nav-links" id="nav-links" style="display: flex; gap: 4px;">
               <a href="cv.html" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
                 简历
@@ -99,23 +139,6 @@
               </a>
             </div>
           </nav>
-          
-          <!-- 移动端菜单脚本 -->
-          <script>
-            (function() {
-              const menuBtn = document.getElementById('mobile-menu-btn');
-              const navLinks = document.getElementById('nav-links');
-              
-              if (menuBtn && navLinks) {
-                menuBtn.addEventListener('click', function() {
-                  navLinks.classList.toggle('active');
-                  menuBtn.innerHTML = navLinks.classList.contains('active') ? 
-                    '<span style="margin-right: 8px;">✕</span> 关闭' : 
-                    '<span style="margin-right: 8px;">☰</span> 菜单';
-                });
-              }
-            })();
-          </script>
         </div>
       </header>
 
