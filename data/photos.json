@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "src": "images/gallery/photo1.jpg",
+    "title": "浙江建德三江口",
+    "description": "2023年2月拍摄于浙江建德市梅城镇三江口，新安江、富春江、钱塘江交汇处。清晨的薄雾笼罩江面，远处的山峦若隐若现，灯塔静静伫立在水中央。",
+    "date": "2023-02",
+    "location": "浙江建德"
+  },
+  {
+    "id": 2,
+    "src": "images/gallery/photo2.jpg",
+    "title": "维斯塔潘",
+    "description": "荷兰德国边境的维斯塔潘官方专卖店",
+    "date": "2025-08-08",
+    "location": "荷兰林堡"
+  },
+  {
+    "id": 3,
+    "src": "images/gallery/photo3.jpg",
+    "title": "科隆街区",
+    "description": "科隆的kalk街区",
+    "date": "2025-08",
+    "location": "德国科隆"
+  }
+]

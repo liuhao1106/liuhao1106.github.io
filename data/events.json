@@ -1,0 +1,41 @@
+{
+  "media": [
+    {
+      "id": 1,
+      "title": "青衿传声热词冷思｜AI时代的人机共生：哲学系刘昊老师带你聊Deepseek",
+      "description": "在AI席卷生活的时代，哲学系刘昊老师从人文学科的视角出发，拆解Deepseek带来的双重悖论，带你思考如何在技术与人文之间找到平衡。",
+      "date": "2025",
+      "source": "同济大学人文学院",
+      "url": "https://mp.weixin.qq.com/s/Mf_gJNYvTNeSFd_W3dNb7w"
+    }
+  ],
+  "academic": [
+    {
+      "id": 1,
+      "title": "宋明理学新青年论文评议会第2期——朱王之争专题",
+      "description": "2026年2月9日晚7点到9点半，宋明理学新青年第二期论文评议会——朱王之争专题于线上展开。刘昊老师作为与谈人参会，对论文进行评议。",
+      "date": "2026-02",
+      "location": "线上会议",
+      "url": "https://mp.weixin.qq.com/s/EGwbljM7IBPmRZ8AZbC8pg"
+    },
+    {
+      "id": 2,
+      "title": "晚清理学与近代学术的流变——纪念唐文治诞辰160周年学术工作坊",
+      "description": "2025年11月29日，由上海交通大学马克思主义学院、同济大学人文学院、上海市儒学研究会联合主办的学术工作坊在上海交通大学徐汇校区举行。刘昊老师致辞并主持第一场报告。",
+      "date": "2025-11",
+      "location": "上海交通大学徐汇校区",
+      "url": "https://m.thepaper.cn/newsDetail_forward_32147552"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "宋明理学史知识图谱",
+      "description": "利用vibe coding生成的宋明理学史知识图谱，还有待进一步更新",
+      "date": "",
+      "role": "项目主页",
+      "url": "lixuegraph.html",
+      "thumbnail": "images/lixuegraph-thumb.png"
+    }
+  ]
+}

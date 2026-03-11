@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>活动 · 刘昊</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/events.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1K9BJLZK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0E1K9BJLZK');
+  </script>
+</head>
+<body>
+  <div class="container">
+    <!-- 顶部导航栏 -->
+    <nav class="nav-bar">
+      <a href="index.html">← 返回主页</a>
+      <div class="nav-links">
+        <a href="cv.html">个人简历</a>
+        <a href="publications.html">学术成果</a>
+        <a href="index.html#course-grid">开设课程</a>
+        <a href="gallery.html">足迹</a>
+        <a href="events.html" style="color: var(--morandi-blue); background: rgba(139, 157, 195, 0.12);">活动</a>
+      </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <header class="page-header">
+      <h1 class="page-title">活动</h1>
+      <p class="page-subtitle">媒体采访 · 学术活动 · 研究项目</p>
+    </header>
+
+    <!-- 活动内容区域 -->
+    <main class="events-container">
+      
+      <!-- 媒体采访 -->
+      <section class="event-section">
+        <div class="section-header">
+          <h2 class="section-icon">📺</h2>
+          <h2 class="section-title">媒体</h2>
+        </div>
+        <div class="event-list" id="media-list">
+          <!-- 媒体内容将通过 JavaScript 动态加载 -->
+        </div>
+      </section>
+
+      <!-- 学术活动 -->
+      <section class="event-section">
+        <div class="section-header">
+          <h2 class="section-icon">🎤</h2>
+          <h2 class="section-title">学术活动</h2>
+        </div>
+        <div class="event-list" id="academic-list">
+          <!-- 学术活动将通过 JavaScript 动态加载 -->
+        </div>
+      </section>
+
+      <!-- 研究项目 -->
+      <section class="event-section">
+        <div class="section-header">
+          <h2 class="section-icon">📊</h2>
+          <h2 class="section-title">项目</h2>
+        </div>
+        <div class="event-list" id="project-list">
+          <!-- 项目将通过 JavaScript 动态加载 -->
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <p>同济大学哲学系 · 刘昊</p>
+      <p>联系邮箱：<a href="mailto:liuhao1106@tongji.edu.cn">liuhao1106@tongji.edu.cn</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // 加载活动数据
+    let eventsData = [];
+
+    // 从 JSON 文件加载数据
+    async function loadEvents() {
+      try {
+        const response = await fetch('data/events.json');
+        if (!response.ok) {
+          eventsData = getDefaultEvents();
+        } else {
+          eventsData = await response.json();
+        }
+        renderEvents();
+      } catch (error) {
+        console.log('使用默认活动数据');
+        eventsData = getDefaultEvents();
+        renderEvents();
+      }
+    }
+
+    // 默认活动数据
+    function getDefaultEvents() {
+      return {
+        "media": [
+          {
+            "id": 1,
+            "title": "采访标题示例",
+            "description": "采访内容描述...",
+            "date": "2024-01",
+            "source": "媒体来源"
+          }
+        ],
+        "academic": [
+          {
+            "id": 1,
+            "title": "学术活动标题示例",
+            "description": "活动内容描述...",
+            "date": "2024-01",
+            "location": "活动地点"
+          }
+        ],
+        "projects": [
+          {
+            "id": 1,
+            "title": "项目标题示例",
+            "description": "项目内容描述...",
+            "date": "2024-01",
+            "role": "主持人"
+          }
+        ]
+      };
+    }
+
+    // 渲染活动列表
+    function renderEvents() {
+      // 渲染媒体
+      const mediaList = document.getElementById('media-list');
+      if (eventsData.media && eventsData.media.length > 0) {
+        mediaList.innerHTML = eventsData.media.map(item => `
+          <div class="event-card">
+            <div class="event-date">${item.date}</div>
+            <h3 class="event-title">
+              ${item.url ? `<a href="${item.url}" target="_blank" class="event-link">${item.title}</a>` : item.title}
+            </h3>
+            <p class="event-desc">${item.description}</p>
+            <span class="event-source">${item.source}</span>
+          </div>
+        `).join('');
+      } else {
+        mediaList.innerHTML = '<p class="empty-text">暂无媒体采访</p>';
+      }
+
+      // 渲染学术活动
+      const academicList = document.getElementById('academic-list');
+      if (eventsData.academic && eventsData.academic.length > 0) {
+        academicList.innerHTML = eventsData.academic.map(item => `
+          <div class="event-card">
+            <div class="event-date">${item.date}</div>
+            <h3 class="event-title">
+              ${item.url ? `<a href="${item.url}" target="_blank" class="event-link">${item.title}</a>` : item.title}
+            </h3>
+            <p class="event-desc">${item.description}</p>
+            <span class="event-location">📍 ${item.location}</span>
+          </div>
+        `).join('');
+      } else {
+        academicList.innerHTML = '<p class="empty-text">暂无学术活动</p>';
+      }
+
+      // 渲染项目
+      const projectList = document.getElementById('project-list');
+      if (eventsData.projects && eventsData.projects.length > 0) {
+        projectList.innerHTML = eventsData.projects.map(item => `
+          <div class="event-card project-card">
+            <div class="project-content">
+              <div class="project-date">${item.date}</div>
+              <h3 class="project-title">
+                ${item.url ? `<a href="${item.url}" target="_blank" class="event-link">${item.title}</a>` : item.title}
+              </h3>
+              <p class="project-desc">${item.description}</p>
+              <span class="project-role">👤 ${item.role}</span>
+            </div>
+            ${item.thumbnail ? `
+            <div class="project-thumbnail">
+              <a href="${item.url}" target="_blank">
+                <img src="${item.thumbnail}" alt="${item.title}" onerror="this.style.display='none'">
+              </a>
+            </div>
+            ` : ''}
+          </div>
+        `).join('');
+      } else {
+        projectList.innerHTML = '<p class="empty-text">暂无项目</p>';
+      }
+    }
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', loadEvents);
+  </script>
+</body>
+</html>

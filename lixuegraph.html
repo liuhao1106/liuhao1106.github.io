@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国理学史知识图谱：从宋明理学到清初实学</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; background-color: #f4f4f9; }
+        #container { width: 100vw; height: 100vh; position: relative; }
+        #sidebar {
+            position: absolute; top: 20px; left: 20px; width: 300px;
+            background: rgba(255, 255, 255, 0.95); padding: 20px;
+            border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            pointer-events: none; opacity: 0; transition: opacity 0.3s;
+            max-height: 80vh; overflow-y: auto;
+        }
+        #sidebar.active { opacity: 1; pointer-events: auto; }
+        h2 { margin-top: 0; color: #333; font-size: 18px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        .info-row { margin-bottom: 8px; font-size: 14px; color: #555; }
+        .info-label { font-weight: bold; color: #333; }
+        #legend {
+            position: absolute; bottom: 20px; left: 20px;
+            background: rgba(255, 255, 255, 0.9); padding: 15px;
+            border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 12px;
+        }
+        .legend-item { display: flex; align-items: center; margin-bottom: 5px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+        svg { width: 100%; height: 100%; cursor: grab; }
+        svg:active { cursor: grabbing; }
+        .node text { pointer-events: none; font-size: 12px; text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff; }
+        .link { stroke-opacity: 0.6; }
+        .node-circle { stroke: #fff; stroke-width: 1.5px; transition: all 0.3s; }
+        .node-circle:hover { stroke: #333; stroke-width: 2.5px; }
+        .highlight-link { stroke: #333; stroke-width: 2px; stroke-opacity: 1; }
+        .fade-link { stroke-opacity: 0.1; }
+        .fade-node { opacity: 0.3; }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <div id="sidebar">
+        <h2 id="sb-title">标题</h2>
+        <div id="sb-content"></div>
+    </div>
+    
+    <div id="legend">
+        <div class="legend-item"><div class="dot" style="background:#4a90e2"></div>理学派 (程朱)</div>
+        <div class="legend-item"><div class="dot" style="background:#f5a623"></div>心学派 (陆王)</div>
+        <div class="legend-item"><div class="dot" style="background:#7ed321"></div>气学/实学派 (明清之际)</div>
+        <div class="legend-item"><div class="dot" style="background:#9013fe"></div>过渡/调和人物</div>
+        <div class="legend-item"><div class="dot" style="background:#bd10e0"></div>重要辩论/事件</div>
+        <div class="legend-item"><div class="dot" style="background:#b8b8b8"></div>哲学概念</div>
+    </div>
+</div>
+
+<script>
+// --- 数据准备 ---
+const nodes = [
+    // --- 北宋五子 ---
+    { id: "周敦颐", group: "neo_confucianism", type: "person", era: "北宋", desc: "濂学创始人，提出'无极而太极'，开启宋明理学先声。" },
+    { id: "张载", group: "qi_school", type: "person", era: "北宋", desc: "关学创始人，提出'太虚即气'，'为天地立心'。" },
+    { id: "程颢", group: "neo_confucianism", type: "person", era: "北宋", desc: "洛学创始人之一，主张'天人本无二'，偏向心学。" },
+    { id: "程颐", group: "neo_confucianism", type: "person", era: "北宋", desc: "洛学创始人之一，提出'性即理'，强调格物穷理。" },
+    
+    // --- 南宋集大成与心学 ---
+    { id: "朱熹", group: "neo_confucianism", type: "person", era: "南宋", desc: "闽学创始人，理学集大成者。主张'理在气先'，'格物致知'。" },
+    { id: "陆九渊", group: "mind_school", type: "person", era: "南宋", desc: "心学开创者。主张'心即理'，'宇宙便是吾心'。" },
+    { id: "吕祖谦", group: "neo_confucianism", type: "person", era: "南宋", desc: "婺学代表，调和朱陆，编撰《近思录》。" },
+
+    // --- 明代心学 ---
+    { id: "王守仁", group: "mind_school", type: "person", era: "明代", desc: "号阳明，心学集大成者。提出'知行合一'，'致良知'。" },
+    { id: "陈献章", group: "mind_school", type: "person", era: "明代", desc: "白沙先生，明代心学先驱，主张'静中养出端倪'。" },
+
+    // --- 明末清初转向 (气学/实学) ---
+    { id: "罗钦顺", group: "qi_school", type: "person", era: "明中期", desc: "气学先驱，批判朱陆，主张'理只是气之理'。" },
+    { id: "王廷相", group: "qi_school", type: "person", era: "明中期", desc: "主张'元气之上无物'，彻底否定理的独立性。" },
+    { id: "刘宗周", group: "transition", type: "person", era: "明末", desc: "蕺山学派，主张'慎独'，试图挽救心学流弊。" },
+    { id: "黄宗羲", group: "qi_school", type: "person", era: "清初", desc: "师承刘宗周，编《明儒学案》，主张'心即气'。" },
+    { id: "顾炎武", group: "practical_school", type: "person", era: "清初", desc: "实学代表，主张'经世致用'，痛斥'清谈误国'。" },
+    { id: "王夫之", group: "qi_school", type: "person", era: "清初", desc: "船山先生，气学集大成。主张'天下惟器'，'理在气中'。" },
+    { id: "颜元", group: "practical_school", type: "person", era: "清初", desc: "颜李学派，极端推崇'习行'，反对读书静坐。" },
+    { id: "戴震", group: "practical_school", type: "person", era: "清中叶", desc: "乾嘉朴学，提出'理存乎欲'，批判'以理杀人'。" },
+    { id: "陈亮", group: "practical_school", type: "person", era: "南宋", desc: "永康学派，事功主义，主张'义利双行'。" },
+    { id: "叶適", group: "practical_school", type: "person", era: "南宋", desc: "永嘉学派，事功主义，反对空谈心性。" },
+
+    // --- 核心概念 ---
+    { id: "理", group: "concept", type: "concept", desc: "宋明理学核心范畴。朱熹视为本体，王夫之视为气之条理。" },
+    { id: "气", group: "concept", type: "concept", desc: "物质实体。张载、王夫之视其为世界本原。" },
+    { id: "心", group: "concept", type: "concept", desc: "主体意识。陆王视其为世界本原 ('心即理')。" },
+    { id: "太极", group: "concept", type: "concept", desc: "宇宙本源。周敦颐提出'无极而太极'。" },
+    { id: "格物致知", group: "concept", type: "concept", desc: "认识论方法。朱熹解为'即物穷理'，王阳明解为'正念头'。" },
+    { id: "知行合一", group: "concept", type: "concept", desc: "王阳明核心命题，知与行不可分割。" },
+    { id: "致良知", group: "concept", type: "concept", desc: "王阳明晚年定论，扩充内心固有的良知。" },
+    { id: "太虚即气", group: "concept", type: "concept", desc: "张载命题，否定虚无，肯定气的实在性。" },
+    { id: "天下惟器", group: "concept", type: "concept", desc: "王夫之命题，道在器中，无器则无道。" },
+    { id: "经世致用", group: "concept", type: "concept", desc: "清初实学核心，学问必须有益于国事。" },
+    { id: "理存乎欲", group: "concept", type: "concept", desc: "戴震命题，肯定人欲的合理性，批判禁欲主义。" },
+
+    // --- 事件 ---
+    { id: "鹅湖之会", group: "event", type: "event", year: "1175", desc: "朱熹与陆九渊的著名辩论，焦点为'为学之方'。" }
+];
+
+const links = [
+    // 北宋脉络
+    { source: "周敦颐", target: "太极", relation: "提出" },
+    { source: "周敦颐", target: "朱熹", relation: "影响" },
+    { source: "张载", target: "气", relation: "本原" },
+    { source: "张载", target: "太虚即气", relation: "提出" },
+    { source: "张载", target: "王夫之", relation: "启发" },
+    { source: "程颢", target: "理", relation: "天理" },
+    { source: "程颐", target: "理", relation: "性即理" },
+    { source: "程颐", target: "格物致知", relation: "倡导" },
+    { source: "程颢", target: "陆九渊", relation: "思想倾向接近" },
+    
+    // 朱熹体系
+    { source: "朱熹", target: "理", relation: "理为本" },
+    { source: "朱熹", target: "气", relation: "理在气先(逻辑)" },
+    { source: "朱熹", target: "格物致知", relation: "即物穷理" },
+    { source: "朱熹", target: "吕祖谦", relation: "合编近思录" },
+    { source: "朱熹", target: "陈亮", relation: "义利之辩" },
+    { source: "陈亮", target: "经世致用", relation: "主张" },
+    { source: "叶適", target: "经世致用", relation: "主张" },
+
+    // 陆王心学
+    { source: "陆九渊", target: "心", relation: "心即理" },
+    { source: "陆九渊", target: "朱熹", relation: "鹅湖之辩" },
+    { source: "陆九渊", target: "鹅湖之会", relation: "参与" },
+    { source: "朱熹", target: "鹅湖之会", relation: "参与" },
+    { source: "陆九渊", target: "王守仁", relation: "继承发展" },
+    { source: "王守仁", target: "心", relation: "心外无理" },
+    { source: "王守仁", target: "知行合一", relation: "提出" },
+    { source: "王守仁", target: "致良知", relation: "提出" },
+    { source: "王守仁", target: "格物致知", relation: "重新解释(正念头)" },
+    { source: "陈献章", target: "王守仁", relation: "先驱" },
+
+    // 明清气学转向
+    { source: "罗钦顺", target: "理", relation: "理只是气之理" },
+    { source: "罗钦顺", target: "朱熹", relation: "批判" },
+    { source: "王廷相", target: "气", relation: "元气之上无物" },
+    { source: "刘宗周", target: "王守仁", relation: "修正(慎独)" },
+    { source: "刘宗周", target: "黄宗羲", relation: "师承" },
+    { source: "黄宗羲", target: "心", relation: "心即气" },
+    { source: "黄宗羲", target: "王夫之", relation: "同时代呼应" },
+    
+    // 王夫之 (集大成批判)
+    { source: "王夫之", target: "气", relation: "唯一实体" },
+    { source: "王夫之", target: "理", relation: "理在气中" },
+    { source: "王夫之", target: "天下惟器", relation: "提出" },
+    { source: "王夫之", target: "朱熹", relation: "批判(离气言理)" },
+    { source: "王夫之", target: "王守仁", relation: "批判(销行入知)" },
+    { source: "王夫之", target: "张载", relation: "继承发扬" },
+
+    // 实学与考据
+    { source: "顾炎武", target: "经世致用", relation: "倡导" },
+    { source: "顾炎武", target: "王守仁", relation: "批判(清谈误国)" },
+    { source: "颜元", target: "格物致知", relation: "反对(主张习行)" },
+    { source: "颜元", target: "朱熹", relation: "激烈反对" },
+    { source: "戴震", target: "理", relation: "理存乎欲" },
+    { source: "戴震", target: "朱熹", relation: "批判(以理杀人)" }
+];
+
+// --- 颜色映射 ---
+const colorScale = {
+    "neo_confucianism": "#4a90e2", // 蓝 - 程朱
+    "mind_school": "#f5a623",      // 橙 - 陆王
+    "qi_school": "#7ed321",        // 绿 - 气学
+    "practical_school": "#50c878", // 深绿 - 实学
+    "transition": "#9013fe",       // 紫 - 过渡
+    "concept": "#b8b8b8",          // 灰 - 概念
+    "event": "#bd10e0"             // 红紫 - 事件
+};
+
+// --- D3 可视化逻辑 ---
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+const svg = d3.select("#container").append("svg")
+    .attr("viewBox", [0, 0, width, height])
+    .on("click", () => {
+        d3.select("#sidebar").classed("active", false);
+        resetHighlight();
+    });
+
+const g = svg.append("g");
+
+// 定义箭头
+svg.append("defs").selectAll("marker")
+    .data(["end"])
+    .enter().append("marker")
+    .attr("id", "arrow")
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 22) // 调整箭头位置，避免遮挡文字
+    .attr("refY", 0)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M0,-5L10,0L0,5")
+    .attr("fill", "#999");
+
+const simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+    .force("charge", d3.forceManyBody().strength(-400))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collide", d3.forceCollide().radius(30));
+
+const link = g.append("g")
+    .attr("class", "links")
+    .selectAll("line")
+    .data(links)
+    .join("line")
+    .attr("class", "link")
+    .attr("stroke", "#999")
+    .attr("stroke-width", 1.5)
+    .attr("marker-end", "url(#arrow)");
+
+const linkLabel = g.append("g")
+    .attr("class", "link-labels")
+    .selectAll("text")
+    .data(links)
+    .join("text")
+    .attr("font-size", "10px")
+    .attr("fill", "#666")
+    .attr("text-anchor", "middle")
+    .attr("dy", -5)
+    .text(d => d.relation);
+
+const node = g.append("g")
+    .attr("class", "nodes")
+    .selectAll("g")
+    .data(nodes)
+    .join("g")
+    .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended))
+    .on("click", (event, d) => {
+        event.stopPropagation();
+        showInfo(d);
+        highlightNodes(d);
+    });
+
+node.append("circle")
+    .attr("class", "node-circle")
+    .attr("r", d => d.type === "concept" ? 12 : 18)
+    .attr("fill", d => colorScale[d.group] || "#ccc");
+
+node.append("text")
+    .attr("dx", d => d.type === "concept" ? 15 : 0)
+    .attr("dy", d => d.type === "concept" ? 4 : 22)
+    .attr("text-anchor", d => d.type === "concept" ? "start" : "middle")
+    .text(d => d.id)
+    .style("font-weight", "bold")
+    .style("font-size", "12px");
+
+simulation.on("tick", () => {
+    link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+    linkLabel
+        .attr("x", d => (d.source.x + d.target.x) / 2)
+        .attr("y", d => (d.source.y + d.target.y) / 2);
+
+    node
+        .attr("transform", d => `translate(${d.x},${d.y})`);
+});
+
+// --- 交互功能 ---
+
+function showInfo(d) {
+    const sidebar = document.getElementById("sidebar");
+    document.getElementById("sb-title").innerText = d.id;
+    
+    let html = `
+        <div class="info-row"><span class="info-label">类型:</span> ${d.type === 'person' ? '哲学家' : (d.type === 'concept' ? '哲学概念' : '历史事件')}</div>
+        <div class="info-row"><span class="info-label">时期/组别:</span> ${d.era || d.group}</div>
+        <div class="info-row" style="margin-top:15px; line-height:1.6;">${d.desc || '暂无详细描述'}</div>
+    `;
+    
+    // 动态查找相关关系
+    const relatedLinks = links.filter(l => l.source.id === d.id || l.target.id === d.id);
+    if (relatedLinks.length > 0) {
+        html += `<div style="margin-top:20px; border-top:1px solid #eee; padding-top:10px;"><strong>关键关系:</strong><ul style="padding-left:20px; font-size:13px; color:#555;">`;
+        relatedLinks.forEach(l => {
+            const other = l.source.id === d.id ? l.target.id : l.source.id;
+            const direction = l.source.id === d.id ? "→" : "←";
+            html += `<li>${direction} ${l.relation} → ${other}</li>`;
+        });
+        html += `</ul></div>`;
+    }
+
+    document.getElementById("sb-content").innerHTML = html;
+    sidebar.classList.add("active");
+}
+
+function highlightNodes(selectedNode) {
+    // 重置
+    node.classed("fade-node", false);
+    link.classed("highlight-link", false).classed("fade-link", false);
+    linkLabel.style("opacity", 1);
+
+    const connectedIds = new Set([selectedNode.id]);
+    
+    // 找出所有连接的节点
+    links.forEach(l => {
+        if (l.source.id === selectedNode.id) connectedIds.add(l.target.id);
+        if (l.target.id === selectedNode.id) connectedIds.add(l.source.id);
+    });
+
+    // 淡化未连接的节点
+    node.classed("fade-node", d => !connectedIds.has(d.id));
+    
+    // 高亮连接的线
+    link.classed("highlight-link", d => 
+        d.source.id === selectedNode.id || d.target.id === selectedNode.id
+    ).classed("fade-link", d => 
+        !(d.source.id === selectedNode.id || d.target.id === selectedNode.id)
+    );
+    
+    // 淡化未连接的线标签
+    linkLabel.style("opacity", d => 
+        (d.source.id === selectedNode.id || d.target.id === selectedNode.id) ? 1 : 0.1
+    );
+}
+
+function resetHighlight() {
+    node.classed("fade-node", false);
+    link.classed("highlight-link", false).classed("fade-link", false);
+    linkLabel.style("opacity", 1);
+}
+
+function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+}
+
+function dragged(event, d) {
+    d.fx = event.x;
+    d.fy = event.y;
+}
+
+function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+}
+
+// 初始稍微分散一点，避免重叠
+simulation.alpha(1).restart();
+
+</script>
+</body>
+</html>

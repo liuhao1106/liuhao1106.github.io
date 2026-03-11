@@ -1,0 +1,278 @@
+/* ===== 活动页面样式 ===== */
+
+/* 页面头部 */
+.page-header {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+  margin-bottom: var(--space-xl);
+}
+
+.page-header .page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 8px;
+}
+
+.page-header .page-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* 活动容器 */
+.events-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+/* 活动区块 */
+.event-section {
+  margin-bottom: var(--space-2xl);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.event-section:last-child {
+  margin-bottom: var(--space-xl);
+}
+
+/* 区块标题 */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 2px solid var(--morandi-1);
+}
+
+.section-icon {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--morandi-1);
+  margin: 0;
+}
+
+/* 媒体区块使用不同颜色 */
+.event-section:nth-child(2) .section-header {
+  border-bottom-color: var(--morandi-blue);
+}
+
+.event-section:nth-child(2) .section-title {
+  color: var(--morandi-blue);
+}
+
+/* 项目区块使用不同颜色 */
+.event-section:nth-child(3) .section-header {
+  border-bottom-color: var(--morandi-sage);
+}
+
+.event-section:nth-child(3) .section-title {
+  color: var(--morandi-sage);
+}
+
+/* 活动列表 */
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* 活动卡片 */
+.event-card {
+  padding: var(--space-lg);
+  background: linear-gradient(135deg, rgba(139, 157, 195, 0.05) 0%, rgba(196, 164, 164, 0.05) 100%);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--morandi-1);
+  transition: all var(--transition-base);
+}
+
+.event-card:hover {
+  transform: translateX(8px);
+  box-shadow: var(--shadow-sm);
+}
+
+.event-section:nth-child(2) .event-card {
+  border-left-color: var(--morandi-blue);
+}
+
+.event-section:nth-child(3) .event-card {
+  border-left-color: var(--morandi-sage);
+}
+
+/* 活动日期 */
+.event-date {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: var(--space-xs);
+  font-weight: 500;
+}
+
+/* 活动标题 */
+.event-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  line-height: 1.4;
+}
+
+/* 链接样式 */
+.event-link {
+  color: var(--morandi-blue);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.event-link:hover {
+  color: var(--morandi-1);
+  text-decoration: underline;
+}
+
+/* 活动描述 */
+.event-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-sm);
+}
+
+/* 活动来源/地点/角色 */
+.event-source,
+.event-location,
+.event-role {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+/* 空状态 */
+.empty-text {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--text-light);
+  font-style: italic;
+}
+
+/* 项目卡片 - 带缩略图 */
+.project-card {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+
+.project-content {
+  flex: 1;
+}
+
+.project-date {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: var(--space-xs);
+}
+
+.project-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  line-height: 1.4;
+}
+
+.project-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-sm);
+}
+
+.project-role {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.project-thumbnail {
+  flex-shrink: 0;
+  width: 180px;
+}
+
+.project-thumbnail img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+
+.project-thumbnail a:hover img {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== 响应式设计 ===== */
+@media (max-width: 768px) {
+  .page-header .page-title {
+    font-size: 2rem;
+    letter-spacing: 4px;
+  }
+  
+  .events-container {
+    padding: 0 var(--space-md);
+  }
+  
+  .event-section {
+    padding: var(--space-lg);
+  }
+  
+  .section-header {
+    gap: var(--space-sm);
+  }
+  
+  .section-icon {
+    font-size: 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.3rem;
+  }
+  
+  .event-card {
+    padding: var(--space-md);
+  }
+  
+  .event-title {
+    font-size: 1.1rem;
+  }
+  
+  .event-desc {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: var(--space-xl) 0;
+  }
+  
+  .page-header .page-title {
+    font-size: 1.8rem;
+  }
+  
+  .event-section {
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+  
+  .event-card:hover {
+    transform: translateX(4px);
+  }
+}

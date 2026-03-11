@@ -288,7 +288,7 @@ a:hover {
   justify-content: center;
   gap: var(--space-md);
   margin-top: var(--space-xl);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .header-nav .nav-item {
@@ -302,7 +302,8 @@ a:hover {
   border-radius: var(--radius-lg);
   color: var(--text-white);
   transition: all var(--transition-fast);
-  min-width: 80px;
+  min-width: 70px;
+  flex-shrink: 0;
 }
 
 .header-nav .nav-item:hover {
@@ -1151,23 +1152,39 @@ footer a:hover {
     text-align: center !important;
   }
   
+  /* 手机端：header-main-row 改为垂直布局 */
+  .home-header .header-main-row {
+    flex-direction: column !important;
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .home-header .header-main-row > div:first-child {
+    margin: 0 auto;
+  }
+  
+  .home-header .header-main-row > div:nth-child(2) {
+    text-align: center;
+  }
+  
   /* 手机端导航栏适配 - 确保不与背景重叠 */
   .home-header .header-nav {
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 10px !important;
+    gap: 6px;
+    padding: 8px !important;
     border-radius: 12px !important;
-    margin-top: var(--space-md);
+    margin-top: 0 !important;
     background: rgba(255,255,255,0.55) !important;
     border: 1px solid rgba(255,255,255,0.6) !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+    width: 100%;
   }
   
   .home-header .header-nav .nav-item {
-    flex: 1;
-    min-width: 60px;
-    max-width: 80px;
-    padding: 8px 4px;
+    flex: 1 1 calc(33.333% - 4px);
+    min-width: 0;
+    max-width: none;
+    padding: 8px 2px;
     min-height: auto;
     border-radius: 8px;
     background: rgba(245,243,240,0.95) !important;
@@ -1176,11 +1193,11 @@ footer a:hover {
   }
   
   .home-header .header-nav .nav-icon {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
   .home-header .header-nav .nav-text {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
   
   .course-grid {
