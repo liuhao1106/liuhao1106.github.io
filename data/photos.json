@@ -19,8 +19,40 @@
     "id": 3,
     "src": "images/gallery/photo3.jpg",
     "title": "科隆街区",
-    "description": "科隆的kalk街区",
+    "description": "德国科隆kalk的街区",
     "date": "2025-08",
     "location": "德国科隆"
+  },
+  {
+    "id": 4,
+    "src": "images/gallery/3e9d57219b517df52faa083f9a6720a7.jpg",
+    "title": "首里王城",
+    "description": "守礼之邦",
+    "date": "2025-01",
+    "location": "日本冲绳"
+  },
+  {
+    "id": 5,
+    "src": "images/gallery/5c44dfaceb97070ab60bc3c0ce180247.jpg",
+    "title": "冲绳海边",
+    "description": "冲绳的日航Alivila酒店",
+    "date": "2025-01",
+    "location": "日本冲绳"
+  },
+  {
+    "id": 6,
+    "src": "images/gallery/63fc45cb1a174c61732c8c90abf808d4.jpg",
+    "title": "避暑圣地",
+    "description": "位于江西宜春的中源乡",
+    "date": "2022-07",
+    "location": "江西宜春"
+  },
+  {
+    "id": 7,
+    "src": "images/gallery/fa8149bd516e1066d304cce61fa779e0.jpg",
+    "title": "平潭日落",
+    "description": "位于平潭岛的东海岸",
+    "date": "2022-08",
+    "location": "福建平潭"
   }
 ]
