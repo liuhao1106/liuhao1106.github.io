@@ -319,16 +319,16 @@ a:hover {
     color: #4a4a4a !important;
   }
   
-  .nav-links {
-    display: none;
+  #nav-links {
+    display: none !important;
     flex-direction: column;
     gap: 8px;
     margin-top: 8px;
     animation: slideDown 0.3s ease;
   }
   
-  .nav-links.active {
-    display: flex;
+  #nav-links.active {
+    display: flex !important;
   }
   
   @keyframes slideDown {
