@@ -54,5 +54,149 @@
     "description": "位于平潭岛的东海岸",
     "date": "2022-08",
     "location": "福建平潭"
+  },
+  {
+    "id": 8,
+    "src": "images/gallery/20170713190541_IMG_2262-01.jpeg",
+    "title": "茶卡盐湖",
+    "description": "天空之镜，倒映着蓝天白云和远山",
+    "date": "2017-07",
+    "location": "青海茶卡"
+  },
+  {
+    "id": 9,
+    "src": "images/gallery/20180904172217_IMG_8564-01.jpeg",
+    "title": "青岛圣弥厄尔大教堂",
+    "description": "青岛标志性的哥特式建筑",
+    "date": "2018-09",
+    "location": "山东青岛"
+  },
+  {
+    "id": 10,
+    "src": "images/gallery/20190123124212_IMG_0747.JPG",
+    "title": "网走监狱",
+    "description": "北海道网走市的旧监狱建筑",
+    "date": "2019-01",
+    "location": "日本北海道"
+  },
+  {
+    "id": 11,
+    "src": "images/gallery/20190127130503_IMG_1087.JPG",
+    "title": "旭川街景",
+    "description": "北海道旭川市的冬日街景",
+    "date": "2019-01",
+    "location": "日本北海道"
+  },
+  {
+    "id": 12,
+    "src": "images/gallery/DSC00759.JPG",
+    "title": "自由女神像",
+    "description": "纽约自由岛的标志性景观",
+    "date": "2020-02",
+    "location": "美国纽约"
+  },
+  {
+    "id": 13,
+    "src": "images/gallery/IMG_20181006_153847-01.jpeg",
+    "title": "前门剪影",
+    "description": "透过玻璃幕墙看北京前门",
+    "date": "2018-10",
+    "location": "北京"
+  },
+  {
+    "id": 14,
+    "src": "images/gallery/IMG_20190710_104738.jpg",
+    "title": "柏林街景",
+    "description": "德国柏林博物馆岛附近",
+    "date": "2019-07",
+    "location": "德国柏林"
+  },
+  {
+    "id": 15,
+    "src": "images/gallery/IMG_20190714_140310.jpg",
+    "title": "哥本哈根新港",
+    "description": "丹麦哥本哈根色彩斑斓的运河区",
+    "date": "2019-07",
+    "location": "丹麦哥本哈根"
+  },
+  {
+    "id": 16,
+    "src": "images/gallery/IMG_20190716_171628.jpg",
+    "title": "凯旋门",
+    "description": "巴黎凯旋门的宏伟建筑",
+    "date": "2019-07",
+    "location": "法国巴黎"
+  },
+  {
+    "id": 17,
+    "src": "images/gallery/IMG_20191223_121632.jpg",
+    "title": "哈佛大学",
+    "description": "波士顿哈佛大学校园冬日景色",
+    "date": "2019-12",
+    "location": "美国波士顿"
+  },
+  {
+    "id": 18,
+    "src": "images/gallery/IMG_20200203_163157.jpg",
+    "title": "布鲁克林大桥",
+    "description": "从布鲁克林大桥眺望曼哈顿天际线",
+    "date": "2020-02",
+    "location": "美国纽约"
+  },
+  {
+    "id": 19,
+    "src": "images/gallery/IMG_20200625_141001.jpg",
+    "title": "海边的曼彻斯特",
+    "description": "通过那部奥斯卡电影而出名的小镇",
+    "date": "2020-06",
+    "location": "美国波士顿"
+  },
+  {
+    "id": 20,
+    "src": "images/gallery/MVIMG_20230527_192424-01.jpeg",
+    "title": "香港夜景",
+    "description": "太平山顶俯瞰维多利亚港夜景",
+    "date": "2023-05",
+    "location": "中国香港"
+  },
+  {
+    "id": 21,
+    "src": "images/gallery/0f925bd0ab63f34ddb2fe58998fa2ce0.jpg",
+    "title": "维米尔《天文学家》",
+    "description": "维米尔博物馆展出的维米尔名作",
+    "date": "2025-08",
+    "location": "荷兰代尔夫特"
+  },
+  {
+    "id": 22,
+    "src": "images/gallery/988bb3a7782d2ed2d5fa9ae9b4fa6bb7.jpg",
+    "title": "浙大图书馆访书",
+    "description": "柳树芳藏批校《陆清献公日记》，原来书页中间还有夹签，解决了困扰多时的问题",
+    "date": "2024-08",
+    "location": "浙江杭州"
+  },
+  {
+    "id": 23,
+    "src": "images/gallery/9a3044d41c5ec6d9116e0ef5d0c02c5f.jpg",
+    "title": "借阅记录",
+    "description": "《陆清献公日记》借阅记录卡，记载了我研究这本日记的三年，目前还有新发现",
+    "date": "2024-04",
+    "location": "复旦大学图书馆"
+  },
+  {
+    "id": 24,
+    "src": "images/gallery/ca5da443ab5c693c12cc9614b155328e.jpg",
+    "title": "新安江水电站俱乐部",
+    "description": "看到这个窗子，想起了90年代非常典型的俱乐部、工会",
+    "date": "2026-02",
+    "location": "浙江建德"
+  },
+  {
+    "id": 25,
+    "src": "images/gallery/e11cac7c73745e2507efc69d06bfd058.jpg",
+    "title": "F1日本大奖赛",
+    "description": "2025年F1日本大奖赛比赛现场",
+    "date": "2025-04",
+    "location": "日本铃鹿"
   }
 ]
