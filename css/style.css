@@ -315,32 +315,30 @@ a:hover {
   
   .banner-menu-container .mobile-menu-btn {
     display: inline-flex !important;
-    padding: 10px 18px !important;
-    background: rgba(255,255,255,0.95) !important;
-    border: 1px solid rgba(0,0,0,0.05) !important;
-    border-radius: 50px !important;
+    padding: 8px 12px !important;
+    background: transparent !important;
+    border: none !important;
     cursor: pointer !important;
-    font-size: 0.95rem !important;
-    color: #4a4a4a !important;
+    font-size: 18px !important;
+    color: #fff !important;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
   }
   
   .banner-menu-container #nav-links {
     display: none !important;
     position: fixed;
-    top: 56px;
-    left: 16px;
+    top: 44px;
+    left: 8px;
     flex-direction: column;
     gap: 0;
-    animation: slideDown 0.3s ease;
-    background: rgba(255,255,255,0.98);
-    padding: 4px 0;
+    animation: slideDown 0.2s ease;
+    background: transparent;
+    padding: 0;
     border-radius: 0;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-    min-width: auto;
-    width: auto;
+    box-shadow: none;
+    min-width: 80px;
     z-index: 9999;
     max-height: calc(100vh - 80px);
     overflow-y: auto;
@@ -353,23 +351,21 @@ a:hover {
   .banner-menu-container #nav-links .nav-item {
     display: block !important;
     border-radius: 0 !important;
-    padding: 10px 20px !important;
-    font-size: 0.9rem !important;
+    padding: 5px 10px !important;
+    font-size: 13px !important;
     background: transparent !important;
-    color: #4a4a4a !important;
+    color: #000 !important;
     text-decoration: none;
     text-align: left;
-    transition: background 0.2s ease;
+    transition: all 0.15s ease;
     white-space: nowrap;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-  }
-
-  .banner-menu-container #nav-links .nav-item:last-child {
-    border-bottom: none;
+    line-height: 1.3;
+    text-shadow: none;
   }
 
   .banner-menu-container #nav-links .nav-item:hover {
-    background: rgba(0,0,0,0.03) !important;
+    color: #666 !important;
+    background: transparent !important;
   }
   
   @keyframes slideDown {

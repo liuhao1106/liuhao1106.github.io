@@ -29,24 +29,24 @@
         <div style="position: absolute; top: 16px; left: 16px; z-index: 4;" class="banner-menu-container">
           <nav class="header-nav" id="main-nav" style="display: inline-block;">
             <!-- 移动端菜单按钮 -->
-            <button class="mobile-menu-btn" id="mobile-menu-btn" style="display: none; padding: 10px 18px; background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.05); border-radius: 50px; cursor: pointer; font-size: 0.95rem; color: #4a4a4a; box-shadow: 0 2px 12px rgba(0,0,0,0.15);">
-              <span style="margin-right: 6px;">☰</span> 菜单
+            <button class="mobile-menu-btn" id="mobile-menu-btn" style="display: none; padding: 8px 12px; background: transparent; border: none; cursor: pointer; font-size: 14px; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+              <span>☰</span>
             </button>
             <!-- 导航链接 -->
-            <div class="nav-links" id="nav-links" style="display: flex; gap: 4px; background: rgba(255,255,255,0.95); padding: 8px; border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-              <a href="cv.html" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+            <div class="nav-links" id="nav-links" style="display: flex; gap: 4px; background: transparent; padding: 0; border-radius: 0; box-shadow: none;">
+              <a href="cv.html" class="nav-item" style="display: block; padding: 6px 12px; background: transparent; color: #000; border-radius: 0; text-decoration: none; transition: all 0.2s; font-size: 14px; font-weight: 500;">
                 简历
               </a>
-              <a href="publications.html" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+              <a href="publications.html" class="nav-item" style="display: block; padding: 6px 12px; background: transparent; color: #000; border-radius: 0; text-decoration: none; transition: all 0.2s; font-size: 14px; font-weight: 500;">
                 成果
               </a>
-              <a href="#course-grid" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+              <a href="#course-grid" class="nav-item" style="display: block; padding: 6px 12px; background: transparent; color: #000; border-radius: 0; text-decoration: none; transition: all 0.2s; font-size: 14px; font-weight: 500;">
                 课程
               </a>
-              <a href="gallery.html" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+              <a href="gallery.html" class="nav-item" style="display: block; padding: 6px 12px; background: transparent; color: #000; border-radius: 0; text-decoration: none; transition: all 0.2s; font-size: 14px; font-weight: 500;">
                 足迹
               </a>
-              <a href="events.html" class="nav-item" style="display: block; padding: 10px 20px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 0.9rem; font-weight: 500;">
+              <a href="events.html" class="nav-item" style="display: block; padding: 6px 12px; background: transparent; color: #000; border-radius: 0; text-decoration: none; transition: all 0.2s; font-size: 14px; font-weight: 500;">
                 活动
               </a>
             </div>
@@ -62,8 +62,8 @@
                 menuBtn.addEventListener('click', function() {
                   navLinks.classList.toggle('active');
                   menuBtn.innerHTML = navLinks.classList.contains('active') ? 
-                    '<span style="margin-right: 6px;">✕</span> 关闭' : 
-                    '<span style="margin-right: 6px;">☰</span> 菜单';
+                    '<span>✕</span>' : 
+                    '<span>☰</span>';
                 });
               }
             })();
@@ -120,21 +120,21 @@
           </div>
           
           <!-- 桌面端导航栏 -->
-          <nav class="header-nav desktop-nav" id="main-nav" style="display: inline-block; background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-radius: 50px; padding: 8px; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+          <nav class="header-nav desktop-nav" id="main-nav" style="display: inline-block; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-radius: 24px; padding: 6px; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 2px 12px rgba(0,0,0,0.05);">
             <div class="nav-links" id="nav-links" style="display: flex; gap: 4px;">
-              <a href="cv.html" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+              <a href="cv.html" class="nav-item" style="display: block; padding: 10px 24px; background: rgba(255,255,255,0.7); color: #4a4a4a; border-radius: 20px; text-decoration: none; transition: all 0.2s; font-size: 0.95rem; font-weight: 500;">
                 简历
               </a>
-              <a href="publications.html" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+              <a href="publications.html" class="nav-item" style="display: block; padding: 10px 24px; background: rgba(255,255,255,0.7); color: #4a4a4a; border-radius: 20px; text-decoration: none; transition: all 0.2s; font-size: 0.95rem; font-weight: 500;">
                 成果
               </a>
-              <a href="#course-grid" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+              <a href="#course-grid" class="nav-item" style="display: block; padding: 10px 24px; background: rgba(255,255,255,0.7); color: #4a4a4a; border-radius: 20px; text-decoration: none; transition: all 0.2s; font-size: 0.95rem; font-weight: 500;">
                 课程
               </a>
-              <a href="gallery.html" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+              <a href="gallery.html" class="nav-item" style="display: block; padding: 10px 24px; background: rgba(255,255,255,0.7); color: #4a4a4a; border-radius: 20px; text-decoration: none; transition: all 0.2s; font-size: 0.95rem; font-weight: 500;">
                 足迹
               </a>
-              <a href="events.html" class="nav-item" style="display: block; padding: 12px 28px; background: rgba(255,255,255,0.95); color: #4a4a4a; border-radius: 50px; text-decoration: none; transition: all 0.2s; font-size: 1rem; font-weight: 500;">
+              <a href="events.html" class="nav-item" style="display: block; padding: 10px 24px; background: rgba(255,255,255,0.7); color: #4a4a4a; border-radius: 20px; text-decoration: none; transition: all 0.2s; font-size: 0.95rem; font-weight: 500;">
                 活动
               </a>
             </div>
