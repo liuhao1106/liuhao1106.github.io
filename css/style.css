@@ -18,21 +18,21 @@
   --morandi-10: #A89F91;
   
   /* 莫兰迪强调色 */
-  --morandi-blue: #7A8B99;
-  --academic-blue: #7A8B99;
-  --morandi-sage: #9CAF88;
-  --morandi-rose: #C4A4A4;
-  --morandi-sand: #C9B8A8;
-  --morandi-slate: #8E9AAF;
-  
+  --morandi-blue: #6B7B8A;
+  --academic-blue: #6B7B8A;
+  --morandi-sage: #8A9E7A;
+  --morandi-rose: #9E8A7A;
+  --morandi-sand: #B8A894;
+  --morandi-slate: #7A8A9E;
+
   /* 渐变组合 - 莫兰迪风格 */
-  --gradient-1: linear-gradient(135deg, #8B9DC3 0%, #A8B5C4 100%);
-  --gradient-2: linear-gradient(135deg, #C4A4A4 0%, #D4C4B0 100%);
-  --gradient-3: linear-gradient(135deg, #9CAF88 0%, #B8C5D6 100%);
-  --gradient-4: linear-gradient(135deg, #C9B8A8 0%, #D4C4B0 100%);
-  --gradient-5: linear-gradient(135deg, #8E9AAF 0%, #B5B5B5 100%);
-  --gradient-morandi: linear-gradient(135deg, #8B9DC3 0%, #A8B5C4 25%, #C4A4A4 50%, #C9B8A8 75%, #9CAF88 100%);
-  --gradient-academic: linear-gradient(135deg, #7A8B99 0%, #8B9DC3 50%, #A8B5C4 100%);
+  --gradient-1: linear-gradient(135deg, #7A8B9E 0%, #9AA8B8 100%);
+  --gradient-2: linear-gradient(135deg, #9E8A7A 0%, #B8A894 100%);
+  --gradient-3: linear-gradient(135deg, #8A9E7A 0%, #A8B8C8 100%);
+  --gradient-4: linear-gradient(135deg, #A89480 0%, #C4B8A8 100%);
+  --gradient-5: linear-gradient(135deg, #7A8A9E 0%, #A8A8A8 100%);
+  --gradient-morandi: linear-gradient(135deg, #7A8B9E 0%, #9AA8B8 25%, #9E8A7A 50%, #B8A894 75%, #8A9E7A 100%);
+  --gradient-academic: linear-gradient(135deg, #6B7B8A 0%, #7A8B9E 50%, #9AA8B8 100%);
   
   /* 背景色 - 典雅的浅色调 */
   --bg-dark: #F5F3F0;
