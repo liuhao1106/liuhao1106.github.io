@@ -1,0 +1,11 @@
+{
+    "colorScale": {
+        "neo_confucianism": "#4a90e2",
+        "mind_school": "#f5a623",
+        "qi_school": "#7ed321",
+        "practical_school": "#50c878",
+        "transition": "#9013fe",
+        "concept": "#b8b8b8",
+        "event": "#bd10e0"
+    }
+}
