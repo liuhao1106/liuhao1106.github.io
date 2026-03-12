@@ -219,14 +219,14 @@ a:hover {
 /* ===== 头部区域 ===== */
 .home-header {
   grid-column: span 4;
-  min-height: 400px;
+  min-height: 260px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
   border-radius: var(--radius-xl);
-  padding: var(--space-2xl);
+  padding: var(--space-lg);
 }
 
 
