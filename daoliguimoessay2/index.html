@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>道理规模与工夫次第：解构朱子学的内在双螺旋</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --paper-bg: #f7f5f0;
+            --ink-black: #2c2c2c;
+            --cinnabar: #8a2be2; /* Adjusted to a deep academic red */
+            --accent-red: #b93a32;
+            --mountain-grey: #8c8c8c;
+        }
+
+        body {
+            background-color: var(--paper-bg);
+            color: var(--ink-black);
+            font-family: 'Noto Serif SC', serif;
+            overflow-x: hidden;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        .font-calligraphy {
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #eaddcf;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8c8c8c;
+            border-radius: 4px;
+        }
+
+        /* Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ink-splash {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        /* DNA Helix Animation */
+        .helix-container {
+            perspective: 1000px;
+            height: 400px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .helix-strand {
+            position: absolute;
+            width: 200px;
+            height: 20px;
+            background: linear-gradient(90deg, transparent, #2c2c2c, transparent);
+            border-radius: 10px;
+            opacity: 0.6;
+            animation: rotateHelix 10s linear infinite;
+        }
+
+        @keyframes rotateHelix {
+            0% { transform: rotateY(0deg) translateY(0); }
+            100% { transform: rotateY(360deg) translateY(0); }
+        }
+
+        /* Interactive Card Hover */
+        .concept-card {
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.2);
+        }
+
+        /* Vertical text for aesthetics */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 0.2em;
+        }
+
+        /* Comparison Slider Logic */
+        .comparison-slider {
+            position: relative;
+            overflow: hidden;
+        }
+        .comparison-slider .slider-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--accent-red);
+            left: 50%;
+            cursor: ew-resize;
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .nav-dot {
+            transition: all 0.3s ease;
+        }
+        .nav-dot.active {
+            background-color: var(--accent-red);
+            transform: scale(1.2);
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="antialiased">
+
+    <!-- Home Button -->
+    <a href="../index.html" class="fixed top-5 left-5 z-50 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2 text-sm font-medium">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        回主页
+    </a>
+
+    <!-- Navigation Dots -->
+    <div class="fixed right-5 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-4 hidden md:flex">
+        <a href="#hero" class="nav-dot w-3 h-3 rounded-full bg-gray-400 block" title="首页"></a>
+        <a href="#problem" class="nav-dot w-3 h-3 rounded-full bg-gray-400 block" title="核心问题"></a>
+        <a href="#framework" class="nav-dot w-3 h-3 rounded-full bg-gray-400 block" title="核心框架"></a>
+        <a href="#origin" class="nav-dot w-3 h-3 rounded-full bg-gray-400 block" title="思想起源"></a>
+        <a href="#paths" class="nav-dot w-3 h-3 rounded-full bg-gray-400 block" title="思想分野"></a>
+        <a href="#impact" class="nav-dot w-3 h-3 rounded-full bg-gray-400 block" title="社会影响"></a>
+        <a href="#conclusion" class="nav-dot w-3 h-3 rounded-full bg-gray-400 block" title="结论"></a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center items-center relative px-4 overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-20 pointer-events-none">
+            <!-- Abstract Ink Background -->
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0 100 C 20 0 50 0 100 100 Z" fill="#d1d1d1" />
+            </svg>
+        </div>
+
+        <div class="z-10 text-center max-w-5xl mx-auto">
+            <h2 class="text-xl md:text-2xl text-gray-600 mb-4 tracking-widest fade-in-up">南宋以降朱子学思想类编文本的结构、张力及其深远影响</h2>
+            <h1 class="text-4xl md:text-7xl font-bold mb-12 text-gray-900 leading-tight fade-in-up" style="font-family: 'Noto Serif SC', serif;">
+                道理规模与工夫次第<br>
+                <span class="text-3xl md:text-5xl font-light mt-4 block text-gray-700">解构朱子学的内在双螺旋</span>
+            </h1>
+            
+            <!-- Interactive DNA Visualization -->
+            <div class="helix-container my-10 fade-in-up" id="dnaCanvas">
+                <!-- JS will populate this -->
+            </div>
+
+            <div class="flex justify-center gap-12 text-xl font-bold text-gray-800 fade-in-up">
+                <div class="flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800"></span>
+                    <span>道理规模</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-red-800"></span>
+                    <span>工夫次第</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 animate-bounce">
+            <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <!-- Core Problem Section -->
+    <section id="problem" class="py-20 px-4 md:px-10 bg-white/50 relative">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center border-b-2 border-gray-200 pb-4 inline-block mx-auto w-full fade-in-up">
+                一个长期存在的迷思：<span class="text-red-800">南宋之后的朱子学是思想僵化吗？</span>
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Traditional View -->
+                <div class="concept-card bg-stone-50 p-8 rounded-lg border-l-4 border-gray-400 fade-in-up">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800">“传统观点”</h3>
+                    <p class="text-lg leading-relaxed text-gray-700 mb-4">
+                        学界长期以“是否对朱子思想有创新”为标准，认为朱子后学思想缺乏发展，趋于<span class="font-bold text-red-700">僵化</span>，最终为阳明心学兴起所取代。
+                    </p>
+                    <p class="text-gray-600 italic">
+                        这种观点往往将朱子学简化为科举制度的官方意识形态。
+                    </p>
+                </div>
+
+                <!-- Challenge View -->
+                <div class="concept-card bg-stone-50 p-8 rounded-lg border-l-4 border-red-800 fade-in-up" style="transition-delay: 0.2s;">
+                    <h3 class="text-2xl font-bold mb-6 text-red-900">“本文提出的挑战”</h3>
+                    <p class="text-lg leading-relaxed text-gray-800 mb-4">
+                        这种评价忽视了朱子学自身固有的<span class="font-bold">问题意识和内在思想结构</span>。其演变并非简单的停滞，而是在一个核心张力的驱动下，展现出强大的生命力。
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center fade-in-up">
+                <p class="text-2xl font-bold text-gray-900 bg-stone-100 inline-block px-8 py-4 rounded-full shadow-sm">
+                    如果不是僵化，那么驱动朱子学发展的内在玄机是什么？
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Framework -->
+    <section id="framework" class="py-24 px-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-stone-100 opacity-50 z-0"></div>
+        
+        <div class="max-w-6xl mx-auto relative z-10">
+            <h2 class="text-3xl md:text-4xl font-bold mb-20 text-center fade-in-up">
+                解码朱子学的核心框架：<span class="border-b-4 border-red-800 pb-1">一对相生相成的概念</span>
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <!-- Left: Scale -->
+                <div class="group cursor-pointer fade-in-up">
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-8 border-gray-800 transition-transform transform group-hover:-translate-y-2">
+                        <h3 class="text-3xl font-bold mb-2 text-gray-900">道理规模</h3>
+                        <p class="text-sm text-gray-500 mb-6 uppercase tracking-wider">The Scale of Principle</p>
+                        <ul class="space-y-4 text-lg text-gray-700">
+                            <li class="flex items-start">
+                                <span class="mr-2 text-gray-400">•</span>
+                                <span>亦称“道体规模”。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2 text-gray-400">•</span>
+                                <span>指太极、理气、心性等本原性义理。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2 text-gray-400">•</span>
+                                <span>是为学工夫的终极依据、指向和境界。<br><span class="text-sm text-gray-500">如同建筑的蓝图。</span></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right: Order -->
+                <div class="group cursor-pointer fade-in-up" style="transition-delay: 0.2s;">
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-8 border-red-800 transition-transform transform group-hover:-translate-y-2">
+                        <h3 class="text-3xl font-bold mb-2 text-red-900">工夫次第</h3>
+                        <p class="text-sm text-gray-500 mb-6 uppercase tracking-wider">The Order of Practice</p>
+                        <ul class="space-y-4 text-lg text-gray-700">
+                            <li class="flex items-start">
+                                <span class="mr-2 text-red-300">•</span>
+                                <span>亦称“用功节目”。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2 text-red-300">•</span>
+                                <span>指为学、修身、读书等落实于下学层面的具体步骤和顺序。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2 text-red-300">•</span>
+                                <span>是体会和掌握“道理规模”的必经之路。<br><span class="text-sm text-gray-500">如同施工的步骤。</span></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center max-w-3xl mx-auto fade-in-up">
+                <p class="text-xl text-gray-800 leading-relaxed bg-stone-50 p-6 rounded-lg border border-stone-200">
+                    这两者构成了朱子学思想的<span class="font-bold text-red-800">双重结构</span>。它们并非简单的先后关系，而是一种充满内在张力的互构关系，深刻塑造了南宋以降朱子学的发展图景。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Origin of Tension -->
+    <section id="origin" class="py-20 px-4 bg-stone-100">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center fade-in-up">
+                思想张力的起源：朱熹编纂《近思录》时的迟疑
+            </h2>
+            
+            <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl fade-in-up relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-gray-100 rounded-bl-full -mr-10 -mt-10 z-0"></div>
+                
+                <div class="relative z-10">
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-gray-500 mb-2">背景</h3>
+                        <p class="text-lg">淳熙二年（1175），朱熹与吕祖谦编纂《近思录》，旨在系统整理北宋理学遗产。</p>
+                    </div>
+
+                    <div class="mb-8 border-l-4 border-red-800 pl-6 py-2 bg-red-50">
+                        <h3 class="text-xl font-bold text-red-900 mb-2">核心矛盾</h3>
+                        <p class="text-lg font-medium">关于首卷是否应为“道体”卷（涉及太极、阴阳等本原问题）的争论。</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2">朱熹的顾虑</h4>
+                            <p class="text-gray-700 text-sm leading-relaxed">
+                                他认为“道体”卷“入手之处过高”，不符合“近思”——即切近日用、平易近人——的初衷。他担心初学者会“茫然不知要领”。
+                            </p>
+                            <div class="mt-4 p-4 bg-gray-100 rounded text-sm italic text-gray-600 border border-gray-200">
+                                “《近思录》首卷难看。……若只读此，则道理孤单，如顿兵坚城之下。”
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-2">吕祖谦的辩护（朱熹最终接受）</h4>
+                            <p class="text-gray-700 text-sm leading-relaxed">
+                                “义理之本原”虽难，但若学者“茫然不识其梗概，则亦何所底止？”。列于篇首是为了让学者“知其名义，有所向往”。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-10 pt-6 border-t border-gray-200">
+                        <p class="text-lg font-bold text-center text-gray-900">
+                            结论：这场争论表明，朱熹本人已深刻意识到“本原纲领”与“日用工夫”之间的张力。<br>
+                            <span class="text-red-800">理论上“规模”优先，实践上却需从“次第”入手。</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Framework Solidification -->
+    <section class="py-20 px-4">
+        <div class="max-w-5xl mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8 fade-in-up">框架的定型：朱熹对《大学》结构的诠释</h2>
+            <p class="mb-12 text-gray-600 fade-in-up">《大学章句》（与编纂《近思录》同期完成）</p>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8 fade-in-up">
+                <div class="w-full md:w-1/3 p-6 border-2 border-gray-300 rounded-lg hover:border-gray-800 transition-colors">
+                    <h3 class="text-4xl font-calligraphy mb-4">纲</h3>
+                    <p class="text-sm text-gray-500 mb-2">规模</p>
+                    <p class="text-gray-700">明明德、亲民、止于至善</p>
+                    <p class="text-xs text-gray-400 mt-2">确立宏大理想</p>
+                </div>
+                
+                <div class="text-4xl text-gray-300">→</div>
+
+                <div class="w-full md:w-1/3 p-6 border-2 border-red-200 rounded-lg hover:border-red-800 transition-colors bg-red-50/30">
+                    <h3 class="text-4xl font-calligraphy mb-4 text-red-900">格致诚正<br>修齐治平</h3>
+                    <p class="text-sm text-red-800 mb-2">次第</p>
+                    <p class="text-gray-700">具体、细密的工夫步骤</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 p-6 bg-stone-100 rounded-lg inline-block fade-in-up">
+                <p class="text-xl font-serif italic">“古人为学规模及今日用力次第，尽在此矣。”</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divergence of Thought (Interactive Tabs) -->
+    <section id="paths" class="py-24 px-4 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center fade-in-up">传承与诠释：朱子后学的思想分野</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto fade-in-up">
+                朱熹逝世后，其弟子们根据各自的理解，对“道理规模”与“工夫次第”的优先性做出了不同选择。这些文本的分类结构本身，就标示着编者所理解的思想进路。
+            </p>
+
+            <!-- Interactive Comparison Widget -->
+            <div class="bg-stone-50 rounded-xl shadow-2xl overflow-hidden fade-in-up border border-stone-200">
+                <div class="flex border-b border-stone-200">
+                    <button onclick="switchTab('scale')" id="btn-scale" class="flex-1 py-4 text-center font-bold text-lg bg-white text-gray-800 border-b-4 border-gray-800 transition-all">
+                        进路一：“道理规模”优先
+                    </button>
+                    <button onclick="switchTab('order')" id="btn-order" class="flex-1 py-4 text-center font-bold text-lg bg-stone-100 text-gray-500 hover:bg-stone-200 transition-all">
+                        进路二：“工夫次第”优先
+                    </button>
+                </div>
+
+                <div class="p-8 min-h-[400px] relative">
+                    <!-- Content for Scale Priority -->
+                    <div id="content-scale" class="transition-opacity duration-300">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-1/2">
+                                <h3 class="text-2xl font-bold mb-4 text-gray-800">核心特征</h3>
+                                <p class="text-gray-700 mb-6 leading-relaxed">
+                                    这一派的编纂者遵循《近思录》的结构，将关于宇宙本原的“道体”问题置于卷首，认为掌握性命之本原在为学中具有理论上的优先地位。
+                                </p>
+                                <h4 class="font-bold mb-2">代表文本：</h4>
+                                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                    <li>《朱子语类》（黄士毅编）</li>
+                                    <li>《晦庵先生语录类要》（叶士龙编）</li>
+                                </ul>
+                            </div>
+                            <div class="md:w-1/2 space-y-4">
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                                    <h4 class="text-center font-bold text-gray-500 mb-4">结构示例：《朱子语类》卷次</h4>
+                                    <div class="space-y-3">
+                                        <div class="p-3 bg-gray-100 rounded border-l-4 border-gray-600 font-bold">卷一：太极、理气（宇宙本原）</div>
+                                        <div class="p-3 bg-gray-50 rounded text-gray-500 pl-6">卷二：鬼神</div>
+                                        <div class="p-3 bg-gray-50 rounded text-gray-500 pl-6">卷三：性理（心、性、情）</div>
+                                        <div class="text-center text-gray-300">...</div>
+                                        <div class="p-3 bg-gray-50 rounded text-gray-500 pl-6">卷十四：为学之方（具体工夫）</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content for Order Priority -->
+                    <div id="content-order" class="hidden transition-opacity duration-300">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-1/2">
+                                <h3 class="text-2xl font-bold mb-4 text-red-900">核心特征</h3>
+                                <p class="text-gray-700 mb-6 leading-relaxed">
+                                    另一派编纂者认为，朱子学要义在于一套由低入高、由近及远的为学工夫。因此，应将切近日用的实践内容置于优先位置，以便于初学者入门。
+                                </p>
+                                <h4 class="font-bold mb-2">代表文本：</h4>
+                                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                    <li>《朱子语略》（杨与立编）</li>
+                                    <li>书名中的“略”字意在为初学者提供概要。</li>
+                                </ul>
+                            </div>
+                            <div class="md:w-1/2 space-y-4">
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-red-100">
+                                    <h4 class="text-center font-bold text-red-500 mb-4">结构示例：《朱子语略》卷次</h4>
+                                    <div class="space-y-3">
+                                        <div class="p-3 bg-red-50 rounded border-l-4 border-red-600 font-bold text-red-900">卷一：为学</div>
+                                        <div class="p-3 bg-red-50 rounded text-red-800 pl-6">卷二：心</div>
+                                        <div class="p-3 bg-red-50 rounded text-red-800 pl-6">卷三：主敬与穷理</div>
+                                        <div class="p-3 bg-red-50 rounded text-red-800 pl-6">卷四：克己、修身</div>
+                                        <div class="text-center text-gray-300">...</div>
+                                        <div class="p-3 bg-gray-100 rounded text-gray-500 pl-6">卷十一：太极、阴阳、鬼神</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Balanced Path -->
+            <div class="mt-12 bg-stone-100 p-8 rounded-xl fade-in-up">
+                <h3 class="text-xl font-bold mb-4 text-center">寻求平衡的综合路径：“性理”作为桥梁</h3>
+                <div class="flex justify-center items-center gap-4 text-center">
+                    <div class="p-4 bg-white rounded-full shadow-md w-24 h-24 flex items-center justify-center font-bold text-gray-400">太极<br>(高)</div>
+                    <div class="h-1 w-16 bg-gray-300"></div>
+                    <div class="p-6 bg-white rounded-full shadow-lg w-32 h-32 flex items-center justify-center font-bold text-2xl text-gray-800 border-2 border-yellow-600 z-10">性理</div>
+                    <div class="h-1 w-16 bg-gray-300"></div>
+                    <div class="p-4 bg-white rounded-full shadow-md w-24 h-24 flex items-center justify-center font-bold text-gray-400">工夫<br>(近)</div>
+                </div>
+                <p class="text-center mt-6 text-gray-600 max-w-2xl mx-auto text-sm">
+                    一些后学试图在两种极端进路中找到平衡点。他们既不以高深难解的“太极”开篇，也不完全从具体工夫入手，而是选择以“性理”为核心，作为沟通天道与人的中介。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Impact -->
+    <section id="impact" class="py-24 px-4 bg-stone-800 text-stone-100">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center fade-in-up text-white">
+                从文本结构到社会影响：朱子学的双重传播动力
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="bg-stone-700/50 p-8 rounded-xl border border-stone-600 fade-in-up">
+                    <div class="text-4xl mb-4 text-red-400">01</div>
+                    <h3 class="text-2xl font-bold mb-4">强调日用工夫，融入日常生活</h3>
+                    <p class="text-stone-300 leading-relaxed mb-4">
+                        “工夫次第”的优先性，使得朱子学易于为初学者掌握，与书院讲学、民间教化相结合，提倡一种与生活经验密不可分的“进学成德之法”。
+                    </p>
+                    <div class="text-sm text-stone-400 border-t border-stone-600 pt-4">
+                        关键文本：《朱子家礼》、《小学》及其注本的广泛流传。
+                    </div>
+                </div>
+
+                <div class="bg-stone-700/50 p-8 rounded-xl border border-stone-600 fade-in-up" style="transition-delay: 0.2s;">
+                    <div class="text-4xl mb-4 text-red-400">02</div>
+                    <h3 class="text-2xl font-bold mb-4">重视训蒙教育，契合科举制度</h3>
+                    <p class="text-stone-300 leading-relaxed mb-4">
+                        朱子学循序渐进的“课程”特点，与国家选拔人才的需求高度契合，成为元明清科举考试的官方哲学。这推动朱子学持续向中下层士人社会渗透。
+                    </p>
+                    <div class="text-sm text-stone-400 border-t border-stone-600 pt-4">
+                        制度化体现：《程氏家塾读书分年日程》
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Visualization -->
+            <div class="mt-20 relative fade-in-up">
+                <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-0.5 bg-stone-600 transform md:-translate-x-1/2"></div>
+                
+                <div class="relative mb-12">
+                    <div class="md:flex items-center justify-between">
+                        <div class="md:w-5/12 text-right pr-8 hidden md:block">
+                            <h4 class="text-xl font-bold text-white">《性理字训》</h4>
+                            <p class="text-stone-400">朱子弟子程端蒙编纂，早期蒙学著作。</p>
+                        </div>
+                        <div class="absolute left-0 md:left-1/2 w-4 h-4 bg-red-600 rounded-full transform -translate-x-1.5 md:-translate-x-1/2 border-2 border-stone-800"></div>
+                        <div class="md:w-5/12 pl-8 md:pl-8">
+                            <h4 class="text-xl font-bold text-white md:hidden">《性理字训》</h4>
+                            <p class="text-stone-400 md:hidden">朱子弟子程端蒙编纂，早期蒙学著作。</p>
+                            <div class="mt-2 md:mt-0 p-4 bg-stone-700 rounded border border-stone-600">
+                                <p class="text-sm">以“性理”为核心，连接高深理论与日常实践。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative mb-12">
+                    <div class="md:flex items-center justify-between flex-row-reverse">
+                        <div class="md:w-5/12 text-left pl-8 hidden md:block">
+                            <h4 class="text-xl font-bold text-white">《增广性理字训》</h4>
+                            <p class="text-stone-400">元代程若庸增补，加入“造化”一节。</p>
+                        </div>
+                        <div class="absolute left-0 md:left-1/2 w-4 h-4 bg-red-600 rounded-full transform -translate-x-1.5 md:-translate-x-1/2 border-2 border-stone-800"></div>
+                        <div class="md:w-5/12 pr-8 text-right">
+                             <h4 class="text-xl font-bold text-white md:hidden">《增广性理字训》</h4>
+                            <p class="text-stone-400 md:hidden">元代程若庸增补，加入“造化”一节。</p>
+                            <div class="mt-2 md:mt-0 p-4 bg-stone-700 rounded border border-stone-600 inline-block text-left">
+                                <p class="text-sm">为了让学者“终身向望”，再次体现“规模”与“次第”的经典张力。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section id="conclusion" class="py-24 px-4 bg-stone-100">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-5xl font-bold mb-12 fade-in-up font-serif">
+                永恒的双螺旋：<br><span class="text-red-800">张力即是生命力</span>
+            </h2>
+            
+            <p class="text-xl leading-relaxed mb-12 text-gray-800 fade-in-up">
+                朱子学之所以能主导中国思想数百年，其秘诀正在于“道理规模”与“工夫次第”之间永不消解的内在张力。
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-16 text-left">
+                <div class="p-6 bg-white rounded-lg shadow-sm border-t-4 border-gray-800 fade-in-up">
+                    <h3 class="font-bold text-lg mb-2">“道理规模”</h3>
+                    <p class="text-gray-600 text-sm">提供了崇高的理想和形上根基，保证了学问的深度和终极方向。</p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-sm border-t-4 border-red-800 fade-in-up" style="transition-delay: 0.1s;">
+                    <h3 class="font-bold text-lg mb-2 text-red-900">“工夫次第”</h3>
+                    <p class="text-gray-600 text-sm">提供了切实可行的实践路径，使其能够与教育、科举和日常生活深度结合，保证了思想的广度与社会影响力。</p>
+                </div>
+            </div>
+
+            <div class="p-8 bg-white rounded-xl shadow-lg border border-stone-200 fade-in-up">
+                <p class="text-lg md:text-xl font-medium text-gray-900 leading-relaxed">
+                    这种双重结构并非理论缺陷，而是朱子学思想体系保持活力的引擎。<br>
+                    它使得朱子学既是一种精微的哲学，更是一种不离日用常行的践履之学。
+                </p>
+                <div class="mt-6 pt-6 border-t border-gray-100">
+                    <p class="text-gray-500 text-sm">共同构成了南宋以降朱子学发展的总体图景。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-8 text-center text-gray-400 text-sm bg-stone-200">
+        <p>基于学术演示文稿重构 | 交互式网页演示</p>
+    </footer>
+
+    <script>
+        // Initialize GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Fade in animations for sections
+        const fadeElements = document.querySelectorAll('.fade-in-up');
+        fadeElements.forEach(element => {
+            gsap.fromTo(element, 
+                { opacity: 0, y: 50 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    }
+                }
+            );
+        });
+
+        // Navigation Dots Active State
+        const sections = document.querySelectorAll('section');
+        const navDots = document.querySelectorAll('.nav-dot');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navDots.forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('href').includes(current)) {
+                    dot.classList.add('active');
+                }
+            });
+        });
+
+        // Tab Switching Logic
+        function switchTab(tab) {
+            const btnScale = document.getElementById('btn-scale');
+            const btnOrder = document.getElementById('btn-order');
+            const contentScale = document.getElementById('content-scale');
+            const contentOrder = document.getElementById('content-order');
+
+            if (tab === 'scale') {
+                btnScale.classList.add('bg-white', 'text-gray-800', 'border-b-4', 'border-gray-800');
+                btnScale.classList.remove('bg-stone-100', 'text-gray-500');
+                
+                btnOrder.classList.remove('bg-white', 'text-gray-800', 'border-b-4', 'border-gray-800');
+                btnOrder.classList.add('bg-stone-100', 'text-gray-500');
+
+                contentScale.classList.remove('hidden');
+                setTimeout(() => contentScale.classList.remove('opacity-0'), 10);
+                contentOrder.classList.add('hidden', 'opacity-0');
+            } else {
+                btnOrder.classList.add('bg-white', 'text-red-800', 'border-b-4', 'border-red-800');
+                btnOrder.classList.remove('bg-stone-100', 'text-gray-500');
+                
+                btnScale.classList.remove('bg-white', 'text-gray-800', 'border-b-4', 'border-gray-800');
+                btnScale.classList.add('bg-stone-100', 'text-gray-500');
+
+                contentOrder.classList.remove('hidden');
+                setTimeout(() => contentOrder.classList.remove('opacity-0'), 10);
+                contentScale.classList.add('hidden', 'opacity-0');
+            }
+        }
+
+        // Simple DNA Helix Animation Generator
+        const dnaContainer = document.getElementById('dnaCanvas');
+        const strandCount = 20;
+        
+        for (let i = 0; i < strandCount; i++) {
+            const strand = document.createElement('div');
+            strand.className = 'helix-strand';
+            // Alternate colors
+            strand.style.background = i % 2 === 0 ? '#2c2c2c' : '#b93a32';
+            strand.style.opacity = 0.3 + (i / strandCount) * 0.5;
+            strand.style.top = `${50 + i * 15}px`;
+            strand.style.animationDelay = `${i * 0.2}s`;
+            strand.style.width = `${150 + Math.sin(i) * 20}px`;
+            
+            // Add horizontal bars to simulate DNA connections
+            const bar = document.createElement('div');
+            bar.style.position = 'absolute';
+            bar.style.height = '2px';
+            bar.style.background = '#ccc';
+            bar.style.width = '100%';
+            bar.style.top = '50%';
+            strand.appendChild(bar);
+
+            dnaContainer.appendChild(strand);
+        }
+
+    </script>
+</body>
+</html>

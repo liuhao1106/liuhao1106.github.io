@@ -66,6 +66,22 @@
           <h2 class="section-icon">📊</h2>
           <h2 class="section-title">项目</h2>
         </div>
+        
+        <!-- 项目展示卡片：道理规模与工夫次第 -->
+        <div class="project-showcase" style="display: flex; gap: 24px; background: var(--bg-card); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-md); margin-bottom: 32px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform=''; this.style.boxShadow='var(--shadow-md)'">
+          <div style="flex-shrink: 0;">
+            <img src="daoliguimoessay/pdf_images/page_001.png" alt="道理规模与工夫次第" style="width: 200px; height: 140px; object-fit: cover; object-position: top; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+          </div>
+          <div style="flex: 1;">
+            <h3 style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">道理规模与工夫次第：朱子学思想结构可视化</h3>
+            <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">基于论文《道理规模与工夫次第：朱子学类编文本的思想结构及其张力》（2025年第4期《同济大学学报（社会科学版）》）的可视化呈现项目，通过交互式图表展示朱子学的思想结构与工夫次第关系。</p>
+            <div style="display: flex; gap: 12px;">
+              <a href="daoliguimoessay/pdf_viewer.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--gradient-1); color: #fff; text-decoration: none; border-radius: 20px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">查看展示一 →</a>
+              <a href="daoliguimoessay2/index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--bg-card); color: var(--morandi-blue); border: 1px solid var(--morandi-1); text-decoration: none; border-radius: 20px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">查看展示二 →</a>
+            </div>
+          </div>
+        </div>
+        
         <div class="event-list" id="project-list">
           <!-- 项目将通过 JavaScript 动态加载 -->
         </div>
@@ -172,25 +188,28 @@
       // 渲染项目
       const projectList = document.getElementById('project-list');
       if (eventsData.projects && eventsData.projects.length > 0) {
-        projectList.innerHTML = eventsData.projects.map(item => `
+        projectList.innerHTML = eventsData.projects.map(item => {
+          const isExternal = item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'));
+          const targetAttr = isExternal ? 'target="_blank"' : '';
+          return `
           <div class="event-card project-card">
             <div class="project-content">
               <div class="project-date">${item.date}</div>
               <h3 class="project-title">
-                ${item.url ? `<a href="${item.url}" target="_blank" class="event-link">${item.title}</a>` : item.title}
+                ${item.url ? `<a href="${item.url}" ${targetAttr} class="event-link">${item.title}</a>` : item.title}
               </h3>
               <p class="project-desc">${item.description}</p>
               <span class="project-role">👤 ${item.role}</span>
             </div>
             ${item.thumbnail ? `
             <div class="project-thumbnail">
-              <a href="${item.url}" target="_blank">
+              <a href="${item.url}" ${targetAttr}>
                 <img src="${item.thumbnail}" alt="${item.title}" onerror="this.style.display='none'">
               </a>
             </div>
             ` : ''}
           </div>
-        `).join('');
+        `}).join('');
       } else {
         projectList.innerHTML = '<p class="empty-text">暂无项目</p>';
       }

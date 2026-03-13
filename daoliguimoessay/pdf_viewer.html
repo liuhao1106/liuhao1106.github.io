@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>道理规模与工夫次第：朱子学的思想结构</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.4;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #e94560;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .btn-secondary {
+            background: #0f3460;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 5px 15px rgba(15, 52, 96, 0.4);
+        }
+
+        .btn-home {
+            background: #533483;
+        }
+
+        .btn-home:hover {
+            box-shadow: 0 5px 15px rgba(83, 52, 131, 0.4);
+        }
+
+        .viewer-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            padding: 30px;
+        }
+
+        .pages-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-number {
+            color: #666;
+            font-size: 0.9rem;
+            padding: 5px 15px;
+            background: #f0f0f0;
+            border-radius: 15px;
+        }
+
+        .page-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-radius: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .viewer-container {
+                padding: 15px;
+            }
+            
+            .pages-container {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>道理规模与工夫次第：朱子学的思想结构</h1>
+        <p class="subtitle">Zhu Xi's Double Helix</p>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-secondary" onclick="fitToWidth()">适应宽度</button>
+        <button class="btn btn-secondary" onclick="fitToHeight()">适应高度</button>
+        <button class="btn btn-secondary" onclick="actualSize()">原始大小</button>
+        <a href="../index.html" class="btn btn-home">← 回主页</a>
+    </div>
+
+    <div class="viewer-container">
+        <div class="pages-container" id="pagesContainer">
+            <div class="loading">加载中...</div>
+        </div>
+    </div>
+
+    <script>
+        const totalPages = 13;
+        let zoomMode = 'fit-width';
+
+        // 初始化
+        function init() {
+            loadAllPages();
+        }
+
+        // 加载所有页面
+        function loadAllPages() {
+            const container = document.getElementById('pagesContainer');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= totalPages; i++) {
+                const pageWrapper = document.createElement('div');
+                pageWrapper.className = 'page-wrapper';
+                
+                const pageNum = document.createElement('div');
+                pageNum.className = 'page-number';
+                pageNum.textContent = `第 ${i} 页`;
+                
+                const img = document.createElement('img');
+                img.className = 'page-image';
+                img.src = `pdf_images/page_${String(i).padStart(3, '0')}.png`;
+                img.alt = `Page ${i}`;
+                img.loading = 'lazy';
+                
+                pageWrapper.appendChild(pageNum);
+                pageWrapper.appendChild(img);
+                container.appendChild(pageWrapper);
+            }
+            
+            applyZoom();
+        }
+
+        // 适应宽度
+        function fitToWidth() {
+            zoomMode = 'fit-width';
+            applyZoom();
+        }
+
+        // 适应高度
+        function fitToHeight() {
+            zoomMode = 'fit-height';
+            applyZoom();
+        }
+
+        // 原始大小
+        function actualSize() {
+            zoomMode = 'actual';
+            applyZoom();
+        }
+
+        // 应用缩放
+        function applyZoom() {
+            const images = document.querySelectorAll('.page-image');
+            
+            images.forEach(img => {
+                switch(zoomMode) {
+                    case 'fit-width':
+                        img.style.width = '100%';
+                        img.style.height = 'auto';
+                        img.style.maxHeight = 'none';
+                        break;
+                    case 'fit-height':
+                        img.style.width = 'auto';
+                        img.style.height = '80vh';
+                        img.style.maxHeight = 'none';
+                        break;
+                    case 'actual':
+                        img.style.width = 'auto';
+                        img.style.height = 'auto';
+                        img.style.maxHeight = 'none';
+                        break;
+                }
+            });
+        }
+
+        // 启动
+        init();
+    </script>
+</body>
+</html>
