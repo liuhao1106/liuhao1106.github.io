@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文章标题 · 刘昊</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- 引入 Markdown 渲染模块 -->
+  <script src="/js/markdown.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1K9BJLZK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0E1K9BJLZK');
+  </script>
+</head>
+<body>
+  <div class="container">
+    <!-- 返回按钮 -->
+    <a href="index.html" class="markdown-back">← 返回首页</a>
+    
+    <!-- Markdown 文章容器 -->
+    <div class="markdown-container">
+      <!-- 文章头部（可选） -->
+      <header class="markdown-header" id="article-header" style="display: none;">
+        <h1 id="article-title">文章标题</h1>
+        <p class="meta" id="article-meta">作者 · 日期</p>
+      </header>
+      
+      <!-- Markdown 内容区域 -->
+      <div class="markdown-body" id="markdown-content"></div>
+    </div>
+
+    <footer style="margin-top: var(--space-2xl);">
+      <p>同济大学哲学系 · 刘昊</p>
+      <p>联系邮箱：<a href="mailto:liuhao1106@tongji.edu.cn">liuhao1106@tongji.edu.cn</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // 默认 Markdown 内容（当没有外部文件时使用）
+    const defaultMarkdown = `# 欢迎使用 Markdown 文章模板
+
+这是一个示例文章，你可以通过以下几种方式使用 Markdown：
+
+## 方式一：直接内嵌 Markdown
+
+编辑此 HTML 文件，修改 \`defaultMarkdown\` 变量中的内容。
+
+## 方式二：加载外部 Markdown 文件
+
+在 URL 中添加 \`?md=文件路径.md\` 参数，例如：
+
+\`\`\`
+article-template.html?md=articles/my-article.md
+\`\`\`
+
+## 支持的 Markdown 语法
+
+### 1. 文本格式
+
+- **粗体文本**
+- *斜体文本*
+- ~~删除线~~
+- \`行内代码\`
+
+### 2. 列表
+
+无序列表：
+- 第一项
+- 第二项
+- 第三项
+
+有序列表：
+1. 第一步
+2. 第二步
+3. 第三步
+
+### 3. 引用
+
+> 这是一段引用文本。
+> 可以有多行。
+
+### 4. 代码块
+
+\`\`\`javascript
+function hello() {
+  console.log("Hello, Markdown!");
+}
+\`\`\`
+
+### 5. 表格
+
+| 姓名 | 年龄 | 职业 |
+|------|------|------|
+| 张三 | 25   | 教师 |
+| 李四 | 30   | 医生 |
+
+### 6. 链接和图片
+
+[访问首页](index.html)
+
+### 7. 分隔线
+
+---
+
+## 使用说明
+
+1. 复制此文件并重命名（如 \`my-article.html\`）
+2. 修改 \`<title>\` 标签中的标题
+3. 修改 \`defaultMarkdown\` 变量中的 Markdown 内容
+4. 或者使用 URL 参数 \`?md=your-file.md\` 加载外部文件
+
+---
+
+*祝你写作愉快！*`;
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', async function() {
+      // 获取 URL 参数
+      const urlParams = new URLSearchParams(window.location.search);
+      const mdFile = urlParams.get('md');
+      const title = urlParams.get('title');
+      const author = urlParams.get('author') || '刘昊';
+      const date = urlParams.get('date');
+      
+      // 如果有标题参数，显示文章头部
+      if (title) {
+        document.getElementById('article-header').style.display = 'block';
+        document.getElementById('article-title').textContent = title;
+        document.getElementById('article-meta').textContent = 
+          date ? `${author} · ${date}` : author;
+        document.title = `${title} · 刘昊`;
+      }
+      
+      // 初始化 Markdown 渲染器
+      await MarkdownRenderer.init();
+      
+      let markdownText = defaultMarkdown;
+      
+      // 如果指定了外部 Markdown 文件
+      if (mdFile) {
+        try {
+          const response = await fetch(mdFile);
+          if (!response.ok) {
+            throw new Error(`Failed to load ${mdFile}: ${response.status}`);
+          }
+          markdownText = await response.text();
+        } catch (error) {
+          document.getElementById('markdown-content').innerHTML = `
+            <div style="color: #c00; padding: 20px;">
+              <h3>加载失败</h3>
+              <p>无法加载文件：${mdFile}</p>
+              <p>错误信息：${error.message}</p>
+            </div>
+          `;
+          return;
+        }
+      }
+      
+      // 渲染 Markdown
+      const html = MarkdownRenderer.render(markdownText);
+      document.getElementById('markdown-content').innerHTML = html;
+      
+      // 加载代码高亮（可选）
+      MarkdownRenderer.loadHighlight('github').then(() => {
+        MarkdownRenderer.highlightCode(document.getElementById('markdown-content'));
+      }).catch(() => {
+        // 代码高亮加载失败不影响正常显示
+      });
+    });
+  </script>
+</body>
+</html>

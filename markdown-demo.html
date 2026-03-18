@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown 显示示例</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- 引入 Markdown 渲染模块 -->
+  <script src="/js/markdown.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1K9BJLZK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0E1K9BJLZK');
+  </script>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="markdown-back">← 返回首页</a>
+    
+    <div class="markdown-container">
+      <header class="markdown-header">
+        <h1>宋明理学概述</h1>
+        <p class="meta">Markdown 渲染示例</p>
+      </header>
+      
+      <div class="markdown-body" id="markdown-content"></div>
+    </div>
+
+    <footer style="margin-top: var(--space-2xl);">
+      <p>同济大学哲学系 · 刘昊</p>
+      <p>联系邮箱：<a href="mailto:liuhao1106@tongji.edu.cn">liuhao1106@tongji.edu.cn</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // Markdown 内容
+    const markdownText = `# 什么是宋明理学？
+
+**宋明理学**，又称**道学**，是宋明时期儒家哲学的主要形态。它以**理**为核心概念，探讨宇宙本体、人性善恶、修养工夫等问题。
+
+## 主要流派
+
+### 1. 程朱理学
+- **代表人物**：程颢、程颐、朱熹
+- **核心思想**：
+  - "理一分殊" - 万物各具其理，又同出一源
+  - "性即理" - 人性本善，源于天理
+  - "格物致知" - 通过穷究事物之理来获得知识
+
+### 2. 陆王心学
+- **代表人物**：陆九渊、王阳明
+- **核心思想**：
+  - "心即理" - 心即是理，不假外求
+  - "致良知" - 发明本心，恢复良知
+  - "知行合一" - 知与行不可分割
+
+## 经典语录
+
+> "存天理，灭人欲。" ——朱熹
+
+> "宇宙便是吾心，吾心即是宇宙。" ——陆九渊
+
+## 工夫次第
+
+| 阶段 | 内容 | 目的 |
+|------|------|------|
+| 小学 | 洒扫应对 | 培养基本行为规范 |
+| 大学 | 格物致知 | 穷究事物之理 |
+| 修身 | 诚意正心 | 涵养德性 |
+| 治国 | 齐家治国 | 推己及人 |
+
+## 代码示例
+
+\`\`\`javascript
+// 读取理学经典
+function readClassics(bookName) {
+  const classics = {
+    '四书章句集注': '朱熹',
+    '传习录': '王阳明',
+    '近思录': '朱熹、吕祖谦'
+  };
+  return classics[bookName] || '未知';
+}
+\`\`\`
+
+---
+
+*更多内容请参考 [中国哲学史课程](philosophy-history-ii/index.html)*`;
+
+    document.addEventListener('DOMContentLoaded', async function() {
+      // 初始化 Markdown 渲染器
+      await MarkdownRenderer.init();
+      
+      // 渲染 Markdown
+      const html = MarkdownRenderer.render(markdownText);
+      document.getElementById('markdown-content').innerHTML = html;
+      
+      // 加载代码高亮
+      MarkdownRenderer.loadHighlight('github').then(() => {
+        MarkdownRenderer.highlightCode(document.getElementById('markdown-content'));
+      });
+    });
+  </script>
+</body>
+</html>

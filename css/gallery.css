@@ -3,15 +3,15 @@
 /* 页面头部 */
 .gallery-header {
   text-align: center;
-  padding: var(--space-2xl) 0;
-  margin-bottom: var(--space-xl);
+  padding: var(--space-10) 0;
+  margin-bottom: var(--space-8);
 }
 
 .gallery-header .page-title {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-2);
   letter-spacing: 8px;
 }
 
@@ -25,15 +25,15 @@
 .gallery-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--space-lg);
+  padding: 0 var(--space-6);
 }
 
 /* 相册网格 - 瀑布流布局 */
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--space-xl);
-  padding-bottom: var(--space-2xl);
+  gap: var(--space-8);
+  padding-bottom: var(--space-10);
 }
 
 /* 相册项 */
@@ -42,7 +42,7 @@
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: all var(--transition-base);
+  transition: all var(--duration-normal) var(--ease-out);
   cursor: pointer;
 }
 
@@ -67,7 +67,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-slow);
+  transition: transform var(--duration-slow) var(--ease-out);
 }
 
 .gallery-item:hover .gallery-image-wrapper img {
@@ -76,21 +76,21 @@
 
 /* 图片信息 */
 .gallery-info {
-  padding: var(--space-lg);
+  padding: var(--space-5);
 }
 
 .gallery-title {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: var(--space-xs);
+  margin-bottom: var(--space-1);
 }
 
 .gallery-desc {
   font-size: 0.95rem;
   color: var(--text-secondary);
   line-height: 1.6;
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-4);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -102,7 +102,7 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.85rem;
-  color: var(--text-light);
+  color: var(--text-tertiary);
 }
 
 .gallery-date::before {
@@ -117,7 +117,7 @@
 .gallery-empty {
   grid-column: 1 / -1;
   text-align: center;
-  padding: var(--space-2xl);
+  padding: var(--space-10);
   color: var(--text-secondary);
   font-size: 1.1rem;
 }
@@ -137,7 +137,7 @@
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: all var(--transition-base);
+  transition: all var(--duration-normal) var(--ease-out);
 }
 
 .lightbox.active {
@@ -165,21 +165,21 @@
 .lightbox-caption {
   text-align: center;
   color: white;
-  margin-top: var(--space-lg);
+  margin-top: var(--space-5);
   max-width: 600px;
 }
 
 .lightbox-caption h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-2);
 }
 
 .lightbox-caption p {
   font-size: 1rem;
   line-height: 1.6;
   opacity: 0.9;
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-2);
 }
 
 .lightbox-date {
@@ -200,7 +200,7 @@
   color: white;
   font-size: 2rem;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--duration-fast) var(--ease-out);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,7 +223,7 @@
   color: white;
   font-size: 2rem;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--duration-fast) var(--ease-out);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -245,7 +245,7 @@
 @media (max-width: 1024px) {
   .gallery-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--space-lg);
+    gap: var(--space-6);
   }
   
   .lightbox-prev {
@@ -265,11 +265,11 @@
   
   .gallery-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--space-md);
+    gap: var(--space-4);
   }
   
   .gallery-info {
-    padding: var(--space-md);
+    padding: var(--space-4);
   }
   
   .lightbox-nav {
@@ -305,7 +305,7 @@
   }
   
   .gallery-container {
-    padding: 0 var(--space-md);
+    padding: 0 var(--space-4);
   }
 }
 
@@ -314,20 +314,20 @@
   background: linear-gradient(135deg, rgba(139, 157, 195, 0.1) 0%, rgba(196, 164, 164, 0.1) 100%);
   border: 2px dashed var(--morandi-1);
   border-radius: var(--radius-md);
-  padding: var(--space-xl);
+  padding: var(--space-6);
   text-align: center;
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-6);
 }
 
 .upload-hint h3 {
   color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-2);
 }
 
 .upload-hint p {
   color: var(--text-secondary);
   font-size: 0.95rem;
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-4);
 }
 
 .upload-hint code {
