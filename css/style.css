@@ -1476,6 +1476,11 @@ footer a:hover {
     text-align: center !important;
   }
   
+  /* 移动端隐藏桌面端导航栏 */
+  .desktop-nav {
+    display: none !important;
+  }
+  
   /* 移动端导航菜单 */
   .banner-menu-container {
     position: absolute;
@@ -1499,20 +1504,20 @@ footer a:hover {
     padding: var(--space-2) 0;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
-    min-width: 110px;
+    min-width: 90px;
     z-index: 9999;
     max-height: calc(100vh - 80px);
     overflow-y: auto;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(0, 0, 0, 0.05);
-    
+
     /* 平滑动画 */
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px) scale(0.96);
     transform-origin: top left;
-    transition: 
+    transition:
       opacity 0.25s var(--ease-out),
       visibility 0.25s var(--ease-out),
       transform 0.25s var(--ease-out);
@@ -1532,7 +1537,7 @@ footer a:hover {
     background: transparent !important;
     color: var(--text-primary) !important;
     text-decoration: none;
-    text-align: left;
+    text-align: center;
     transition: all 0.2s var(--ease-out);
     white-space: nowrap;
     line-height: 1.4;
@@ -1541,10 +1546,15 @@ footer a:hover {
   }
 
   .banner-menu-container #nav-links .nav-item:hover {
-    color: var(--accent-primary) !important;
-    background: rgba(122, 139, 158, 0.08) !important;
+    color: #3d3d3d !important;
+    background: rgba(122, 139, 158, 0.15) !important;
     border-left-color: var(--accent-primary);
-    padding-left: var(--space-5) !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .banner-menu-container #nav-links .nav-item:hover::before {
+    display: none !important;
   }
   
   .course-grid {

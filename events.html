@@ -76,8 +76,8 @@
             <h3 style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">道理规模与工夫次第：朱子学思想结构可视化</h3>
             <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">基于论文《道理规模与工夫次第：朱子学类编文本的思想结构及其张力》（2025年第4期《同济大学学报（社会科学版）》）的可视化呈现项目，通过交互式图表展示朱子学的思想结构与工夫次第关系。</p>
             <div style="display: flex; gap: 12px;">
-              <a href="daoliguimoessay/pdf_viewer.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--gradient-1); color: #fff; text-decoration: none; border-radius: 20px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">查看展示一 →</a>
-              <a href="daoliguimoessay2/index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--bg-card); color: var(--morandi-blue); border: 1px solid var(--morandi-1); text-decoration: none; border-radius: 20px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">查看展示二 →</a>
+              <a href="daoliguimoessay/pdf_viewer.html" class="btn" style="padding: 8px 16px; font-size: 0.85rem;">查看展示一 →</a>
+              <a href="daoliguimoessay2/index.html" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">查看展示二 →</a>
             </div>
           </div>
         </div>
@@ -199,7 +199,7 @@
                 ${item.url ? `<a href="${item.url}" ${targetAttr} class="event-link">${item.title}</a>` : item.title}
               </h3>
               <p class="project-desc">${item.description}</p>
-              <span class="project-role">👤 ${item.role}</span>
+              ${item.url ? `<a href="${item.url}" ${targetAttr} class="btn" style="padding: 8px 16px; font-size: 0.85rem; margin-top: 12px;">查看项目 →</a>` : ''}
             </div>
             ${item.thumbnail ? `
             <div class="project-thumbnail">
