@@ -6,6 +6,7 @@
     <title>道理规模与工夫次第：解构朱子学的内在双螺旋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
@@ -22,7 +23,37 @@
             color: var(--ink-black);
             font-family: 'Noto Serif SC', serif;
             overflow-x: hidden;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            position: relative;
+        }
+
+        /* 底纹背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/COVER.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.08;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 纸质纹理叠加 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            z-index: -1;
+            pointer-events: none;
         }
 
         .font-calligraphy {
@@ -130,15 +161,22 @@
 </head>
 <body class="antialiased">
 
-    <!-- Home Button -->
-    <a href="../index.html" class="fixed top-5 left-5 z-50 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2 text-sm font-medium">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        回主页
-    </a>
+<!-- 全局顶部导航栏 -->
+<nav class="global-nav">
+  <div class="container" style="position: relative;">
+    <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单">☰</button>
+    <div class="global-nav-inner" id="global-nav-inner">
+      <a href="/" class="nav-link">首页</a>
+      <a href="/cv.html" class="nav-link">简历</a>
+      <a href="/publications.html" class="nav-link">成果</a>
+      <a href="/courses.html" class="nav-link">课程</a>
+      <a href="/gallery.html" class="nav-link">足迹</a>
+      <a href="/events.html" class="nav-link">活动</a>
+    </div>
+  </div>
+</nav>
 
-    <!-- Navigation Dots -->
+<!-- Navigation Dots -->
     <div class="fixed right-5 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-4 hidden md:flex">
         <a href="#hero" class="nav-dot w-3 h-3 rounded-full bg-gray-400 block" title="首页"></a>
         <a href="#problem" class="nav-dot w-3 h-3 rounded-full bg-gray-400 block" title="核心问题"></a>
@@ -676,6 +714,27 @@
             dnaContainer.appendChild(strand);
         }
 
+    </script>
+    <script>
+    (function() {
+      const toggle = document.getElementById('mobile-toggle');
+      const nav = document.getElementById('global-nav-inner');
+      if (toggle && nav) {
+        toggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          nav.classList.toggle('open');
+          toggle.textContent = nav.classList.contains('open') ? '✕' : '☰';
+          toggle.setAttribute('aria-label', nav.classList.contains('open') ? '关闭菜单' : '打开菜单');
+        });
+        document.addEventListener('click', function(e) {
+          if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+            nav.classList.remove('open');
+            toggle.textContent = '☰';
+            toggle.setAttribute('aria-label', '打开菜单');
+          }
+        });
+      }
+    })();
     </script>
 </body>
 </html>

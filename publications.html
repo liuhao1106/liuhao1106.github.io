@@ -15,143 +15,148 @@
   </script>
 </head>
 <body>
-  <div class="container">
-    <!-- 顶部导航栏 -->
-    <nav class="nav-bar">
-      <a href="index.html">← 返回主页</a>
-      <div class="nav-links">
-        <a href="cv.html">个人简历</a>
-        <a href="publications.html" style="color: var(--morandi-blue); background: rgba(139, 157, 195, 0.12);">学术成果</a>
-        <a href="index.html#course-grid">开设课程</a>
-        <a href="gallery.html">足迹</a>
-        <a href="events.html">活动</a>
+
+  <!-- 全局顶部导航栏 -->
+  <nav class="global-nav">
+    <div class="container" style="position: relative;">
+      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单">☰</button>
+      <div class="global-nav-inner" id="global-nav-inner">
+        <a href="/" class="nav-link">首页</a>
+        <a href="/cv.html" class="nav-link">简历</a>
+        <a href="/publications.html" class="nav-link active">成果</a>
+        <a href="/courses.html" class="nav-link">课程</a>
+        <a href="/gallery.html" class="nav-link">足迹</a>
+        <a href="/events.html" class="nav-link">活动</a>
       </div>
-    </nav>
+    </div>
+  </nav>
+
+  <div class="container">
 
     <!-- 页面头部 -->
-    <header class="lecture-header-large" style="margin-bottom: 0;">
+    <header class="page-header">
       <h1>学术成果</h1>
-      <p class="meta">刘昊 · 同济大学哲学系</p>
+      <p class="page-meta">刘昊 · 同济大学哲学系</p>
     </header>
 
     <!-- 学术成果主体：左侧导航 + 右侧内容 -->
-    <div class="pub-layout">
+    <div class="two-col-layout">
       <!-- 左侧导航栏 -->
-      <aside class="pub-sidebar">
-        <nav class="pub-nav">
-          <a href="#books" class="pub-nav-item active">著作</a>
-          <a href="#papers" class="pub-nav-item">期刊论文</a>
-          <a href="#translations" class="pub-nav-item">译文</a>
-          <a href="#newspapers" class="pub-nav-item">报纸</a>
+      <aside class="layout-sidebar">
+        <nav class="sidebar-nav">
+          <a href="#books" class="sidebar-nav-item active">著作</a>
+          <a href="#papers" class="sidebar-nav-item">期刊论文</a>
+          <a href="#translations" class="sidebar-nav-item">译文</a>
+          <a href="#newspapers" class="sidebar-nav-item">报纸</a>
         </nav>
       </aside>
 
       <!-- 学术成果内容 -->
-      <div class="lecture-body pub-content">
-        
+      <div class="layout-main">
+
         <!-- 著作 -->
-        <section class="pub-section" id="books">
+        <section class="content-section" id="books">
           <h2>著作</h2>
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《王船山"生"的思想研究》</p>
             <p class="pub-meta">中国社会科学出版社 · 2024年6月</p>
           </div>
         </section>
 
         <!-- 期刊论文 -->
-        <section class="pub-section" id="papers">
+        <section class="content-section" id="papers">
           <h2>期刊论文</h2>
-          
-          <div class="pub-item">
+
+          <div class="pub-entry">
             <p class="pub-title">《道理规模与工夫次第：朱子学类编文本的思想结构及其张力》</p>
             <p class="pub-meta">《同济大学学报（社会科学版）》· 2025年第4期 · CSSCI</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《稿本〈柳树芳日记〉所见〈陆清献公日记〉出版过程——兼与遗存出版实物的比较》</p>
             <p class="pub-meta">《文献》· 2024年第5期 · CSSCI</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《道兼理气：朱子学理气论的经典诠释背景及其影响》</p>
             <p class="pub-meta">《哲学研究》· 2023年第7期 · CSSCI</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《书生的旧业——〈三鱼堂书目〉抄本与陆陇其的书籍世界》</p>
             <p class="pub-meta">《古典文献研究》第26卷上 · 2023年 · CSSCI</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《本一与实体——罗钦顺"理气一物"说新探》</p>
             <p class="pub-meta">《儒学与古典学评论》· 2023年</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《"形而上者"的双重视野：经典诠释下的理本与气本》</p>
             <p class="pub-meta">《哲学门》· 2022年第45期 · CSSCI</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《中晚明时代"生之谓性"解释的新动向——以阳明学为中心》</p>
             <p class="pub-meta">《浙江社会科学》· 2020年第7期 · CSSCI</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《理气虽不相离，亦不曾相杂——明代朱子学理气论的一项新了解》</p>
             <p class="pub-meta">《中国哲学史》· 2020年第5期 · CSSCI</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《关于〈阳明先生文录〉的文献学新考察》</p>
             <p class="pub-meta">《中国哲学史》· 2018年第3期 · CSSCI</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《十年来宋明理学研究的回顾与展望——以朱子学和阳明学为中心》</p>
             <p class="pub-meta">《孔子研究》· 2018年第4期 · CSSCI（与吴震合著）</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《气论视野下的性善论重构——基于王船山"生"的思想之考察》</p>
             <p class="pub-meta">《杭州师范大学学报（社会科学版）》· 2017年第1期</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《论阳明学的良知实体化》</p>
             <p class="pub-meta">《学术月刊》· 2019年第11期 · CSSCI（与吴震合著）</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《四十年来中国大陆宋明理学研究的典范——陈来教授的宋明理学研究》</p>
             <p class="pub-meta">《贵州文史丛刊》· 2019年第1期</p>
           </div>
         </section>
 
         <!-- 译文 -->
-        <section class="pub-section" id="translations">
+        <section class="content-section" id="translations">
           <h2>译文</h2>
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《儒家伦理哲学的新旧基础——以伊藤仁斋、戴震和丁若镛为例》</p>
             <p class="pub-meta">[美]艾文贺 著，刘昊等译（第二译者）· 《社会科学战线》· 2019年第2期 · CSSCI</p>
           </div>
         </section>
 
         <!-- 报纸 -->
-        <section class="pub-section" id="newspapers">
+        <section class="content-section" id="newspapers">
           <h2>报纸</h2>
-          
-          <div class="pub-item">
+
+          <div class="pub-entry">
             <p class="pub-title">《回归古典的经世之思：明清气学的内在精神》</p>
             <p class="pub-meta">《中国社会科学报》· 2025年5月28日</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《重回经典诠释：气学研究的反思与新视野》</p>
             <p class="pub-meta">《中国社会科学报》· 2024年12月10日</p>
           </div>
 
-          <div class="pub-item">
+          <div class="pub-entry">
             <p class="pub-title">《探索年谱的多重记忆性质》</p>
             <p class="pub-meta">《社会科学报》· 2023年12月7日 · 第008版</p>
           </div>
@@ -166,122 +171,26 @@
     </footer>
   </div>
 
-  <style>
-    /* 学术成果页面布局 */
-    .pub-layout {
-      display: flex;
-      gap: 32px;
-      margin-top: 32px;
-    }
-    
-    /* 左侧导航栏 */
-    .pub-sidebar {
-      width: 180px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 100px;
-      align-self: flex-start;
-    }
-    
-    .pub-nav {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      box-shadow: var(--shadow-md);
-    }
-    
-    .pub-nav-item {
-      display: block;
-      padding: 12px 16px;
-      margin-bottom: 4px;
-      border-radius: var(--radius-md);
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      font-weight: 500;
-      transition: all var(--transition-fast);
-      text-decoration: none;
-    }
-    
-    .pub-nav-item:hover {
-      background: rgba(139, 157, 195, 0.1);
-      color: var(--morandi-blue);
-    }
-    
-    .pub-nav-item.active {
-      background: var(--gradient-1);
-      color: white;
-    }
-    
-    /* 右侧内容区 */
-    .pub-content {
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .pub-section {
-      margin-bottom: 48px;
-      scroll-margin-top: 120px;
-    }
-    
-    .pub-section h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 28px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid var(--morandi-1);
-    }
-    
-    .pub-item {
-      margin-bottom: 24px;
-      padding-left: 16px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid rgba(139, 157, 195, 0.15);
-    }
-    
-    .pub-item:last-child {
-      border-bottom: none;
-    }
-    
-    .pub-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-      line-height: 1.6;
-    }
-    
-    .pub-meta {
-      font-size: 0.9rem;
-      color: var(--text-light);
-      margin-bottom: 8px;
-    }
-    
-    /* 响应式设计 */
-    @media (max-width: 900px) {
-      .pub-layout {
-        flex-direction: column;
+  <script>
+    (function() {
+      const toggle = document.getElementById('mobile-toggle');
+      const nav = document.getElementById('global-nav-inner');
+      if (toggle && nav) {
+        toggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          nav.classList.toggle('open');
+          toggle.textContent = nav.classList.contains('open') ? '✕' : '☰';
+          toggle.setAttribute('aria-label', nav.classList.contains('open') ? '关闭菜单' : '打开菜单');
+        });
+        document.addEventListener('click', function(e) {
+          if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+            nav.classList.remove('open');
+            toggle.textContent = '☰';
+            toggle.setAttribute('aria-label', '打开菜单');
+          }
+        });
       }
-      
-      .pub-sidebar {
-        width: 100%;
-        position: relative;
-        top: 0;
-      }
-      
-      .pub-nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        padding: 12px;
-      }
-      
-      .pub-nav-item {
-        margin-bottom: 0;
-        padding: 8px 16px;
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+    })();
+  </script>
 </body>
 </html>

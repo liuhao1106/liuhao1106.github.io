@@ -16,18 +16,22 @@
   </script>
 </head>
 <body>
-  <div class="container">
-    <!-- 顶部导航栏 -->
-    <nav class="nav-bar">
-      <a href="index.html">← 返回主页</a>
-      <div class="nav-links">
-        <a href="cv.html">个人简历</a>
-        <a href="publications.html">学术成果</a>
-        <a href="index.html#course-grid">开设课程</a>
-        <a href="gallery.html" style="color: var(--morandi-blue); background: rgba(139, 157, 195, 0.12);">足迹</a>
-        <a href="events.html">活动</a>
+  <!-- 全局顶部导航栏 -->
+  <nav class="global-nav">
+    <div class="container" style="position: relative;">
+      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单">☰</button>
+      <div class="global-nav-inner" id="global-nav-inner">
+        <a href="/" class="nav-link">首页</a>
+        <a href="/cv.html" class="nav-link">简历</a>
+        <a href="/publications.html" class="nav-link">成果</a>
+        <a href="/courses.html" class="nav-link">课程</a>
+        <a href="/gallery.html" class="nav-link active">足迹</a>
+        <a href="/events.html" class="nav-link">活动</a>
       </div>
-    </nav>
+    </div>
+  </nav>
+
+  <div class="container">
 
     <!-- 页面标题 -->
     <header class="gallery-header">
@@ -179,6 +183,27 @@
 
     // 页面加载完成后初始化
     document.addEventListener('DOMContentLoaded', loadPhotos);
+  </script>
+  <script>
+    (function() {
+      const toggle = document.getElementById('mobile-toggle');
+      const nav = document.getElementById('global-nav-inner');
+      if (toggle && nav) {
+        toggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          nav.classList.toggle('open');
+          toggle.textContent = nav.classList.contains('open') ? '✕' : '☰';
+          toggle.setAttribute('aria-label', nav.classList.contains('open') ? '关闭菜单' : '打开菜单');
+        });
+        document.addEventListener('click', function(e) {
+          if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+            nav.classList.remove('open');
+            toggle.textContent = '☰';
+            toggle.setAttribute('aria-label', '打开菜单');
+          }
+        });
+      }
+    })();
   </script>
 </body>
 </html>

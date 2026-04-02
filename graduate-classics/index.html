@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中国思想原典选读 · 2026春</title>
+  <title>中国思想原典选读 · 刘昊</title>
   <link rel="stylesheet" href="/css/style.css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0E1K9BJLZK"></script>
@@ -14,41 +14,43 @@
     gtag('config', 'G-0E1K9BJLZK');
   </script>
 </head>
-<body>
-  <div class="container">
-    <!-- 导航栏 -->
-    <nav class="nav-bar">
-      <a href="/index.html">← 返回主页</a>
-      <div class="nav-links">
-        <a href="#course-info">课程信息</a>
-        <a href="#course-requirements">课程要求</a>
-        <a href="#course-history">课程沿革</a>
-        <a href="#course-syllabus">课程大纲</a>
-        <a href="#course-archive">历史课程</a>
-      </div>
-    </nav>
+<body class="course-page">
 
-    <!-- 课程标题Banner -->
-    <header class="home-header bento-item span-4" style="min-height: 280px; position: relative; margin-bottom: 32px;">
-      <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('/images/banner-lighthouse.jpg'); background-size: cover; background-position: center; opacity: 0.75; filter: blur(4px); transform: scale(1.05);"></div>
-      <div class="header-content">
-        <h1>中国思想原典选读</h1>
-        <p class="subtitle">2026春季学期 · 周一5-6节 · 彰武北大楼212</p>
+  <!-- 全局顶部导航栏 -->
+  <nav class="global-nav">
+    <div class="container" style="position: relative;">
+      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单">☰</button>
+      <div class="global-nav-inner" id="global-nav-inner">
+        <a href="/" class="nav-link">首页</a>
+        <a href="/cv.html" class="nav-link">简历</a>
+        <a href="/publications.html" class="nav-link">成果</a>
+        <a href="/courses.html" class="nav-link active">课程</a>
+        <a href="/gallery.html" class="nav-link">足迹</a>
+        <a href="/events.html" class="nav-link">活动</a>
       </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- 课程标题区域 -->
+    <header class="course-header">
+      <h1>中国思想原典选读</h1>
+      <p class="subtitle">2026春季学期 · 周一5-6节 · 彰武北大楼212</p>
     </header>
 
     <!-- 课程简介 -->
-    <section class="section" style="margin-bottom: 32px;">
-      <h2 class="section-title">课程简介</h2>
-      <p style="color: var(--text-secondary); line-height: 1.8;">
+    <section class="course-section" id="course-info">
+      <h2>课程简介</h2>
+      <p>
         本课程旨在引导学生从中国哲学史研究的基本方法出发，掌握宋明理学研究的基本方法与文献，理解理学经典文本的脉络与现代学术研究之间的张力，从研究视野、方法等角度进一步反思宋明理学乃至中国哲学研究的得失。
       </p>
     </section>
 
     <!-- 课程信息 -->
-    <section id="course-info" class="section" style="margin-bottom: 32px;">
-      <h2 class="section-title">基本信息</h2>
-      <div class="info-list">
+    <section class="course-section" id="course-meta">
+      <h2>基本信息</h2>
+      <ul class="info-list">
         <li>
           <span class="label">课程名称</span>
           <span class="value">中国思想原典选读（宋明理学研究的方法与文献）</span>
@@ -73,107 +75,63 @@
           <span class="label">授课方式</span>
           <span class="value">教师主讲+学生主题发言+教师评议+开放式讨论</span>
         </li>
-      </div>
+      </ul>
     </section>
 
     <!-- 课程要求 -->
-    <section id="course-requirements" class="section" style="margin-bottom: 32px;">
-      <h2 class="section-title">课程要求</h2>
-      <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+    <section class="course-section" id="course-requirements">
+      <h2>课程要求</h2>
+      <p>
         每次课程先由教师主讲，然后由1名同学围绕必读材料，结合参考材料做20分钟主题报告，教师与其他同学参与自由讨论。
       </p>
-      <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
-        <li style="display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(135deg, rgba(139, 157, 195, 0.1) 0%, rgba(168, 181, 196, 0.1) 100%); border-radius: 12px;">
-          <span style="font-size: 1.5rem;">📝</span>
-          <div>
-            <p style="font-weight: 700; color: var(--text-primary);">主题报告</p>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">主题报告的选题可参考教师提供的题目，也可在每节课程的范围内自由选择主题</p>
-          </div>
-        </li>
-        <li style="display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(135deg, rgba(196, 164, 164, 0.1) 0%, rgba(212, 196, 176, 0.1) 100%); border-radius: 12px;">
-          <span style="font-size: 1.5rem;">📄</span>
-          <div>
-            <p style="font-weight: 700; color: var(--text-primary);">期末作业</p>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">期末撰写一篇5000字左右的读书报告或学术书评，与课程内容相关</p>
-          </div>
-        </li>
+      <ul>
+        <li><strong>主题报告</strong>：主题报告的选题可参考教师提供的题目，也可在每节课程的范围内自由选择主题</li>
+        <li><strong>期末作业</strong>：期末撰写一篇5000字左右的读书报告或学术书评，与课程内容相关</li>
       </ul>
-      <div style="margin-top: 16px; padding: 12px; background: rgba(201, 184, 168, 0.15); border-radius: 12px; border-left: 4px solid var(--morandi-sand);">
-        <p style="color: var(--text-secondary); font-size: 0.9rem;">
-          <strong>阅读要求：</strong>阅读所有必读材料，泛读参考材料。
-        </p>
-      </div>
+      <p>
+        <strong>阅读要求：</strong>阅读所有必读材料，泛读参考材料。
+      </p>
     </section>
 
     <!-- 课程沿革 -->
-    <section id="course-history" class="section" style="margin-bottom: 32px;">
-      <h2 class="section-title">课程沿革</h2>
-      <div style="display: grid; gap: 24px;">
-        <div style="display: flex; gap: 16px; align-items: flex-start;">
-          <div style="min-width: 80px; text-align: center;">
-            <span style="display: inline-block; padding: 8px 16px; background: var(--gradient-1); color: white; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">2026</span>
-          </div>
-          <div>
-            <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">课程更新</h4>
-            <p style="color: var(--text-secondary); line-height: 1.6;">2026年春季学期，课程大纲暂定为阅读《张子正蒙注》。</p>
-          </div>
-        </div>
-        <div style="display: flex; gap: 16px; align-items: flex-start;">
-          <div style="min-width: 80px; text-align: center;">
-            <span style="display: inline-block; padding: 8px 16px; background: var(--gradient-2); color: white; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">2025</span>
-          </div>
-          <div>
-            <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">课程改革</h4>
-            <p style="color: var(--text-secondary); line-height: 1.6;">由于培养方案调整，此课程内容已经移植并更新到研究生「宋明理学」课程。</p>
-          </div>
-        </div>
-        <div style="display: flex; gap: 16px; align-items: flex-start;">
-          <div style="min-width: 80px; text-align: center;">
-            <span style="display: inline-block; padding: 8px 16px; background: var(--gradient-3); color: white; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">2023</span>
-          </div>
-          <div>
-            <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">首次开设</h4>
-            <p style="color: var(--text-secondary); line-height: 1.6;">首次接手开设此门课程，以阅读《朱子语类》和朱子学著作为核心。</p>
-          </div>
-        </div>
-      </div>
+    <section class="course-section" id="course-history">
+      <h2>课程沿革</h2>
+      <ul>
+        <li><strong>2026年</strong>：课程大纲暂定为阅读《张子正蒙注》。</li>
+        <li><strong>2025年</strong>：由于培养方案调整，此课程内容已经移植并更新到研究生「宋明理学」课程。</li>
+        <li><strong>2023年</strong>：首次接手开设此门课程，以阅读《朱子语类》和朱子学著作为核心。</li>
+      </ul>
     </section>
 
     <!-- 课程大纲 -->
-    <section id="course-syllabus" class="section" style="margin-bottom: 32px;">
-      <h2 class="section-title">课程大纲</h2>
-      <div class="syllabus-detail">
-        <div class="syllabus-week">
-          <h3 class="week-title">暂定内容</h3>
-          <div class="week-content">
-            <p style="color: var(--text-secondary); line-height: 1.8;">
-              本课程大纲暂定为阅读<strong>《张子正蒙注》</strong>，其他内容待更新。
-            </p>
-          </div>
+    <section class="course-section" id="course-syllabus">
+      <h2>课程大纲</h2>
+      <div class="syllabus-week">
+        <h3 class="week-title">暂定内容</h3>
+        <div class="week-content">
+          <p>
+            本课程大纲暂定为阅读<strong>《张子正蒙注》</strong>，其他内容待更新。
+          </p>
         </div>
       </div>
     </section>
 
     <!-- 历史课程 -->
-    <section id="course-archive" class="section" style="margin-bottom: 32px;">
-      <h2 class="section-title">历史课程</h2>
-      <ul class="lecture-list">
-        <li class="lecture-item">
-          <div class="lecture-header">
-            <span class="lecture-title">2024年秋季学期</span>
-            <span class="lecture-week">已结课</span>
-          </div>
-          <p class="lecture-desc">中国思想原典选读（宋明理学研究的方法与文献），周三7-8节，1-17周。</p>
-          <div class="lecture-links">
-            <a href="/graduate-classics/2024-fall/">查看课程大纲 →</a>
-          </div>
-        </li>
-      </ul>
+    <section class="course-section" id="course-archive">
+      <h2>历史课程</h2>
+      <div class="course-entry">
+        <div class="course-entry-header">
+          <h3>2024年秋季学期</h3>
+          <span class="course-tag">已结课</span>
+        </div>
+        <p class="course-entry-desc">中国思想原典选读（宋明理学研究的方法与文献），周三7-8节，1-17周。</p>
+        <a href="/graduate-classics/2024-fall/" class="course-entry-link">查看课程大纲 →</a>
+      </div>
     </section>
 
     <!-- 分页导航 -->
     <nav class="pagination">
-      <a href="/index.html#course-grid" class="prev">返回开设课程</a>
+      <a href="/courses.html" class="prev">← 返回开设课程</a>
     </nav>
 
     <footer>
@@ -181,5 +139,27 @@
       <p><a href="mailto:liuhao1106@tongji.edu.cn">联系邮箱</a></p>
     </footer>
   </div>
+
+  <script>
+    (function() {
+      const toggle = document.getElementById('mobile-toggle');
+      const nav = document.getElementById('global-nav-inner');
+      if (toggle && nav) {
+        toggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          nav.classList.toggle('open');
+          toggle.textContent = nav.classList.contains('open') ? '✕' : '☰';
+          toggle.setAttribute('aria-label', nav.classList.contains('open') ? '关闭菜单' : '打开菜单');
+        });
+        document.addEventListener('click', function(e) {
+          if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+            nav.classList.remove('open');
+            toggle.textContent = '☰';
+            toggle.setAttribute('aria-label', '打开菜单');
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
