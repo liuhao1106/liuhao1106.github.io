@@ -1069,11 +1069,14 @@ button:focus-visible {
 /* 课程页面移动端适配 */
 @media (max-width: 640px) {
   .course-page .container {
-    padding-top: 80px;
+    padding-top: var(--space-4);
   }
   
   .course-page .global-nav {
-    padding: var(--space-3) 0;
+    padding: var(--space-2) 0;
+    background: var(--bg-content);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
   
   .course-page .global-nav-inner {
@@ -1087,10 +1090,10 @@ button:focus-visible {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-light);
-    padding: var(--space-4);
+    padding: var(--space-3);
     gap: 0;
     z-index: 101;
-    max-height: calc(100vh - 60px);
+    max-height: calc(100vh - 50px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -1108,8 +1111,8 @@ button:focus-visible {
   }
   
   .course-header {
-    padding: var(--space-6) 0 var(--space-6);
-    margin-bottom: var(--space-6);
+    padding: var(--space-4) 0 var(--space-4);
+    margin-bottom: var(--space-4);
   }
   
   .course-header h1 {
