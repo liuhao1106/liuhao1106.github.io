@@ -942,7 +942,10 @@ footer a:hover {
     border-bottom: 1px solid var(--border-light);
     padding: var(--space-4);
     gap: 0;
-    z-index: 99;
+    z-index: 101;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .global-nav-inner.open {
@@ -1058,28 +1061,64 @@ button:focus-visible {
 
 /* ===== 课程页面专用样式 ===== */
 
-/* 课程页面导航栏 - 与主页保持一致 */
-.course-page .global-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--bg-content);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-light);
-  padding: var(--space-5) 0;
-}
-
-.course-page .global-nav-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-8);
-}
-
 /* 课程页面内容区域 */
 .course-page .container {
   padding-top: var(--space-6);
+}
+
+/* 课程页面移动端适配 */
+@media (max-width: 640px) {
+  .course-page .container {
+    padding-top: 80px;
+  }
+  
+  .course-page .global-nav {
+    padding: var(--space-3) 0;
+  }
+  
+  .course-page .global-nav-inner {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--bg-content);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-light);
+    padding: var(--space-4);
+    gap: 0;
+    z-index: 101;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .course-page .global-nav-inner.open {
+    display: flex;
+  }
+  
+  .course-page .mobile-nav-toggle {
+    display: flex;
+    position: absolute;
+    right: var(--space-4);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .course-header {
+    padding: var(--space-6) 0 var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+  
+  .course-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .course-header .subtitle {
+    font-size: 0.85rem;
+  }
 }
 
 /* 课程页面标题区域 - 移除背景图片，使用简洁样式 */
