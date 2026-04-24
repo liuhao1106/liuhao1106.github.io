@@ -3174,7 +3174,38 @@
                 lifeTraceTrackLines.push(line);
             }
 
-            // 绘制标记
+            // 绘制标记 - 为同一地点的事件添加偏移，避免完全重叠
+            const locationCounts = {};
+            const locationOffsets = {};
+            
+            lifeTraceEvents.forEach((e, idx) => {
+                const locKey = `${e.lat.toFixed(2)},${e.lng.toFixed(2)}`;
+                if (!locationCounts[locKey]) {
+                    locationCounts[locKey] = 0;
+                    locationOffsets[locKey] = [];
+                }
+                locationCounts[locKey]++;
+            });
+            
+            // 为每个地点生成偏移量
+            Object.keys(locationCounts).forEach(locKey => {
+                const count = locationCounts[locKey];
+                if (count > 1) {
+                    const offsetStep = 0.05; // 偏移步长
+                    const offsets = [];
+                    for (let i = 0; i < count; i++) {
+                        const angle = (2 * Math.PI * i) / count;
+                        offsets.push({
+                            lat: Math.sin(angle) * offsetStep,
+                            lng: Math.cos(angle) * offsetStep
+                        });
+                    }
+                    locationOffsets[locKey] = offsets;
+                }
+            });
+            
+            const locationIndexCounters = {};
+            
             lifeTraceEvents.forEach((e, idx) => {
                 const color = lifeTraceColorMap[e.type] || '#555';
                 const isEndpoint = (e.type === '出生' || e.type === '逝世');
@@ -3190,7 +3221,22 @@
                     <p class="desc">${e.event}</p>
                 </div>`;
 
-                const marker = L.circleMarker([e.lat, e.lng], {
+                // 计算偏移后的位置
+                const locKey = `${e.lat.toFixed(2)},${e.lng.toFixed(2)}`;
+                let lat = e.lat;
+                let lng = e.lng;
+                
+                if (locationOffsets[locKey] && locationOffsets[locKey].length > 0) {
+                    if (!locationIndexCounters[locKey]) {
+                        locationIndexCounters[locKey] = 0;
+                    }
+                    const offset = locationOffsets[locKey][locationIndexCounters[locKey]];
+                    lat += offset.lat;
+                    lng += offset.lng;
+                    locationIndexCounters[locKey]++;
+                }
+
+                const marker = L.circleMarker([lat, lng], {
                     radius: radius, 
                     color: color, 
                     weight: weight,
@@ -3204,6 +3250,8 @@
                 marker._index = idx;
                 marker._originalColor = color;
                 marker._originalRadius = radius;
+                marker._originalLat = e.lat;
+                marker._originalLng = e.lng;
                 lifeTraceMarkers.push(marker);
             });
 
@@ -3304,14 +3352,32 @@
         function selectLifeTraceEvent(index) {
             const marker = lifeTraceMarkers[index];
             const eventItem = document.querySelector(`.life-trace-event-item[data-index="${index}"]`);
+            const event = lifeTraceEvents[index];
             
-            if (!marker) return;
+            if (!marker || !event) return;
+            
+            // 清除之前的高亮定时器
+            if (window._highlightTimer) {
+                clearTimeout(window._highlightTimer);
+            }
             
             // 高亮地图标记
             const highlightColor = '#FFD700';
             const baseRadius = marker._originalRadius;
             const targetRadius = baseRadius + 8;
             
+            // 为当前事件生成特定的 popup 内容
+            const color = lifeTraceColorMap[event.type] || '#555';
+            const popupHtml = `<div class="life-trace-popup-content">
+                <h4 style="border-color:${color}">${event.year}年 · ${event.loc}</h4>
+                <div class="meta">
+                    <span>${event.age}岁</span>
+                    <span style="color:${color};font-weight:500;">${event.type}</span>
+                </div>
+                <p class="desc">${event.event}</p>
+            </div>`;
+            
+            marker.setPopupContent(popupHtml);
             marker.setStyle({
                 color: highlightColor,
                 weight: 5,
@@ -3321,8 +3387,8 @@
             marker.setRadius(targetRadius);
             marker.openPopup();
             
-            // 地图中心移动到标记
-            lifeTraceMap.panTo(marker.getLatLng(), {animate: true, duration: 1});
+            // 地图中心移动到标记（使用 flyTo 获得更好的动画效果）
+            lifeTraceMap.flyTo(marker.getLatLng(), 10, {animate: true, duration: 1.5});
             
             // 高亮列表项
             document.querySelectorAll('.life-trace-event-item').forEach(item => {
@@ -3334,11 +3400,11 @@
             }
             
             // 更新滑块位置
-            lifeTraceSlider.value = lifeTraceEvents[index].year;
-            updateLifeTraceMarkers(lifeTraceEvents[index].year);
+            lifeTraceSlider.value = event.year;
+            updateLifeTraceMarkers(event.year);
             
-            // 1.5 秒后恢复
-            setTimeout(() => {
+            // 3 秒后恢复
+            window._highlightTimer = setTimeout(() => {
                 marker.setStyle({
                     color: marker._originalColor,
                     weight: marker._type === '出生' || marker._type === '逝世' ? 3 : 2,
@@ -3347,7 +3413,7 @@
                 });
                 marker.setRadius(baseRadius);
                 marker.closePopup();
-            }, 1500);
+            }, 3000);
         }
 
         function showAll() {
