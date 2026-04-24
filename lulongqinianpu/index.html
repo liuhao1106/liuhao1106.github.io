@@ -12,6 +12,8 @@
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
     <style>
         :root {
             /* 古典怀旧色调 - 宣纸、墨色、朱砂 */
@@ -1814,6 +1816,10 @@
     </style>
 </head>
 <body>
+    <!-- 加载自定义模块（必须在主脚本之前） -->
+    <script src="assets/js/modules/dataService.js"></script>
+    <script src="assets/js/modules/errorHandler.js"></script>
+    <script src="assets/js/modules/loadingManager.js"></script>
     <header class="header">
         <div class="header-bg-calligraphy"></div>
         <div class="header-content">
@@ -2904,24 +2910,29 @@
             });
         }
 
-        // 异步加载弟子记录数据
+        // 使用 DataService 加载弟子记录数据
         async function loadDisciplesRecords() {
             try {
-                const response = await fetch('disciples_records.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                disciplesRecords = await response.json();
+                disciplesRecords = await dataService.loadData('disciples_records.json');
+                errorHandler.showSuccessToast('弟子记录加载完成', 2000);
             } catch (error) {
-                console.error('加载弟子记录数据失败:', error);
-                // 显示错误提示
+                errorHandler.handleError({
+                    type: 'DATA_LOAD_ERROR',
+                    userMessage: '弟子记录数据加载失败，请检查网络连接',
+                    originalError: error.message,
+                    url: 'disciples_records.json'
+                });
+                
+                // 显示错误提示在容器中
                 const container = document.getElementById('chronicleContainer');
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: var(--ink-gray);">
-                        <p>数据加载失败，请刷新页面重试</p>
-                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">错误信息: ${error.message}</p>
-                    </div>
-                `;
+                if (container) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: var(--ink-gray);">
+                            <p>📚 数据加载失败</p>
+                            <p style="font-size: 0.875rem; margin-top: 0.5rem;">请检查网络连接后刷新页面重试</p>
+                        </div>
+                    `;
+                }
             }
         }
 
@@ -2939,11 +2950,10 @@
         let network = null;
         let networkData = null;
 
-        // 初始化网络图
+        // 使用 DataService 初始化网络图
         async function initNetwork() {
             try {
-                const response = await fetch('teacher_student_network.json');
-                const data = await response.json();
+                const data = await dataService.loadData('teacher_student_network.json');
 
                 // 创建节点和边的数据集
                 const nodes = new vis.DataSet(data.nodes.map(node => ({
@@ -3028,13 +3038,22 @@
                 });
 
             } catch (error) {
-                console.error('加载网络图数据失败:', error);
-                document.getElementById('networkContainer').innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: var(--ink-gray);">
-                        <p>网络图数据加载失败</p>
-                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">错误信息: ${error.message}</p>
-                    </div>
-                `;
+                errorHandler.handleError({
+                    type: 'DATA_LOAD_ERROR',
+                    userMessage: '网络图数据加载失败',
+                    originalError: error.message,
+                    url: 'teacher_student_network.json'
+                });
+                
+                const container = document.getElementById('networkContainer');
+                if (container) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: var(--ink-gray);">
+                            <p>🕸️ 网络图数据加载失败</p>
+                            <p style="font-size: 0.875rem; margin-top: 0.5rem;">请检查网络连接后刷新页面重试</p>
+                        </div>
+                    `;
+                }
             }
         }
 
@@ -3122,18 +3141,20 @@
             '1690-1693': '御史与晚年归里（1690—1693）'
         };
 
-        // 异步加载 JSON 数据
+        // 使用 DataService 加载行迹图数据
         async function loadLifeTraceData() {
             try {
-                const response = await fetch('lulonqgqilife/陆陇其年谱结构化数据.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const rawData = await response.json();
+                const rawData = await dataService.loadData('lulonqgqilife/陆陇其年谱结构化数据.json');
                 lifeTraceEvents = mapEventData(rawData);
                 initLifeTraceMap();
+                errorHandler.showSuccessToast('行迹图数据加载完成', 2000);
             } catch (error) {
-                console.error('加载行迹图数据失败:', error);
+                errorHandler.handleError({
+                    type: 'DATA_LOAD_ERROR',
+                    userMessage: '行迹图数据加载失败',
+                    originalError: error.message,
+                    url: 'lulonqgqilife/陆陇其年谱结构化数据.json'
+                });
             }
         }
 
