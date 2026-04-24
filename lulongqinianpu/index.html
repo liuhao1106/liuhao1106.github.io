@@ -1,0 +1,3508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寻踪陆陇其</title>
+    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/ol@8.2.0/ol.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/ol@8.2.0/dist/ol.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* 古典怀旧色调 - 宣纸、墨色、朱砂 */
+            --ink-black: #1a1a1a;
+            --ink-gray: #4a4a4a;
+            --paper-cream: #f5f0e8;
+            --paper-aged: #e8e0d0;
+            --paper-dark: #d4c8b8;
+            --accent-teal: #2d5a5a;
+            --accent-burgundy: #8b3a3a;
+            --accent-gold: #b8860b;
+            --cinnabar: #c41e3a;
+            --ink-wash: rgba(26, 26, 26, 0.03);
+            --shadow-soft: 0 4px 20px rgba(26, 26, 26, 0.08);
+            --shadow-card: 0 2px 12px rgba(26, 26, 26, 0.06);
+            --border-classical: 1px solid var(--paper-dark);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: #f5f0e6;
+            color: var(--ink-black);
+            line-height: 1.8;
+            min-height: 100vh;
+            /* 中式古籍内页背景图 */
+            background-image: url('橙汁视觉 中式古籍内页素材 (10).jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        .header {
+            background: 
+                linear-gradient(180deg, rgba(245, 240, 230, 0.92) 0%, rgba(235, 225, 210, 0.88) 100%),
+                url('橙汁视觉 中式古籍内页素材 (10).jpg');
+            background-size: cover;
+            background-position: center top;
+            color: #2c241b;
+            padding: 5rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px double #a08060;
+            box-shadow: 
+                0 2px 10px rgba(44, 36, 27, 0.1),
+                inset 0 -10px 30px rgba(44, 36, 27, 0.05);
+            overflow: hidden;
+        }
+
+        /* 陆陇其手书背景 */
+        .header-bg-calligraphy {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 80%;
+            background: url('lujiashu.png') center/contain no-repeat;
+            opacity: 0.18;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 顶部双层边框装饰 */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 5%;
+            right: 5%;
+            height: calc(100% - 30px);
+            border: 1px solid rgba(160, 128, 96, 0.3);
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 内层细边框 */
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: calc(5% + 5px);
+            right: calc(5% + 5px);
+            height: calc(100% - 40px);
+            border: 1px solid rgba(160, 128, 96, 0.2);
+            border-radius: 1px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 1.5rem;
+        }
+
+        .header h1 {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', 'STSong', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+            position: relative;
+            display: inline-block;
+            padding: 0 2rem;
+        }
+
+        /* 标题装饰线 */
+        .header h1::before,
+        .header h1::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #a08060, transparent);
+        }
+
+        .header h1::before {
+            left: -20px;
+        }
+
+        .header h1::after {
+            right: -20px;
+        }
+
+        /* 标题上方小装饰 */
+        .header-decoration {
+            font-size: 1.5rem;
+            color: #a08060;
+            letter-spacing: 0.5em;
+            margin-bottom: 0.5rem;
+            opacity: 0.6;
+        }
+
+        .header .subtitle {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', 'STSong', serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            margin-top: 1rem;
+            color: #5a4a3a;
+            font-weight: 500;
+        }
+
+        .header .source {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.85rem;
+            margin-top: 2rem;
+            font-style: italic;
+            letter-spacing: 0.08em;
+            color: #7a6a5a;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #faf8f3 0%, #f0ebe0 100%);
+            border-radius: 2px;
+            padding: 1.75rem 1.5rem;
+            text-align: center;
+            box-shadow: 
+                inset 0 1px 0 rgba(255,255,255,0.8),
+                0 2px 8px rgba(26, 26, 26, 0.08);
+            transition: all 0.3s ease;
+            border: var(--border-classical);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 传统印章效果 - 篆刻风格 */
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--cinnabar);
+            border-radius: 3px;
+            opacity: 0.3;
+            background: 
+                linear-gradient(45deg, transparent 48%, var(--cinnabar) 48%, var(--cinnabar) 52%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, var(--cinnabar) 48%, var(--cinnabar) 52%, transparent 52%);
+            background-size: 8px 8px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* 卡片四角装饰 */
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 12px;
+            height: 12px;
+            border-top: 2px solid var(--accent-gold);
+            border-left: 2px solid var(--accent-gold);
+            opacity: 0.4;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                inset 0 1px 0 rgba(255,255,255,0.8),
+                0 6px 20px rgba(26, 26, 26, 0.12);
+        }
+
+        .stat-card .number {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', 'STSong', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--accent-teal);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            line-height: 1;
+        }
+
+        .stat-card.highlight .number {
+            color: var(--cinnabar);
+        }
+
+        .stat-card .label {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', 'STSong', serif;
+            font-size: 1rem;
+            color: var(--ink-gray);
+            margin-top: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* 卡片通用样式 - 古籍卷轴风格 */
+        .chart-card, .table-card, .map-wrapper {
+            background: linear-gradient(145deg, #faf8f3 0%, #f0ebe0 100%);
+            border-radius: 2px;
+            padding: 1.75rem;
+            box-shadow: 
+                inset 0 1px 0 rgba(255,255,255,0.8),
+                0 2px 8px rgba(26, 26, 26, 0.08);
+            border: var(--border-classical);
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        /* 卷轴装饰效果 */
+        .chart-card::before, .table-card::before, .map-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--accent-gold) 10%, 
+                var(--accent-gold) 90%, 
+                transparent 100%
+            );
+            opacity: 0.5;
+        }
+
+        .chart-card h3, .table-card h3, .map-wrapper h3 {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', 'STSong', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--ink-black);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--accent-gold);
+            letter-spacing: 0.12em;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* 标题装饰 */
+        .chart-card h3::after, .table-card h3::after, .map-wrapper h3::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--accent-gold);
+        }
+
+        .table-card h3 {
+            border-bottom-color: var(--cinnabar);
+        }
+
+        .table-card h3::after {
+            background: var(--cinnabar);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .map-controls-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .map-selector select {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border: var(--border-classical);
+            border-radius: 2px;
+            background: linear-gradient(145deg, #faf8f3 0%, #f0ebe0 100%);
+            cursor: pointer;
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', 'STSong', serif;
+            color: var(--ink-black);
+        }
+
+        .era-switcher {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .era-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border: var(--border-classical);
+            border-radius: 2px;
+            background: linear-gradient(145deg, #faf8f3 0%, #f0ebe0 100%);
+            cursor: pointer;
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', 'STSong', serif;
+            color: var(--ink-black);
+            transition: all 0.3s ease;
+        }
+
+        .era-btn:hover {
+            background: var(--paper-aged);
+        }
+
+        .era-btn.active {
+            background: var(--accent-teal);
+            color: var(--paper-cream);
+            border-color: var(--accent-teal);
+        }
+
+        .auto-play-btn {
+            background: linear-gradient(145deg, #f0f8f0 0%, #e0f0e0 100%);
+            border-color: var(--accent-teal);
+            color: var(--accent-teal);
+        }
+
+        .auto-play-btn:hover {
+            background: var(--accent-teal);
+            color: var(--paper-cream);
+        }
+
+        .auto-play-btn.active {
+            background: var(--cinnabar);
+            border-color: var(--cinnabar);
+            color: var(--paper-cream);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(196, 30, 58, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(196, 30, 58, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(196, 30, 58, 0); }
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 550px;
+            border-radius: 2px;
+            border: var(--border-classical);
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(44, 36, 27, 0.1);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .map-controls button {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: linear-gradient(145deg, var(--accent-teal) 0%, #2d4a4a 100%);
+            color: var(--paper-cream);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: 'Noto Serif SC', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .map-controls button:hover {
+            background: linear-gradient(145deg, #2d4a4a 0%, #1e3a3a 100%);
+        }
+
+        /* 地图图例样式 */
+        .map-legend {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(253, 252, 250, 0.95);
+            padding: 8px 10px;
+            border-radius: 4px;
+            border: var(--border-classical);
+            font-size: 0.7rem;
+            min-width: 160px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            transition: all 0.3s ease;
+        }
+
+        .map-legend-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--paper-dark);
+        }
+
+        .map-legend-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--ink-black);
+        }
+
+        .map-legend-era {
+            font-size: 0.65rem;
+            padding: 1px 6px;
+            border-radius: 2px;
+            color: #fff;
+        }
+
+        .map-legend-era.early {
+            background: #8b3a3a;
+        }
+
+        .map-legend-era.sanyutang {
+            background: #2d6a4f;
+        }
+
+        .map-legend-era.late {
+            background: #1e5aa8;
+        }
+
+        .map-legend-era.both {
+            background: linear-gradient(90deg, #8b3a3a 33%, #2d6a4f 66%, #1e5aa8 100%);
+        }
+
+        .map-legend-section {
+            margin-bottom: 6px;
+        }
+
+        .map-legend-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .map-legend-section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.65rem;
+            color: var(--accent-teal);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .map-legend-size-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
+
+        .map-legend-size-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .map-legend-circle {
+            border-radius: 50%;
+            border: 1px solid #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+
+        .map-legend-circle.early {
+            background: #a04040;
+        }
+
+        .map-legend-circle.sanyutang {
+            background: #40916c;
+        }
+
+        .map-legend-circle.late {
+            background: #2e7ad8;
+        }
+
+        .map-legend-size-label {
+            font-size: 0.6rem;
+            color: var(--ink-gray);
+        }
+
+        .map-legend-color-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 3px;
+        }
+
+        .map-legend-color-box {
+            width: 14px;
+            height: 8px;
+            border-radius: 1px;
+        }
+
+        .map-legend-color-label {
+            font-size: 0.6rem;
+            color: var(--ink-gray);
+        }
+
+        .map-legend-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+
+        .map-legend-stat {
+            text-align: center;
+            padding: 4px;
+            background: var(--paper-cream);
+            border-radius: 2px;
+        }
+
+        .map-legend-stat-value {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-teal);
+        }
+
+        .map-legend-stat-label {
+            font-size: 0.55rem;
+            color: var(--ink-gray);
+        }
+
+        .map-legend-home {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px dashed var(--paper-dark);
+        }
+
+        .map-legend-home-icon {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #b8860b;
+            border: 1px solid #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+
+        .map-legend-home-label {
+            font-size: 0.6rem;
+            color: var(--ink-gray);
+        }
+
+        /* 地图悬停提示框样式 */
+        .map-tooltip {
+            position: absolute;
+            background: linear-gradient(145deg, #fdfcfa 0%, #f5f0e6 100%);
+            border: var(--border-classical);
+            border-radius: 2px;
+            padding: 12px 16px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.9rem;
+            color: var(--ink-black);
+            box-shadow: 0 4px 16px rgba(44, 36, 27, 0.15);
+            pointer-events: none;
+            z-index: 1000;
+            max-width: 280px;
+            display: none;
+        }
+
+        .map-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--paper-dark);
+        }
+
+        .map-tooltip h4 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--cinnabar);
+            border-bottom: 1px dotted var(--paper-dark);
+            padding-bottom: 4px;
+        }
+
+        .map-tooltip .disciple-list {
+            line-height: 1.8;
+            color: var(--ink-gray);
+        }
+
+        .map-tooltip .disciple-count {
+            font-size: 0.8rem;
+            color: var(--accent-teal);
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .map-info {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: var(--paper-cream);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--ink-gray);
+        }
+
+        .map-info a {
+            color: var(--accent-teal);
+        }
+
+        .map-description {
+            margin: 1.25rem 0 1.5rem 0;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(145deg, #fdfcfa 0%, #f8f4ec 100%);
+            border-left: 4px solid var(--accent-teal);
+            border-radius: 0 4px 4px 0;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(44, 36, 27, 0.06);
+        }
+
+        .map-description::before {
+            content: '❝';
+            position: absolute;
+            top: 0.5rem;
+            left: 0.75rem;
+            font-size: 2rem;
+            color: var(--accent-teal);
+            opacity: 0.2;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .map-description p {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+            font-size: 1rem;
+            line-height: 2;
+            color: var(--ink-black);
+            text-align: justify;
+            text-indent: 2em;
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .family-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .family-section h4 {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+            color: var(--cinnabar);
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.08em;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .family-item {
+            background: linear-gradient(145deg, #fdfcfa 0%, #f5f0e6 100%);
+            padding: 0.875rem 1.25rem;
+            border-radius: 2px;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            border: var(--border-classical);
+            font-family: 'Noto Serif SC', serif;
+            position: relative;
+        }
+
+        .family-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-gold);
+        }
+
+        .family-item .relation {
+            color: var(--ink-gray);
+            font-size: 0.85rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            background: var(--cinnabar);
+            color: var(--paper-cream);
+            border-radius: 2px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+            font-family: 'Noto Serif SC', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .jinshi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .jinshi-card {
+            background: linear-gradient(145deg, #fdfcfa 0%, #f5f0e6 100%);
+            border: var(--border-classical);
+            border-radius: 2px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 1px 0 rgba(255,255,255,0.8),
+                0 2px 8px rgba(44, 36, 27, 0.06);
+        }
+
+        .jinshi-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--cinnabar);
+        }
+
+        /* 金色边框装饰 */
+        .jinshi-card::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            border-top: 2px solid var(--accent-gold);
+            border-right: 2px solid var(--accent-gold);
+            opacity: 0.5;
+        }
+
+        .jinshi-card h4 {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.03em;
+        }
+
+        .jinshi-card .style-name {
+            color: var(--ink-gray);
+            font-size: 0.9rem;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .jinshi-card .info {
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--ink-gray);
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--ink-gray);
+            font-size: 0.9rem;
+            font-family: 'Noto Serif SC', serif;
+            border-top: var(--border-classical);
+            margin-top: 2rem;
+            background: linear-gradient(180deg, var(--paper-cream) 0%, var(--paper-aged) 100%);
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-row { grid-template-columns: 1fr; }
+            .family-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .header h1 { font-size: 1.8rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .container { padding: 1rem; }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* 年谱日记记录样式 - 古典卷轴风格 */
+        .chronicle-filter {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.25rem;
+            border: var(--border-classical);
+            background: linear-gradient(145deg, #faf8f3 0%, #f0ebe0 100%);
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-btn:hover {
+            background: var(--paper-aged);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-teal);
+            color: var(--paper-cream);
+            border-color: var(--accent-teal);
+        }
+
+        .chronicle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .chronicle-card {
+            background: linear-gradient(145deg, #fdfcfa 0%, #f5f0e6 100%);
+            border: var(--border-classical);
+            border-radius: 2px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 1px 0 rgba(255,255,255,0.8),
+                0 2px 8px rgba(44, 36, 27, 0.06);
+        }
+
+        /* 传统竖线装饰 */
+        .chronicle-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent-teal);
+        }
+
+        .chronicle-card.diary::before {
+            background: var(--cinnabar);
+        }
+
+        .chronicle-card.quotes::before {
+            background: var(--accent-gold);
+        }
+
+        /* 右上角装饰角 */
+        .chronicle-card::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border-top: 2px solid var(--paper-dark);
+            border-right: 2px solid var(--paper-dark);
+            opacity: 0.4;
+        }
+
+        .chronicle-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                inset 0 1px 0 rgba(255,255,255,0.8),
+                0 4px 16px rgba(44, 36, 27, 0.1);
+        }
+
+        .chronicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px dotted var(--paper-dark);
+        }
+
+        .chronicle-name {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--ink-black);
+            letter-spacing: 0.06em;
+        }
+
+        .chronicle-style {
+            font-size: 0.85rem;
+            color: var(--ink-gray);
+            margin-left: 0.5rem;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .chronicle-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--accent-teal);
+            color: var(--paper-cream);
+            border-radius: 2px;
+            font-size: 0.75rem;
+            font-family: 'Noto Serif SC', serif;
+            letter-spacing: 0.1em;
+        }
+
+        .chronicle-type.diary {
+            background: var(--cinnabar);
+        }
+
+        .chronicle-type.quotes {
+            background: var(--accent-gold);
+        }
+
+        .chronicle-content {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.95rem;
+            line-height: 2;
+            color: var(--ink-black);
+            text-align: justify;
+            text-indent: 2em;
+        }
+
+        .chronicle-source {
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed var(--paper-dark);
+            font-size: 0.8rem;
+            color: var(--ink-gray);
+            font-style: italic;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .chronicle-origin {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--accent-teal);
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @media (max-width: 768px) {
+            .chronicle-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 陆陇其行迹图样式 - 整合自 lulongqilife.html */
+        .life-trace-section {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--paper-dark);
+        }
+
+        .life-trace-wrapper {
+            position: relative;
+            width: 100%;
+            height: 850px;
+            background: linear-gradient(145deg, #faf8f3 0%, #f0ebe0 100%);
+            border-radius: 2px;
+            border: var(--border-classical);
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(44, 36, 27, 0.1);
+        }
+
+        #lifeTraceMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 行迹图标题框 */
+        .life-trace-title-box {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, rgba(250,248,245,0.95) 0%, rgba(245,240,232,0.95) 100%);
+            border: 1px solid rgba(196,92,72,0.15);
+            border-radius: 12px;
+            padding: 18px 36px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            backdrop-filter: blur(12px) saturate(180%);
+        }
+
+        .life-trace-title-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--cinnabar), transparent);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .life-trace-title-box h2 {
+            margin: 0 0 8px 0;
+            font-family: "Noto Serif SC", serif;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--ink-black);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .life-trace-title-box p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--ink-light);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* 行迹图阶段标签 */
+        .life-trace-stage-label {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: linear-gradient(135deg, rgba(196,92,72,0.95) 0%, rgba(196,92,72,0.9) 100%);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: "Noto Serif SC", serif;
+            font-weight: 500;
+            letter-spacing: 2px;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(196,92,72,0.4);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .life-trace-stage-label.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* 行迹图图例 */
+        .life-trace-legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, rgba(250,248,245,0.95) 0%, rgba(245,240,232,0.95) 100%);
+            border: 1px solid rgba(196,92,72,0.15);
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 13px;
+            z-index: 998;
+            line-height: 2;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            backdrop-filter: blur(12px) saturate(180%);
+            width: 220px;
+        }
+
+        .life-trace-legend::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--cinnabar) 0%, var(--gold) 100%);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .life-trace-legend h4 {
+            margin: 0 0 14px 0;
+            text-align: center;
+            font-family: "Noto Serif SC", serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ink-black);
+            letter-spacing: 3px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .life-trace-legend .item {
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .life-trace-legend .item:hover {
+            transform: translateX(4px);
+        }
+
+        .life-trace-legend .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: inline-block;
+            border: 2px solid rgba(255,255,255,0.8);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .life-trace-legend .info {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            font-size: 11px;
+            color: var(--ink-light);
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        /* 行迹图时间轴面板 */
+        .life-trace-timeline-panel {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 360px;
+            background: linear-gradient(145deg, rgba(250,248,245,0.95) 0%, rgba(237,232,223,0.95) 100%);
+            border: 1px solid rgba(196,92,72,0.15);
+            border-radius: 12px;
+            padding: 22px;
+            font-size: 13px;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            backdrop-filter: blur(12px) saturate(180%);
+        }
+
+        .life-trace-timeline-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--indigo) 0%, var(--cinnabar) 50%, var(--gold) 100%);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .life-trace-timeline-panel h4 {
+            margin: 0 0 16px 0;
+            text-align: center;
+            font-family: "Noto Serif SC", serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink-black);
+            letter-spacing: 3px;
+        }
+
+        .life-trace-timeline-panel input[type=range] {
+            width: 100%;
+            cursor: pointer;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--paper-warm) 0%, var(--cinnabar-light) 100%);
+            outline: none;
+            margin: 12px 0;
+        }
+
+        .life-trace-timeline-panel input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--cinnabar);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(196,92,72,0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .life-trace-timeline-panel input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 3px 10px rgba(196,92,72,0.5);
+        }
+
+        .life-trace-timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0 16px 0;
+            color: var(--ink-light);
+            font-size: 11px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .life-trace-timeline-labels #yearDisplay {
+            font-family: "Noto Serif SC", serif;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 2px;
+        }
+
+        .life-trace-timeline-btns {
+            display: flex;
+            gap: 10px;
+            margin: 16px 0;
+            justify-content: center;
+        }
+
+        .life-trace-timeline-btns button {
+            padding: 8px 18px;
+            font-size: 12px;
+            font-family: "Noto Sans SC", sans-serif;
+            border: 1px solid var(--ink-light);
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--ink-gray);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .life-trace-timeline-btns button:hover {
+            background: var(--paper-warm);
+            border-color: var(--cinnabar);
+            color: var(--cinnabar);
+            transform: translateY(-1px);
+        }
+
+        .life-trace-timeline-btns button.active {
+            background: var(--cinnabar);
+            color: var(--paper-cream);
+            border-color: var(--cinnabar);
+            box-shadow: 0 3px 12px rgba(196,92,72,0.3);
+        }
+
+        .life-trace-stage-bar {
+            display: flex;
+            margin-top: 16px;
+            border-radius: 6px;
+            overflow: hidden;
+            height: 28px;
+            font-size: 11px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .life-trace-stage-bar div {
+            flex: 1;
+            text-align: center;
+            line-height: 28px;
+            color: rgba(255,255,255,0.95);
+            cursor: pointer;
+            opacity: 0.85;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 400;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .life-trace-stage-bar div::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .life-trace-stage-bar div:hover {
+            opacity: 1;
+            transform: scale(1.02);
+        }
+
+        .life-trace-stage-bar div:hover::before {
+            left: 100%;
+        }
+
+        .life-trace-stage-bar .s1 { background: linear-gradient(135deg, #1565C0 0%, #1976D2 100%); }
+        .life-trace-stage-bar .s2 { background: linear-gradient(135deg, #C62828 0%, #D32F2F 100%); }
+        .life-trace-stage-bar .s3 { background: linear-gradient(135deg, #6A1B9A 0%, #7B1FA2 100%); }
+        .life-trace-stage-bar .s4 { background: linear-gradient(135deg, #2E7D32 0%, #388E3C 100%); }
+        .life-trace-stage-bar .s5 { background: linear-gradient(135deg, #EF6C00 0%, #F57C00 100%); }
+
+        /* 行迹图左侧事件列表 */
+        .life-trace-events-panel {
+            position: absolute;
+            left: 20px;
+            top: 120px;
+            bottom: 20px;
+            width: 320px;
+            background: linear-gradient(135deg, rgba(250,248,245,0.95) 0%, rgba(245,240,232,0.95) 100%);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            backdrop-filter: blur(12px) saturate(180%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(196,92,72,0.15);
+        }
+
+        .life-trace-events-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(196,92,72,0.1);
+            background: linear-gradient(135deg, rgba(245,240,232,0.5) 0%, rgba(237,232,223,0.5) 100%);
+        }
+
+        .life-trace-events-header h4 {
+            margin: 0;
+            font-family: "Noto Serif SC", serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink-black);
+            letter-spacing: 2px;
+        }
+
+        .life-trace-events-header p {
+            margin: 6px 0 0 0;
+            font-size: 12px;
+            color: var(--ink-light);
+        }
+
+        .life-trace-events-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .life-trace-events-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .life-trace-events-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 3px;
+        }
+
+        .life-trace-events-list::-webkit-scrollbar-thumb {
+            background: var(--cinnabar);
+            border-radius: 3px;
+        }
+
+        .life-trace-event-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 6px;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .life-trace-event-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(196,92,72,0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .life-trace-event-item:hover::before {
+            opacity: 1;
+        }
+
+        .life-trace-event-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .life-trace-event-item.active {
+            background: linear-gradient(90deg, rgba(196,92,72,0.15), rgba(196,92,72,0.05));
+            border-left-color: var(--cinnabar);
+            box-shadow: 0 2px 12px rgba(196,92,72,0.2);
+        }
+
+        .life-trace-event-item.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--cinnabar);
+        }
+
+        .life-trace-event-year {
+            display: inline-block;
+            font-family: "Noto Serif SC", serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--cinnabar);
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .life-trace-event-loc {
+            font-size: 13px;
+            color: var(--ink-black);
+            font-weight: 500;
+            margin-bottom: 3px;
+            line-height: 1.4;
+        }
+
+        .life-trace-event-desc {
+            font-size: 12px;
+            color: var(--ink-light);
+            line-height: 1.5;
+        }
+
+        .life-trace-event-type-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        /* 行迹图弹窗样式 */
+        .life-trace-popup-content {
+            font-family: "Noto Sans SC", "Noto Serif SC", serif;
+            min-width: 300px;
+            max-width: 340px;
+            padding: 8px;
+        }
+
+        .life-trace-popup-content h4 {
+            margin: 0 0 12px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+            font-family: "Noto Serif SC", serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ink-black);
+            letter-spacing: 1px;
+        }
+
+        .life-trace-popup-content .meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: var(--ink-light);
+        }
+
+        .life-trace-popup-content .meta span {
+            background: var(--paper-warm);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 400;
+        }
+
+        .life-trace-popup-content p.desc {
+            margin: 10px 0 0 0;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--ink-gray);
+            font-weight: 400;
+        }
+
+        .leaflet-popup-content-wrapper {
+            background: linear-gradient(145deg, rgba(250,248,245,0.98) 0%, rgba(245,240,232,0.98) 100%);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .leaflet-popup-tip {
+            background: var(--paper-cream);
+        }
+
+        .leaflet-popup-close-button {
+            color: var(--ink-light) !important;
+            font-size: 20px !important;
+            padding: 8px !important;
+            transition: color 0.2s ease;
+        }
+
+        .leaflet-popup-close-button:hover {
+            color: var(--cinnabar) !important;
+        }
+
+        /* 行迹图配色变量 */
+        :root {
+            --lt-ink-black: #1a1a1a;
+            --lt-ink-gray: #3d3d3d;
+            --lt-ink-light: #666666;
+            --lt-paper-white: #faf8f5;
+            --lt-paper-cream: #f5f0e8;
+            --lt-paper-warm: #ede8df;
+            --lt-cinnabar: #c45c48;
+            --lt-cinnabar-light: #d97b6a;
+            --lt-indigo: #4a6741;
+            --lt-indigo-light: #6b8f5f;
+            --lt-gold: #c9a227;
+            --lt-gold-light: #e0c066;
+        }
+
+        /* 版块标题样式 */
+        .section-block {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--paper-dark);
+        }
+
+        .section-block:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--ink-black);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--accent-teal);
+            letter-spacing: 0.1em;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--cinnabar);
+        }
+
+        /* 师徒关系网络图样式 */
+        .network-wrapper {
+            width: 100%;
+            height: 600px;
+            position: relative;
+            border: var(--border-classical);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .network-container {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #fdfcfa 0%, #f5f0e6 100%);
+        }
+
+        .network-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            display: flex;
+            gap: 5px;
+        }
+
+        .network-controls button {
+            padding: 6px 12px;
+            background: linear-gradient(145deg, var(--accent-teal) 0%, #2d4a4a 100%);
+            color: var(--paper-cream);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: 'Noto Serif SC', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .network-controls button:hover {
+            background: linear-gradient(145deg, #2d4a4a 0%, #1e3a3a 100%);
+        }
+
+        .network-legend {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 100;
+            background: rgba(253, 252, 250, 0.95);
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: var(--border-classical);
+            font-size: 0.85rem;
+        }
+
+        .network-legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .network-legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .network-legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .network-legend-line {
+            width: 24px;
+            height: 2px;
+            margin-right: 8px;
+        }
+
+        .network-legend-dashed {
+            border-top: 2px dashed #999;
+        }
+
+        .network-legend-line-family {
+            background: #c41e3a;
+        }
+
+        /* 右下角详细图例 */
+        .network-legend-bottom {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(253, 252, 250, 0.98);
+            padding: 15px;
+            border-radius: 4px;
+            border: var(--border-classical);
+            font-size: 0.8rem;
+            max-width: 220px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+
+        .network-legend-bottom * {
+            pointer-events: auto;
+        }
+
+        .network-legend-bottom h4 {
+            margin: 0 0 10px 0;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.9rem;
+            color: var(--ink-black);
+            border-bottom: 1px solid var(--paper-dark);
+            padding-bottom: 5px;
+        }
+
+        .network-legend-section {
+            margin-bottom: 12px;
+        }
+
+        .network-legend-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .network-legend-section h5 {
+            margin: 0 0 5px 0;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.8rem;
+            color: var(--accent-teal);
+        }
+
+        .network-legend-text {
+            margin-bottom: 3px;
+            color: var(--ink-gray);
+            font-size: 0.75rem;
+        }
+
+        .map-legend-bottom .network-legend-item {
+            margin-bottom: 3px;
+        }
+
+        /* 参考文献样式 */
+        .references-list {
+            padding: 1rem 0;
+        }
+
+        .reference-item {
+            background: linear-gradient(145deg, #fdfcfa 0%, #f5f0e6 100%);
+            padding: 1.25rem 1.5rem;
+            border-radius: 2px;
+            margin-bottom: 1rem;
+            border: var(--border-classical);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .reference-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent-teal);
+        }
+
+        .reference-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 12px rgba(44, 36, 27, 0.1);
+        }
+
+        .reference-item p {
+            margin: 0;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--ink-black);
+            text-align: justify;
+        }
+
+        @media (max-width: 768px) {
+            .reference-item {
+                padding: 1rem;
+            }
+
+            .reference-item p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-bg-calligraphy"></div>
+        <div class="header-content">
+            <div class="header-decoration">◆ ◆ ◆</div>
+            <h1>寻踪陆陇其</h1>
+            <p class="subtitle">陆陇其（1630-1693），浙江平湖人，清初学者，清代首个从祀孔庙的儒者。</p>
+            <p class="source">陆陇其一生的可视化呈现</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 第一部分：陆陇其行迹图 -->
+        <section class="life-trace-section">
+            <h2 class="section-title">第一部分 陆陇其行迹图 · 1630—1693</h2>
+            <div class="life-trace-wrapper">
+                <div id="lifeTraceMap"></div>
+                
+                <!-- 标题框 -->
+                <div class="life-trace-title-box">
+                    <h2>陆陇其行迹图</h2>
+                    <p>清初学者一生行迹与学术活动 · 1630—1693</p>
+                </div>
+                
+                <!-- 阶段标签 -->
+                <div class="life-trace-stage-label" id="stageLabel"></div>
+                
+                <!-- 左侧事件列表 -->
+                <div class="life-trace-events-panel">
+                    <div class="life-trace-events-header">
+                        <h4>事件年表</h4>
+                        <p>共 <span id="eventCount">0</span> 条事件 · 点击查看详情</p>
+                    </div>
+                    <div class="life-trace-events-list" id="eventsList">
+                        <!-- 事件列表由 JavaScript 动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 图例 -->
+                <div class="life-trace-legend">
+                    <h4>事件图例</h4>
+                    <div class="item"><span class="dot" style="background:#1565C0"></span>就馆（教职）</div>
+                    <div class="item"><span class="dot" style="background:#C62828"></span>仕宦（官职）</div>
+                    <div class="item"><span class="dot" style="background:#6A1B9A"></span>教学（弟子执贽）</div>
+                    <div class="item"><span class="dot" style="background:#2E7D32"></span>会友（学术交流）</div>
+                    <div class="item"><span class="dot" style="background:#4E342E"></span>著述（写作刊刻）</div>
+                    <div class="item"><span class="dot" style="background:#EF6C00"></span>科举和考试</div>
+                    <div class="item"><span class="dot" style="background:#455A64"></span>游历</div>
+                    <div class="item"><span class="dot" style="background:#8B4513"></span>出生 / 逝世</div>
+                    <div class="info">
+                        实线连接按时间顺序的行迹<br>
+                        点击标记查看详细事件
+                    </div>
+                </div>
+                
+                <!-- 时间轴面板 -->
+                <div class="life-trace-timeline-panel">
+                    <h4>人生时间轴</h4>
+                    <input type="range" id="yearSlider" min="1630" max="1693" value="1693" step="1">
+                    <div class="life-trace-timeline-labels">
+                        <span>1630 年</span>
+                        <span id="yearDisplay" style="color:var(--lt-cinnabar);">显示全部</span>
+                        <span>1693 年</span>
+                    </div>
+                    <div class="life-trace-timeline-btns">
+                        <button onclick="showAll()" class="active" id="btnAll">显示全部</button>
+                        <button onclick="playAnimation()" id="btnPlay">▶ 动态播放</button>
+                    </div>
+                    <div class="life-trace-stage-bar">
+                        <div class="s1" onclick="filterPeriod(1630,1674)" title="早年求学与就馆">早年</div>
+                        <div class="s2" onclick="filterPeriod(1675,1677)" title="嘉定知县">嘉定</div>
+                        <div class="s3" onclick="filterPeriod(1678,1682)" title="罢归复起">复起</div>
+                        <div class="s4" onclick="filterPeriod(1683,1690)" title="灵寿知县">灵寿</div>
+                        <div class="s5" onclick="filterPeriod(1690,1693)" title="御史与晚年">晚年</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第二部分：地图 - 弟子地理分布 -->
+        <section class="section-block">
+            <h2 class="section-title">第二部分 不同时代弟子的地理分布</h2>
+            <section class="map-wrapper">
+                <h3>🗺️ 弟子地理分布</h3>
+                <div class="map-description">
+                    <p>陆陇其（1630-1693），浙江新埭平湖泖口人，地邻金山，当时的江南一带以水网连接市镇，陆陇其生命中几个重点的坐馆地、讲学点皆在附近的市镇，并且对晚清松江一带的思想产生了重要影响，不同时代的弟子的分布，具有高度的重要性。其部分著作的抄本后来多流入上海图书馆、复旦大学图书馆。这从其弟子的分布已可见一些端绪。</p>
+                </div>
+                <div class="map-controls-row">
+                    <div class="map-selector">
+                        <select id="mapLayerSelect">
+                            <option value="base" selected>地形底图 (ArcGIS)</option>
+                            <option value="satellite">卫星影像 (ArcGIS)</option>
+                        </select>
+                    </div>
+                    <div class="era-switcher">
+                        <button class="era-btn active" data-era="early" onclick="switchEra('early')">清初 (康熙)</button>
+                        <button class="era-btn" data-era="sanyutang" onclick="switchEra('sanyutang')">三魚堂《四書大全》校勘</button>
+                        <button class="era-btn" data-era="late" onclick="switchEra('late')">晚清 (道光)《陆清献公日记》校勘</button>
+                        <button class="era-btn" data-era="both" onclick="switchEra('both')">同时显示</button>
+                        <button class="era-btn auto-play-btn" id="autoPlayBtn" onclick="toggleAutoPlay()">▶ 自动播放</button>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <div id="map"></div>
+                    <div class="map-controls">
+                        <button onclick="map.getView().setZoom(6)">缩小</button>
+                        <button onclick="map.getView().setZoom(8)">放大</button>
+                        <button onclick="resetView()">重置视图</button>
+                    </div>
+                    <div id="mapTooltip" class="map-tooltip"></div>
+                    <div id="mapLegend" class="map-legend">
+                        <div class="map-legend-header">
+                            <span class="map-legend-title">📊 图例</span>
+                            <span id="mapLegendEra" class="map-legend-era early">清初</span>
+                        </div>
+                        <div class="map-legend-section">
+                            <div class="map-legend-section-title">圆点大小 = 弟子数量</div>
+                            <div id="mapLegendSizes" class="map-legend-size-row">
+                                <!-- 动态生成 -->
+                            </div>
+                        </div>
+                        <div class="map-legend-section">
+                            <div class="map-legend-section-title">颜色深浅 = 密度等级</div>
+                            <div id="mapLegendColors" class="map-legend-colors">
+                                <!-- 动态生成 -->
+                            </div>
+                        </div>
+                        <div class="map-legend-section">
+                            <div class="map-legend-section-title">统计数据</div>
+                            <div id="mapLegendStats" class="map-legend-stats">
+                                <!-- 动态生成 -->
+                            </div>
+                        </div>
+                        <div id="mapLegendHome" class="map-legend-home">
+                            <div class="map-legend-home-icon"></div>
+                            <span class="map-legend-home-label">陆陇其故居（平湖新埭）</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- 第三部分：师徒关系网络 -->
+        <section class="section-block">
+            <h2 class="section-title">第三部分 师徒关系网络</h2>
+            <div class="map-description">
+                <p>本网络图展示了陆陇其与其弟子之间的师承关系，以及弟子之间的家族关系（父子、兄弟）。节点大小代表该弟子在文献中的重要性，实线表示师徒关系，虚线表示家族关系。</p>
+            </div>
+            <section class="chart-card">
+                <h3>🕸️ 师承关系网络图</h3>
+                <div class="network-wrapper">
+                    <div class="network-container" id="networkContainer"></div>
+                    <div class="network-controls">
+                        <button onclick="fitNetwork()">适应视图</button>
+                        <button onclick="resetNetwork()">重置</button>
+                    </div>
+                    <div class="network-legend">
+                        <div class="network-legend-item">
+                            <div class="network-legend-color" style="background: #c41e3a;"></div>
+                            <span>陆陇其（师）</span>
+                        </div>
+                        <div class="network-legend-item">
+                            <div class="network-legend-color" style="background: #e85d75;"></div>
+                            <span>直系亲属</span>
+                        </div>
+                        <div class="network-legend-item">
+                            <div class="network-legend-color" style="background: #b8860b;"></div>
+                            <span>姻亲弟子</span>
+                        </div>
+                        <div class="network-legend-item">
+                            <div class="network-legend-color" style="background: #2d5a5a;"></div>
+                            <span>一般弟子</span>
+                        </div>
+                        <div class="network-legend-item">
+                            <div class="network-legend-line" style="background: #c41e3a;"></div>
+                            <span>直系亲属关系</span>
+                        </div>
+                        <div class="network-legend-item">
+                            <div class="network-legend-line" style="background: #999;"></div>
+                            <span>师徒关系</span>
+                        </div>
+                        <div class="network-legend-item">
+                            <div class="network-legend-line network-legend-dashed"></div>
+                            <span>家族关系</span>
+                        </div>
+                    </div>
+                    <div class="network-legend-bottom">
+                        <h4>📊 网络图说明</h4>
+                        <div class="network-legend-section">
+                            <h5>节点颜色</h5>
+                            <div class="network-legend-item">
+                                <div class="network-legend-color" style="background: #c41e3a;"></div>
+                                <span>陆陇其（老师）</span>
+                            </div>
+                            <div class="network-legend-item">
+                                <div class="network-legend-color" style="background: #e85d75;"></div>
+                                <span>直系亲属（父母/兄弟/妻儿）</span>
+                            </div>
+                            <div class="network-legend-item">
+                                <div class="network-legend-color" style="background: #b8860b;"></div>
+                                <span>姻亲（岳父/女婿/族人）</span>
+                            </div>
+                            <div class="network-legend-item">
+                                <div class="network-legend-color" style="background: #2d5a5a;"></div>
+                                <span>一般弟子</span>
+                            </div>
+                        </div>
+                        <div class="network-legend-section">
+                            <h5>交互操作</h5>
+                            <div class="network-legend-text">🖱️ 拖拽节点调整位置</div>
+                            <div class="network-legend-text">🔍 滚轮缩放视图</div>
+                            <div class="network-legend-text">👆 点击查看详情</div>
+                        </div>
+                        <div class="network-legend-section">
+                            <h5>统计数据</h5>
+                            <div class="network-legend-text">节点：90+ 人</div>
+                            <div class="network-legend-text">师徒关系：80+ 条</div>
+                            <div class="network-legend-text">家族关系：30+ 条</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- 第四部分：弟子统计 -->
+        <section class="section-block">
+            <h2 class="section-title">第四部分 弟子统计</h2>
+            <div class="map-description">
+                <p>陆陇其的弟子，大多为下层不知名者，具有进士功名只只寥寥数人。其子数量和分布皆与江南市镇网络重合，可以说其思想在他本人从祀孔庙之前，一直在市镇传播。不过他们在抄录陆氏文献、刊刻著作中发挥了重要作用。</p>
+            </div>
+            
+            <section class="stats-grid">
+                <div class="stat-card animate-in delay-1">
+                    <div class="number">70</div>
+                    <div class="label">收录人物</div>
+                </div>
+                <div class="stat-card animate-in delay-2 highlight">
+                    <div class="number">61</div>
+                    <div class="label">及门弟子</div>
+                </div>
+                <div class="stat-card animate-in delay-3">
+                    <div class="number">52</div>
+                    <div class="label">有著作记录</div>
+                </div>
+                <div class="stat-card animate-in delay-4">
+                    <div class="number">5</div>
+                    <div class="label">进士</div>
+                </div>
+            </section>
+
+            <section class="charts-row">
+                <div class="chart-card">
+                    <h3>身份类型分布</h3>
+                    <div class="chart-container">
+                        <canvas id="identityChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>科举成就统计</h3>
+                    <div class="chart-container">
+                        <canvas id="achievementChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="table-card">
+                <h3>进士名录</h3>
+                <div class="jinshi-grid">
+                    <div class="jinshi-card">
+                        <h4>赵光绪<span class="tag">康熙辛未</span></h4>
+                        <div class="style-name">字襄孙</div>
+                        <div class="info"><span>📍 平湖</span><span>🏛️ 宝鸡县知县</span></div>
+                    </div>
+                    <div class="jinshi-card">
+                        <h4>沈宏勋<span class="tag">康熙辛未</span></h4>
+                        <div class="style-name">字又召，号纪山</div>
+                        <div class="info"><span>📍 平湖</span><span>🏛️ 吴堡令</span></div>
+                    </div>
+                    <div class="jinshi-card">
+                        <h4>张王典<span class="tag">康熙丁丑</span></h4>
+                        <div class="style-name">字惇五</div>
+                        <div class="info"><span>📍 嘉善</span><span>🏛️ 平顺县知县</span></div>
+                    </div>
+                    <div class="jinshi-card">
+                        <h4>王原<span class="tag">康熙二十七年</span></h4>
+                        <div class="style-name">字仲深，号令诒</div>
+                        <div class="info"><span>📍 启圣里</span><span>🏛️ 工科给事中</span></div>
+                    </div>
+                    <div class="jinshi-card">
+                        <h4>陆奎勋<span class="tag">康熙辛丑</span></h4>
+                        <div class="style-name">字聚緱，号坡星</div>
+                        <div class="info"><span>📍 平湖</span><span>🏛️ 检讨</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="charts-row">
+                <div class="chart-card">
+                    <h3>师承关系分析</h3>
+                    <div class="chart-container">
+                        <canvas id="teacherChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>特殊身份统计</h3>
+                    <div class="chart-container">
+                        <canvas id="specialChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="table-card">
+                <h3>👨‍👩‍👧 家族传承关系</h3>
+                <div class="family-grid">
+                    <div class="family-section">
+                        <h4>👬 兄弟同为弟子</h4>
+                        <div class="family-item">席永恂、席前席<span class="relation">（常熟）</span></div>
+                        <div class="family-item">赵凤翔、赵慎徽<span class="relation">（娄县）</span></div>
+                        <div class="family-item">魏氏四兄弟<span class="relation">（嘉善）</span><br><small>魏儒照、魏儒勋、魏儒焕、魏儒焘</small></div>
+                    </div>
+                    <div class="family-section">
+                        <h4>👨‍👦 父子同为弟子</h4>
+                        <div class="family-item">周心屺 → 周梁<span class="relation">（金山）</span></div>
+                        <div class="family-item">李鉉 → 李兴宗<span class="relation">（金山）</span></div>
+                        <div class="family-item">曹宗柱 → 曹焕谋<span class="relation">（平湖）</span></div>
+                        <div class="family-item">李煒 → 李光尧、李应机<span class="relation">（嘉善）</span></div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- 第五部分：日记和年谱等文献中的弟子记录 -->
+        <section class="section-block">
+            <h2 class="section-title">第五部分 日记和年谱等文献中的弟子记录</h2>
+            <section class="table-card">
+                <h3>📜 文献记载</h3>
+                <div class="chronicle-filter">
+                    <button class="filter-btn active" data-filter="all">全部</button>
+                    <button class="filter-btn" data-filter="chronicle">年谱记载</button>
+                    <button class="filter-btn" data-filter="diary">日记记载</button>
+                    <button class="filter-btn" data-filter="quotes">语录问答</button>
+                </div>
+                <div id="chronicleContainer" class="chronicle-grid">
+                    <!-- 动态加载弟子记录 -->
+                </div>
+            </section>
+        </section>
+
+        <!-- 第六部分：参考文献 -->
+        <section class="section-block">
+            <h2 class="section-title">第六部分 参考文献</h2>
+            <section class="table-card">
+                <h3>📚 参考文献</h3>
+                <div class="references-list">
+                    <div class="reference-item">
+                        <p>刘昊：《探索年谱的多重记忆性质》，《社会科学报》2023 年 12 月 7 日。</p>
+                    </div>
+                    <div class="reference-item">
+                        <p>刘昊：《稿本〈柳树芳日记〉所见〈陆清献公日记〉出版过程——兼与现存出版实物的比较》，《文献》2024 年第 5 期。</p>
+                    </div>
+                    <div class="reference-item">
+                        <p>劉昊：《書生的舊業——〈三魚堂書目〉抄本與陸隴其的書籍世界》，《古典文献研究》2023 年第 1 期。</p>
+                    </div>
+                    <div class="reference-item">
+                        <p>陆陇其著、杨春俏点校：《三鱼堂日记》，北京：中华书局，2016 年。</p>
+                    </div>
+                    <div class="reference-item">
+                        <p>沈曰富：《当湖弟子传》，南京图书馆藏清抄本。</p>
+                    </div>
+                    <div class="reference-item">
+                        <p>吴光酉、周梁等：《陆陇其年谱》，北京：中华书局，1993 年。</p>
+                    </div>
+                    <div class="reference-item">
+                        <p>张天杰：《陆陇其全集》，北京：中华书局，2020 年。</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>寻踪陆陇其</p>
+    </footer>
+
+    <script>
+        const statsData = {
+            "身份类型统计": {
+                "诸生": 18, "岁贡生": 6, "进士": 5, "庠生": 5,
+                "廪生": 5, "举人": 3, "门人/弟子": 27
+            },
+            "师承关系统计": {
+                "陆清献本人": 58, "陆陇其直称": 4, "父辈交游": 1, "其他": 6
+            },
+            "科举成就统计": {
+                "进士": 5, "举人": 3, "岁贡生": 6, "廪生": 5, "诸生庠生": 23, "其他": 27
+            }
+        };
+
+        // 清初弟子数据（康熙年间）
+        const geoLocations = [
+            { name: '嘉善', count: 8, lon: 120.92, lat: 30.85, disciples: ['李實', '張王典', '張秉維', '丁廷焕', '魏儒照', '魏儒勋', '魏儒焕', '魏儒焘'] },
+            { name: '西塘', count: 3, lon: 120.88, lat: 30.95, disciples: ['李煒', '李應機', '李泰來'] },
+            { name: '平湖', count: 13, lon: 121.02, lat: 30.68, disciples: ['倪淑則', '趙光緒', '沈宏勳', '曹宗柱', '王素行', '陸奎勋', '陸其暐', '俞曾模', '陸邦烈', '陸攀', '陳榮樟', '陸律', '王鴻志'] },
+            { name: '平湖新埭·陆陇其家', count: 0, lon: 121.11, lat: 30.84, disciples: [], isHome: true },
+            { name: '朱泾', count: 4, lon: 121.17, lat: 30.90, disciples: ['周心屺', '張慧', '趙鳳翔', '趙慎徽'] },
+            { name: '金山', count: 3, lon: 121.12, lat: 30.83, disciples: ['周梁', '李鉉', '唐定昌'] },
+            { name: '嘉定', count: 8, lon: 121.25, lat: 31.38, disciples: ['侯開國', '李實', '張雲章', '嚴茂初', '吳箴', '汪來成', '沈敏', '朱孚魚', '錢民', '時圯授', '陳上驤'] },
+            { name: '嘉兴', count: 3, lon: 120.76, lat: 30.75, disciples: ['沈顯渭', '程佺', '蔣鶴鳴'] },
+            { name: '娄县', count: 5, lon: 121.22, lat: 31.00, disciples: ['周纁', '趙鳳翔', '趙慎徽', '焦袁熹', '程儀千'] },
+            { name: '松江', count: 3, lon: 121.35, lat: 31.05, disciples: ['唐燮', '夏嘉', '張昰'] },
+            { name: '常熟', count: 2, lon: 120.74, lat: 31.65, disciples: ['席永恂', '席前席'] },
+            { name: '苏州', count: 2, lon: 120.62, lat: 31.30, disciples: ['周靖', '劉澤乾'] },
+            { name: '昆山', count: 2, lon: 120.97, lat: 31.39, disciples: ['朱立誠'] },
+            { name: '青浦', count: 2, lon: 121.12, lat: 31.15, disciples: ['屠王機', '單周傳'] },
+            { name: '杭州', count: 3, lon: 120.15, lat: 30.29, disciples: ['应撝謙', '应禮璧', '应禮琮'] },
+            { name: '庆元', count: 1, lon: 118.82, lat: 27.62, disciples: ['吳運光'] },
+            { name: '华亭', count: 2, lon: 121.22, lat: 31.02, disciples: ['夏嘉', '張昰'] }
+        ];
+
+        // 晚清道光年间弟子数据（陆清献公日记校勘姓氏）
+        const lateQingDisciples = [
+            { name: '婁县', count: 2, lon: 121.22, lat: 31.00, disciples: ['姚椿', '姚楗'] },
+            { name: '吴江', count: 7, lon: 120.68, lat: 31.16, disciples: ['迮鶴壽', '顧宗海', '陳來泰', '陳希恕', '沈超然', '殷兆鏞', '沈曰富'] },
+            { name: '震澤', count: 5, lon: 120.65, lat: 30.95, disciples: ['張履', '吳騰霄', '陳壽熊', '王希曾', '柳清原'] },
+            { name: '平湖', count: 2, lon: 121.02, lat: 30.68, disciples: ['顧廣譽', '卜葆鈖'] },
+            { name: '秀水', count: 1, lon: 120.75, lat: 30.85, disciples: ['王忠'] }
+        ];
+
+        // 三魚堂《四書大全》同校姓氏数据（绿色系）
+        const sanyutangDisciples = [
+            { name: '嘉定', count: 35, lon: 121.25, lat: 31.38, disciples: ['趙俞', '侯開國', '張雲章', '王晦', '歸梁', '王度', '黃洪耀', '陸廷璧', '秦偕', '時圯授', '周宗泰', '董德華', '李實', '侯棠', '周承震', '孫之謀', '張有猷', '金潮', '侯萊', '金封', '吳箴', '侯銓', '侯永', '鄭覲旒', '陸廷錕', '楊志達', '王敬銘', '闞宗宏', '陸廷燦', '汪嘉禾', '秦立', '錢瀛', '陳上驤', '趙春曦', '汪來成', '侯燾'] },
+            { name: '婁縣', count: 8, lon: 121.22, lat: 31.00, disciples: ['周纁', '張昺', '趙鳳翔', '李弘璧', '瞿天潢', '唐燮', '陳王聘'] },
+            { name: '平湖', count: 8, lon: 121.02, lat: 30.68, disciples: ['沈弘勲', '趙光緒', '倪淑則', '王素行', '陳榮樟', '金廷煌', '陸律', '王鴻志'] },
+            { name: '嘉善', count: 7, lon: 120.92, lat: 30.85, disciples: ['柯崇樸', '李光堯', '徐善建', '李應機', '張王典', '張秉維', '丁廷煥'] },
+            { name: '靈壽', count: 5, lon: 114.38, lat: 38.32, disciples: ['馬子騭', '傳擴封', '傅德煥', '貢良楫', '傅維樟'] },
+            { name: '華亭', count: 4, lon: 121.22, lat: 31.02, disciples: ['夏嘉', '夏周翰', '唐定昌'] },
+            { name: '嘉興', count: 3, lon: 120.76, lat: 30.75, disciples: ['蔣鶴鳴', '程佺', '沈顯渭'] },
+            { name: '青浦', count: 2, lon: 121.12, lat: 31.15, disciples: ['王原', '單周傳'] },
+            { name: '錢唐', count: 2, lon: 120.15, lat: 30.25, disciples: ['應禮壁', '應禮琮'] },
+            { name: '金山', count: 1, lon: 121.12, lat: 30.83, disciples: ['焦袁熹'] },
+            { name: '吳縣', count: 1, lon: 120.62, lat: 31.30, disciples: ['周靖'] },
+            { name: '大興', count: 1, lon: 116.33, lat: 39.73, disciples: ['張凱'] },
+            { name: '上海', count: 1, lon: 121.47, lat: 31.23, disciples: ['趙慎徽'] },
+            { name: '徽州', count: 1, lon: 118.33, lat: 29.87, disciples: ['程儀千'] },
+            { name: '杭州', count: 1, lon: 120.15, lat: 30.29, disciples: ['張靄生'] },
+            { name: '三韓', count: 1, lon: 125.00, lat: 42.50, disciples: ['賈澤潤'] },
+            { name: '江陰', count: 1, lon: 120.28, lat: 31.92, disciples: ['徐世沐'] },
+            { name: '松江', count: 1, lon: 121.35, lat: 31.05, disciples: ['張慧'] },
+            { name: '太倉', count: 1, lon: 121.10, lat: 31.45, disciples: ['陳邁'] }
+        ];
+
+        const wmtsConfigs = {
+            'base': {
+                layer: 'base',
+                name: '地形底图',
+                url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+            },
+            'satellite': {
+                layer: 'satellite',
+                name: '卫星影像',
+                url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+            }
+        };
+
+        function createWMTSLayer(config) {
+            return new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: config.url,
+                    crossOrigin: 'anonymous'
+                }),
+                opacity: 0.9
+            });
+        }
+
+        // 创建清初弟子图层（红色系）
+        const earlyQingSource = new ol.source.Vector();
+        geoLocations.forEach(loc => {
+            const feature = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.fromLonLat([loc.lon, loc.lat])),
+                name: loc.name,
+                count: loc.count,
+                disciples: loc.disciples || [],
+                isHome: loc.isHome || false,
+                era: 'early'
+            });
+            earlyQingSource.addFeature(feature);
+        });
+
+        // 创建晚清弟子图层（蓝色系）
+        const lateQingSource = new ol.source.Vector();
+        lateQingDisciples.forEach(loc => {
+            const feature = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.fromLonLat([loc.lon, loc.lat])),
+                name: loc.name,
+                count: loc.count,
+                disciples: loc.disciples || [],
+                era: 'late'
+            });
+            lateQingSource.addFeature(feature);
+        });
+
+        // 创建三魚堂校勘者图层（绿色系）
+        const sanyutangSource = new ol.source.Vector();
+        sanyutangDisciples.forEach(loc => {
+            const feature = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.fromLonLat([loc.lon, loc.lat])),
+                name: loc.name,
+                count: loc.count,
+                disciples: loc.disciples || [],
+                era: 'sanyutang'
+            });
+            sanyutangSource.addFeature(feature);
+        });
+
+        // 清初弟子样式（红色系）
+        const earlyQingLayer = new ol.layer.Vector({
+            source: earlyQingSource,
+            style: function(feature) {
+                const count = feature.get('count');
+                const isHome = feature.get('isHome');
+                const isBothMode = currentEra === 'both';
+                
+                if (isHome) {
+                    return new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 12,
+                            fill: new ol.style.Fill({ color: '#b8860b' }),
+                            stroke: new ol.style.Stroke({ color: '#fff', width: 3 })
+                        }),
+                        text: new ol.style.Text({
+                            text: feature.get('name'),
+                            font: 'bold 12px Noto Sans SC',
+                            fill: new ol.style.Fill({ color: '#b8860b' }),
+                            stroke: new ol.style.Stroke({ color: '#fff', width: 3 }),
+                            offsetY: -20,
+                            textAlign: 'center'
+                        })
+                    });
+                }
+                
+                const size = count >= 10 ? 18 : count >= 5 ? 14 : count >= 3 ? 10 : 7;
+                const color = count >= 10 ? '#8b3a3a' : count >= 5 ? '#a04040' : '#c06060';
+                // 同时显示时，标签向上偏移
+                const labelOffsetY = isBothMode ? -size - 25 : -size - 8;
+
+                return new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: size,
+                        fill: new ol.style.Fill({ color: color }),
+                        stroke: new ol.style.Stroke({ color: '#fff', width: 2 })
+                    }),
+                    text: new ol.style.Text({
+                        text: feature.get('name') + '(' + count + ')',
+                        font: 'bold 11px Noto Sans SC',
+                        fill: new ol.style.Fill({ color: '#1a1a1a' }),
+                        stroke: new ol.style.Stroke({ color: '#fff', width: 2 }),
+                        offsetY: labelOffsetY,
+                        textAlign: 'center'
+                    })
+                });
+            }
+        });
+
+        // 晚清弟子样式（蓝色系）
+        const lateQingLayer = new ol.layer.Vector({
+            source: lateQingSource,
+            style: function(feature) {
+                const count = feature.get('count');
+                const isBothMode = currentEra === 'both';
+                const size = count >= 5 ? 16 : count >= 3 ? 12 : 8;
+                const color = count >= 5 ? '#1e5aa8' : count >= 3 ? '#2e7ad8' : '#4e9af8';
+                // 同时显示时，标签向下偏移
+                const labelOffsetY = isBothMode ? -size + 10 : -size - 8;
+
+                return new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: size,
+                        fill: new ol.style.Fill({ color: color }),
+                        stroke: new ol.style.Stroke({ color: '#fff', width: 2 })
+                    }),
+                    text: new ol.style.Text({
+                        text: feature.get('name') + '(' + count + ')',
+                        font: 'bold 11px Noto Sans SC',
+                        fill: new ol.style.Fill({ color: '#1e5aa8' }),
+                        stroke: new ol.style.Stroke({ color: '#fff', width: 2 }),
+                        offsetY: labelOffsetY,
+                        textAlign: 'center'
+                    })
+                });
+            },
+            visible: false
+        });
+
+        // 三魚堂校勘者样式（绿色系）
+        const sanyutangLayer = new ol.layer.Vector({
+            source: sanyutangSource,
+            style: function(feature) {
+                const count = feature.get('count');
+                const isBothMode = currentEra === 'both';
+                const size = count >= 20 ? 20 : count >= 10 ? 16 : count >= 5 ? 12 : 8;
+                const color = count >= 20 ? '#2d6a4f' : count >= 10 ? '#40916c' : count >= 5 ? '#52b788' : '#74c69d';
+                // 同时显示时，标签保持在中间位置
+                const labelOffsetY = isBothMode ? -size - 8 : -size - 8;
+
+                return new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: size,
+                        fill: new ol.style.Fill({ color: color }),
+                        stroke: new ol.style.Stroke({ color: '#fff', width: 2 })
+                    }),
+                    text: new ol.style.Text({
+                        text: feature.get('name') + '(' + count + ')',
+                        font: 'bold 11px Noto Sans SC',
+                        fill: new ol.style.Fill({ color: '#2d6a4f' }),
+                        stroke: new ol.style.Stroke({ color: '#fff', width: 2 }),
+                        offsetY: labelOffsetY,
+                        textAlign: 'center'
+                    })
+                });
+            },
+            visible: false
+        });
+
+        let currentWMTSLayer = createWMTSLayer(wmtsConfigs['base']);
+
+        const map = new ol.Map({
+            target: 'map',
+            layers: [currentWMTSLayer, earlyQingLayer, sanyutangLayer, lateQingLayer],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([120.9, 30.9]),
+                zoom: 8,
+                minZoom: 4,
+                maxZoom: 18
+            })
+        });
+
+        // 自适应显示所有标记点
+        function fitToExtent() {
+            const extent = earlyQingSource.getExtent();
+            map.getView().fit(extent, {
+                padding: [50, 50, 50, 50],
+                maxZoom: 10
+            });
+        }
+
+        // 地图加载完成后自适应
+        setTimeout(fitToExtent, 500);
+
+        function resetView() {
+            fitToExtent();
+        }
+
+        // 切换时代显示
+        let currentEra = 'early';
+
+        // 图例配置数据
+        const legendConfig = {
+            early: {
+                name: '清初',
+                sizes: [
+                    { radius: 4, label: '1-2人', count: '1-2' },
+                    { radius: 6, label: '3-4人', count: '3-4' },
+                    { radius: 8, label: '5-9人', count: '5-9' },
+                    { radius: 10, label: '10+人', count: '10+' }
+                ],
+                colors: [
+                    { color: '#c06060', label: '较少 (1-4人)' },
+                    { color: '#a04040', label: '中等 (5-9人)' },
+                    { color: '#8b3a3a', label: '较多 (10+人)' }
+                ],
+                stats: {
+                    totalDisciples: 61,
+                    totalLocations: 17,
+                    topLocation: '平湖',
+                    topCount: 13
+                }
+            },
+            sanyutang: {
+                name: '四書大全',
+                sizes: [
+                    { radius: 4, label: '1-4人', count: '1-4' },
+                    { radius: 6, label: '5-9人', count: '5-9' },
+                    { radius: 8, label: '10-19人', count: '10-19' },
+                    { radius: 10, label: '20+人', count: '20+' }
+                ],
+                colors: [
+                    { color: '#74c69d', label: '较少 (1-4人)' },
+                    { color: '#52b788', label: '中等 (5-9人)' },
+                    { color: '#40916c', label: '较多 (10-19人)' },
+                    { color: '#2d6a4f', label: '最多 (20+人)' }
+                ],
+                stats: {
+                    totalDisciples: 91,
+                    totalLocations: 19,
+                    topLocation: '嘉定',
+                    topCount: 35
+                }
+            },
+            late: {
+                name: '晚清日记',
+                sizes: [
+                    { radius: 4, label: '1-2人', count: '1-2' },
+                    { radius: 6, label: '3-4人', count: '3-4' },
+                    { radius: 8, label: '5+人', count: '5+' }
+                ],
+                colors: [
+                    { color: '#4e9af8', label: '较少 (1-2人)' },
+                    { color: '#2e7ad8', label: '中等 (3-4人)' },
+                    { color: '#1e5aa8', label: '较多 (5+人)' }
+                ],
+                stats: {
+                    totalDisciples: 17,
+                    totalLocations: 5,
+                    topLocation: '吴江',
+                    topCount: 7
+                }
+            },
+            both: {
+                name: '综合',
+                sizes: [
+                    { radius: 4, label: '1-4人', count: '1-4' },
+                    { radius: 6, label: '5-9人', count: '5-9' },
+                    { radius: 8, label: '10-19人', count: '10-19' },
+                    { radius: 10, label: '20+人', count: '20+' }
+                ],
+                colors: [
+                    { color: '#8b3a3a', label: '清初 (红色系)' },
+                    { color: '#2d6a4f', label: '四書大全 (绿色系)' },
+                    { color: '#1e5aa8', label: '晚清日记 (蓝色系)' }
+                ],
+                stats: {
+                    totalDisciples: 169,
+                    totalLocations: 30,
+                    topLocation: '嘉定',
+                    topCount: 35
+                }
+            }
+        };
+
+        // 更新地图图例
+        function updateMapLegend(era) {
+            const config = legendConfig[era];
+            
+            // 更新时代标签
+            const eraLabel = document.getElementById('mapLegendEra');
+            eraLabel.textContent = config.name;
+            eraLabel.className = 'map-legend-era ' + era;
+
+            // 更新圆点大小
+            const sizesContainer = document.getElementById('mapLegendSizes');
+            sizesContainer.innerHTML = config.sizes.map(s => `
+                <div class="map-legend-size-item">
+                    <div class="map-legend-circle ${era}" style="width: ${s.radius * 2}px; height: ${s.radius * 2}px;"></div>
+                    <span class="map-legend-size-label">${s.label}</span>
+                </div>
+            `).join('');
+
+            // 更新颜色说明
+            const colorsContainer = document.getElementById('mapLegendColors');
+            colorsContainer.innerHTML = config.colors.map(c => `
+                <div class="map-legend-color-row">
+                    <div class="map-legend-color-box" style="background: ${c.color};"></div>
+                    <span class="map-legend-color-label">${c.label}</span>
+                </div>
+            `).join('');
+
+            // 更新统计数据
+            const statsContainer = document.getElementById('mapLegendStats');
+            statsContainer.innerHTML = `
+                <div class="map-legend-stat">
+                    <div class="map-legend-stat-value">${config.stats.totalDisciples}</div>
+                    <div class="map-legend-stat-label">总弟子数</div>
+                </div>
+                <div class="map-legend-stat">
+                    <div class="map-legend-stat-value">${config.stats.totalLocations}</div>
+                    <div class="map-legend-stat-label">分布地点</div>
+                </div>
+                <div class="map-legend-stat">
+                    <div class="map-legend-stat-value">${config.stats.topLocation}</div>
+                    <div class="map-legend-stat-label">最多地点</div>
+                </div>
+                <div class="map-legend-stat">
+                    <div class="map-legend-stat-value">${config.stats.topCount}</div>
+                    <div class="map-legend-stat-label">最多人数</div>
+                </div>
+            `;
+
+            // 清初时代显示故居标记
+            const homeLegend = document.getElementById('mapLegendHome');
+            homeLegend.style.display = (era === 'early' || era === 'both') ? 'flex' : 'none';
+        }
+
+        function switchEra(era) {
+            currentEra = era;
+            if (era === 'early') {
+                earlyQingLayer.setVisible(true);
+                sanyutangLayer.setVisible(false);
+                lateQingLayer.setVisible(false);
+                // 添加淡入动画效果（更慢更明显）
+                earlyQingLayer.setOpacity(0);
+                let opacity = 0;
+                const fadeIn = setInterval(() => {
+                    opacity += 0.03;
+                    earlyQingLayer.setOpacity(opacity);
+                    if (opacity >= 1) clearInterval(fadeIn);
+                }, 120);
+            } else if (era === 'sanyutang') {
+                earlyQingLayer.setVisible(false);
+                sanyutangLayer.setVisible(true);
+                lateQingLayer.setVisible(false);
+                // 添加淡入动画效果（更慢更明显）
+                sanyutangLayer.setOpacity(0);
+                let opacity = 0;
+                const fadeIn = setInterval(() => {
+                    opacity += 0.03;
+                    sanyutangLayer.setOpacity(opacity);
+                    if (opacity >= 1) clearInterval(fadeIn);
+                }, 120);
+            } else if (era === 'late') {
+                earlyQingLayer.setVisible(false);
+                sanyutangLayer.setVisible(false);
+                lateQingLayer.setVisible(true);
+                // 添加淡入动画效果（更慢更明显）
+                lateQingLayer.setOpacity(0);
+                let opacity = 0;
+                const fadeIn = setInterval(() => {
+                    opacity += 0.03;
+                    lateQingLayer.setOpacity(opacity);
+                    if (opacity >= 1) clearInterval(fadeIn);
+                }, 120);
+            } else if (era === 'both') {
+                // 同时显示三个图层
+                earlyQingLayer.setVisible(true);
+                sanyutangLayer.setVisible(true);
+                lateQingLayer.setVisible(true);
+                // 先保持当前透明度，然后淡入到1
+                let opacity = earlyQingLayer.getOpacity() || 0;
+                if (opacity >= 1) opacity = 0;
+                const fadeIn = setInterval(() => {
+                    opacity += 0.03;
+                    earlyQingLayer.setOpacity(opacity);
+                    sanyutangLayer.setOpacity(opacity);
+                    lateQingLayer.setOpacity(opacity);
+                    if (opacity >= 1) clearInterval(fadeIn);
+                }, 120);
+            }
+            
+            // 刷新所有图层样式以应用新的标签位置
+            earlyQingLayer.changed();
+            sanyutangLayer.changed();
+            lateQingLayer.changed();
+            
+            // 更新按钮状态
+            document.querySelectorAll('.era-btn').forEach(btn => {
+                if (btn.id !== 'autoPlayBtn') {
+                    btn.classList.remove('active');
+                    if (btn.dataset.era === era) {
+                        btn.classList.add('active');
+                    }
+                }
+            });
+
+            // 更新图例
+            updateMapLegend(era);
+        }
+
+        // 初始化图例
+        updateMapLegend('early');
+
+        // 自动播放功能
+        let autoPlayInterval = null;
+        let isAutoPlaying = false;
+        const eras = ['early', 'sanyutang', 'late', 'both'];
+        let currentEraIndex = 0;
+
+        function toggleAutoPlay() {
+            const btn = document.getElementById('autoPlayBtn');
+            if (isAutoPlaying) {
+                // 停止自动播放
+                clearInterval(autoPlayInterval);
+                isAutoPlaying = false;
+                btn.innerHTML = '▶ 自动播放';
+                btn.classList.remove('active');
+            } else {
+                // 开始自动播放
+                isAutoPlaying = true;
+                btn.innerHTML = '⏸ 停止播放';
+                btn.classList.add('active');
+                
+                // 立即切换一次
+                currentEraIndex = (currentEraIndex + 1) % eras.length;
+                switchEra(eras[currentEraIndex]);
+                
+                // 每4秒切换一次
+                autoPlayInterval = setInterval(() => {
+                    currentEraIndex = (currentEraIndex + 1) % eras.length;
+                    switchEra(eras[currentEraIndex]);
+                }, 4000);
+            }
+        }
+
+        // 地图悬停提示功能
+        const tooltip = document.getElementById('mapTooltip');
+        let currentFeature = null;
+
+        // 鼠标移动事件
+        map.on('pointermove', function(e) {
+            const feature = map.forEachFeatureAtPixel(e.pixel, function(feature) {
+                return feature;
+            });
+
+            if (feature && feature.get('name')) {
+                const name = feature.get('name');
+                const count = feature.get('count');
+                const disciples = feature.get('disciples') || [];
+                
+                // 构建弟子名字列表（最多显示8个，超出显示省略）
+                let discipleText = '';
+                if (disciples.length > 0) {
+                    const displayDisciples = disciples.slice(0, 8);
+                    discipleText = displayDisciples.join('、');
+                    if (disciples.length > 8) {
+                        discipleText += ' 等';
+                    }
+                }
+
+                tooltip.innerHTML = `
+                    <h4>${name}</h4>
+                    <div class="disciple-list">${discipleText}</div>
+                    <div class="disciple-count">共 ${count} 位弟子</div>
+                `;
+
+                // 定位 tooltip
+                const coordinate = e.coordinate;
+                const pixel = map.getPixelFromCoordinate(coordinate);
+                const mapRect = document.getElementById('map').getBoundingClientRect();
+                
+                tooltip.style.display = 'block';
+                tooltip.style.left = (pixel[0] - tooltip.offsetWidth / 2) + 'px';
+                tooltip.style.top = (pixel[1] - tooltip.offsetHeight - 15) + 'px';
+
+                // 改变鼠标样式
+                map.getTargetElement().style.cursor = 'pointer';
+                currentFeature = feature;
+            } else {
+                tooltip.style.display = 'none';
+                map.getTargetElement().style.cursor = '';
+                currentFeature = null;
+            }
+        });
+
+        // 鼠标离开地图时隐藏提示
+        map.getTargetElement().addEventListener('mouseleave', function() {
+            tooltip.style.display = 'none';
+            currentFeature = null;
+        });
+
+        document.getElementById('mapLayerSelect').addEventListener('change', function(e) {
+            const selectedLayer = e.target.value;
+            const config = wmtsConfigs[selectedLayer];
+            if (config) {
+                map.getLayers().clear();
+                map.addLayer(createWMTSLayer(config));
+                map.addLayer(earlyQingLayer);
+                map.addLayer(sanyutangLayer);
+                map.addLayer(lateQingLayer);
+            }
+        });
+
+        Chart.defaults.font.family = "'Noto Sans SC', sans-serif";
+        Chart.defaults.color = '#4a4a4a';
+
+        new Chart(document.getElementById('identityChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(statsData.身份类型统计),
+                datasets: [{
+                    data: Object.values(statsData.身份类型统计),
+                    backgroundColor: ['#2d5a5a', '#8b3a3a', '#b8860b', '#4a7c59', '#6b5b95', '#d65076', '#45b7d1', '#96ceb4'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { padding: 15, usePointStyle: true } } }
+            }
+        });
+
+        new Chart(document.getElementById('achievementChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(statsData.科举成就统计),
+                datasets: [{
+                    label: '人数',
+                    data: Object.values(statsData.科举成就统计),
+                    backgroundColor: ['#8b3a3a', '#b8860b', '#2d5a5a', '#4a7c59', '#6b5b95', '#96ceb4'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('teacherChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(statsData.师承关系统计),
+                datasets: [{
+                    data: Object.values(statsData.师承关系统计),
+                    backgroundColor: ['#2d5a5a', '#8b3a3a', '#b8860b', '#6b5b95'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        new Chart(document.getElementById('specialChart'), {
+            type: 'radar',
+            data: {
+                labels: ['女婿', '族叔', '编纂年谱者'],
+                datasets: [{
+                    label: '人数',
+                    data: [1, 2, 3],
+                    backgroundColor: 'rgba(45, 90, 90, 0.2)',
+                    borderColor: '#2d5a5a',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#8b3a3a'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { r: { beginAtZero: true, max: 5 } }
+            }
+        });
+
+        // 加载弟子年谱/日记数据
+        let disciplesData = [];
+        let currentFilter = 'all';
+        let disciplesRecords = [];
+
+        // 渲染弟子记录卡片
+        function renderChronicleCards(filter = 'all') {
+            const container = document.getElementById('chronicleContainer');
+            container.innerHTML = '';
+
+            const filteredData = filter === 'all' 
+                ? disciplesRecords 
+                : disciplesRecords.filter(r => r.category === filter);
+
+            filteredData.forEach((record, index) => {
+                const card = document.createElement('div');
+                card.className = `chronicle-card ${record.category} animate-in delay-${(index % 4) + 1}`;
+                
+                const typeLabel = {
+                    'chronicle': '年譜',
+                    'diary': '日記',
+                    'quotes': '語錄'
+                }[record.category] || '記載';
+
+                card.innerHTML = `
+                    <div class="chronicle-header">
+                        <div>
+                            <span class="chronicle-name">${record.name}</span>
+                            ${record.styleName ? `<span class="chronicle-style">字${record.styleName}</span>` : ''}
+                        </div>
+                        <span class="chronicle-type ${record.category}">${typeLabel}</span>
+                    </div>
+                    <div class="chronicle-content">${record.content}</div>
+                    ${record.additional ? `<div class="chronicle-content" style="margin-top: 0.5rem; color: var(--ink-gray);">${record.additional}</div>` : ''}
+                    <div class="chronicle-source">${record.source}</div>
+                    <span class="chronicle-origin">📍 ${record.origin}${record.originLocation ? ' · ' + record.originLocation : ''} · ${record.type}</span>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // 异步加载弟子记录数据
+        async function loadDisciplesRecords() {
+            try {
+                const response = await fetch('disciples_records.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                disciplesRecords = await response.json();
+            } catch (error) {
+                console.error('加载弟子记录数据失败:', error);
+                // 显示错误提示
+                const container = document.getElementById('chronicleContainer');
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--ink-gray);">
+                        <p>数据加载失败，请刷新页面重试</p>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">错误信息: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 筛选按钮事件
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderChronicleCards(currentFilter);
+            });
+        });
+
+        // 师徒关系网络图
+        let network = null;
+        let networkData = null;
+
+        // 初始化网络图
+        async function initNetwork() {
+            try {
+                const response = await fetch('teacher_student_network.json');
+                const data = await response.json();
+
+                // 创建节点和边的数据集
+                const nodes = new vis.DataSet(data.nodes.map(node => ({
+                    ...node,
+                    color: node.group === 'teacher' ? {
+                        background: '#c41e3a',
+                        border: '#8b3a3a',
+                        highlight: { background: '#d65076', border: '#8b3a3a' }
+                    } : node.group === 'family' ? {
+                        background: '#e85d75',
+                        border: '#c41e3a',
+                        highlight: { background: '#f08a9e', border: '#c41e3a' }
+                    } : node.group === 'relative' ? {
+                        background: '#b8860b',
+                        border: '#8b6914',
+                        highlight: { background: '#d4a84b', border: '#8b6914' }
+                    } : {
+                        background: '#2d5a5a',
+                        border: '#1e3a3a',
+                        highlight: { background: '#4a7c7c', border: '#1e3a3a' }
+                    },
+                    font: { color: '#1a1a1a', size: 14, face: 'Noto Serif SC' },
+                    shape: 'dot',
+                    size: node.group === 'teacher' ? 25 : (node.group === 'family' ? 18 : (node.group === 'relative' ? 15 : 10)),
+                    borderWidth: 2,
+                    shadow: { enabled: true, color: 'rgba(0,0,0,0.2)', size: 10 }
+                })));
+
+                const edges = new vis.DataSet(data.edges.map(edge => ({
+                    ...edge,
+                    color: { color: '#999', highlight: '#666' },
+                    width: 1,
+                    smooth: { type: 'continuous' },
+                    dashes: edge.dashes || false
+                })));
+
+                networkData = { nodes, edges };
+
+                const container = document.getElementById('networkContainer');
+                const options = {
+                    nodes: {
+                        borderWidth: 2,
+                        shadow: true
+                    },
+                    edges: {
+                        width: 1,
+                        shadow: false,
+                        smooth: {
+                            type: 'continuous'
+                        }
+                    },
+                    physics: {
+                        stabilization: false,
+                        barnesHut: {
+                            gravitationalConstant: -2000,
+                            centralGravity: 0.3,
+                            springLength: 95,
+                            springConstant: 0.04,
+                            damping: 0.09,
+                            avoidOverlap: 0.1
+                        }
+                    },
+                    interaction: {
+                        hover: true,
+                        tooltipDelay: 200,
+                        hideEdgesOnDrag: true
+                    },
+                    layout: {
+                        randomSeed: 2
+                    }
+                };
+
+                network = new vis.Network(container, networkData, options);
+
+                // 添加点击事件
+                network.on('click', function(params) {
+                    if (params.nodes.length > 0) {
+                        const nodeId = params.nodes[0];
+                        const node = nodes.get(nodeId);
+                        console.log('点击了节点:', node);
+                    }
+                });
+
+            } catch (error) {
+                console.error('加载网络图数据失败:', error);
+                document.getElementById('networkContainer').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--ink-gray);">
+                        <p>网络图数据加载失败</p>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">错误信息: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 适应视图
+        function fitNetwork() {
+            if (network) {
+                network.fit({
+                    animation: {
+                        duration: 1000,
+                        easingFunction: 'easeInOutQuad'
+                    }
+                });
+            }
+        }
+
+        // 重置网络图
+        function resetNetwork() {
+            if (network) {
+                network.fit();
+                network.redraw();
+            }
+        }
+
+        // 页面初始化
+        async function initializePage() {
+            // 先加载数据
+            await loadDisciplesRecords();
+            // 数据加载完成后渲染
+            renderChronicleCards();
+            // 初始化网络图
+            await initNetwork();
+        }
+
+        // 启动初始化
+        initializePage();
+
+        // ==================== 陆陇其行迹图功能代码 ====================
+        // 从外部 JSON 文件加载数据
+        let lifeTraceEvents = [];
+        let lifeTraceMap;
+        let lifeTraceMarkers = [];
+        let lifeTraceTrackLines = [];
+        let lifeTraceAnimationTimer = null;
+        let lifeTraceHighlightTimer = null;
+        let lifeTraceSlider, lifeTraceDisplay, lifeTraceStageLabel;
+
+        // 字段映射：将 JSON 格式转换为内部使用的格式
+        function mapEventData(rawData) {
+            return rawData.map(item => ({
+                year: item.year,
+                age: item.age,
+                loc: item.location,
+                event: item.event,
+                type: item.type,
+                lat: item.coords[1],
+                lng: item.coords[0]
+            }));
+        }
+
+        // 行迹图颜色映射
+        const lifeTraceColorMap = {
+            "出生": "#8B4513", 
+            "逝世": "#2c2c2c", 
+            "就馆": "#1565C0", 
+            "仕宦": "#C62828", 
+            "科举": "#EF6C00", 
+            "赴考": "#FF8F00", 
+            "赴选": "#FF8F00", 
+            "会友": "#2E7D32", 
+            "教学": "#6A1B9A", 
+            "著述": "#4E342E", 
+            "治学": "#AD1457", 
+            "游历": "#455A64", 
+            "归乡": "#827717", 
+            "丧亲": "#00695C", 
+            "公务": "#00838F", 
+            "家事": "#546E7A"
+        };
+
+        const lifeTracePeriodNames = {
+            '1630-1674': '早年求学与就馆（1630—1674）',
+            '1675-1677': '嘉定知县任（1675—1677）',
+            '1678-1682': '罢归复起与京师（1678—1682）',
+            '1683-1690': '灵寿知县任（1683—1690）',
+            '1690-1693': '御史与晚年归里（1690—1693）'
+        };
+
+        // 异步加载 JSON 数据
+        async function loadLifeTraceData() {
+            try {
+                const response = await fetch('lulonqgqilife/陆陇其年谱结构化数据.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const rawData = await response.json();
+                lifeTraceEvents = mapEventData(rawData);
+                initLifeTraceMap();
+            } catch (error) {
+                console.error('加载行迹图数据失败:', error);
+            }
+        }
+
+        // 初始化行迹图地图
+        function initLifeTraceMap() {
+            lifeTraceMap = L.map('lifeTraceMap', { zoomControl: false }).setView([33.5, 117.5], 6);
+            L.control.zoom({ position: 'topright' }).addTo(lifeTraceMap);
+
+            // 底图 - Esri World Physical（自然地理底图，无政治边界）
+            const physicalLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; Esri &mdash; Natural Earth',
+                maxZoom: 8
+            });
+
+            // 默认加载自然地理底图
+            physicalLayer.addTo(lifeTraceMap);
+
+            L.control.scale({position: 'bottomright', imperial: false}).addTo(lifeTraceMap);
+
+            // 绘制行迹连线
+            for (let i = 0; i < lifeTraceEvents.length - 1; i++) {
+                const e1 = lifeTraceEvents[i];
+                const e2 = lifeTraceEvents[i + 1];
+                const ratio = i / (lifeTraceEvents.length - 1);
+                const r = Math.floor(120 + ratio * 60);
+                const g = Math.floor(100 + ratio * 50);
+                const b = Math.floor(90 + ratio * 40);
+                
+                const line = L.polyline([[e1.lat, e1.lng], [e2.lat, e2.lng]], {
+                    color: `rgb(${r},${g},${b})`,
+                    weight: 2, 
+                    opacity: 0.5, 
+                    dashArray: '5, 8'
+                }).addTo(lifeTraceMap);
+                
+                line._fromYear = e1.year;
+                line._toYear = e2.year;
+                lifeTraceTrackLines.push(line);
+            }
+
+            // 绘制标记
+            lifeTraceEvents.forEach((e, idx) => {
+                const color = lifeTraceColorMap[e.type] || '#555';
+                const isEndpoint = (e.type === '出生' || e.type === '逝世');
+                const radius = isEndpoint ? 11 : 7;
+                const weight = isEndpoint ? 3 : 2;
+
+                const popupHtml = `<div class="life-trace-popup-content">
+                    <h4 style="border-color:${color}">${e.year}年 · ${e.loc}</h4>
+                    <div class="meta">
+                        <span>${e.age}岁</span>
+                        <span style="color:${color};font-weight:500;">${e.type}</span>
+                    </div>
+                    <p class="desc">${e.event}</p>
+                </div>`;
+
+                const marker = L.circleMarker([e.lat, e.lng], {
+                    radius: radius, 
+                    color: color, 
+                    weight: weight,
+                    fillColor: color, 
+                    fillOpacity: 0.8
+                }).addTo(lifeTraceMap).bindPopup(popupHtml);
+
+                marker._year = e.year;
+                marker._type = e.type;
+                marker._event = e.event;
+                marker._index = idx;
+                marker._originalColor = color;
+                marker._originalRadius = radius;
+                lifeTraceMarkers.push(marker);
+            });
+
+            // 生成左侧事件列表
+            generateLifeTraceEventsList();
+
+            // 添加关键地点标注
+            const keyPlaces = [
+                {name: '平湖泖口', lat: 30.70, lng: 121.02, desc: '陆陇其故乡，生于斯，卒于斯'},
+                {name: '嘉定', lat: 31.38, lng: 121.27, desc: '1675—1677 年任知县，廉声远播'},
+                {name: '北京', lat: 39.90, lng: 116.40, desc: '会试、殿试、御史任所，与魏象枢、汤斌等交游'},
+                {name: '灵寿', lat: 38.31, lng: 114.38, desc: '1683—1690 年任知县，刊刻《王学质疑》等'},
+                {name: '常熟虞山', lat: 31.65, lng: 120.75, desc: '席氏馆，晚年多次就馆讲学之地'}
+            ];
+
+            keyPlaces.forEach(p => {
+                L.marker([p.lat, p.lng], {
+                    icon: L.divIcon({
+                        className: 'place-label',
+                        html: `<div style="font-size:13px;font-weight:600;color:var(--ink-black);text-shadow:0 0 4px rgba(255,255,255,0.9);white-space:nowrap;font-family:'Noto Serif SC',serif;letter-spacing:1px;">${p.name}</div>`,
+                        iconSize: [60, 16], 
+                        iconAnchor: [30, 8]
+                    })
+                }).addTo(lifeTraceMap).bindPopup(`<b style="font-family:'Noto Serif SC',serif;">${p.name}</b><br><span style="color:var(--ink-light);">${p.desc}</span>`);
+            });
+
+            // 时间轴控制
+            lifeTraceSlider = document.getElementById('yearSlider');
+            lifeTraceDisplay = document.getElementById('yearDisplay');
+            lifeTraceStageLabel = document.getElementById('stageLabel');
+
+            lifeTraceSlider.addEventListener('input', function() {
+                const year = parseInt(this.value);
+                lifeTraceDisplay.textContent = year + '年';
+                lifeTraceDisplay.style.color = 'var(--lt-cinnabar)';
+                updateLifeTraceMarkers(year);
+                document.getElementById('btnAll').classList.remove('active');
+                lifeTraceStageLabel.textContent = getLifeTracePeriodName(year);
+                lifeTraceStageLabel.classList.add('show');
+                clearTimeout(window._labelTimer);
+                window._labelTimer = setTimeout(() => lifeTraceStageLabel.classList.remove('show'), 2500);
+            });
+
+            showAll();
+        }
+
+        // 更新行迹图标记显示
+        function updateLifeTraceMarkers(year) {
+            lifeTraceMarkers.forEach(m => {
+                if (m._year <= year) {
+                    m.setStyle({opacity: 1, fillOpacity: 0.8});
+                    m.setRadius(m._type === '出生' || m._type === '逝世' ? 11 : 7);
+                } else {
+                    m.setStyle({opacity: 0.1, fillOpacity: 0.05});
+                    m.setRadius(3);
+                }
+            });
+        }
+
+        function getLifeTracePeriodName(year) {
+            if (year <= 1674) return lifeTracePeriodNames['1630-1674'];
+            if (year <= 1677) return lifeTracePeriodNames['1675-1677'];
+            if (year <= 1682) return lifeTracePeriodNames['1678-1682'];
+            if (year <= 1690) return lifeTracePeriodNames['1683-1690'];
+            return lifeTracePeriodNames['1690-1693'];
+        }
+
+        // 生成左侧事件列表
+        function generateLifeTraceEventsList() {
+            const eventsList = document.getElementById('eventsList');
+            const eventCount = document.getElementById('eventCount');
+            
+            eventCount.textContent = lifeTraceEvents.length;
+            
+            lifeTraceEvents.forEach((e, idx) => {
+                const color = lifeTraceColorMap[e.type] || '#555';
+                const item = document.createElement('div');
+                item.className = 'life-trace-event-item';
+                item.dataset.index = idx;
+                item.innerHTML = `
+                    <div class="life-trace-event-year">${e.year}年</div>
+                    <div class="life-trace-event-loc">
+                        <span class="life-trace-event-type-dot" style="background:${color}"></span>
+                        ${e.loc}
+                    </div>
+                    <div class="life-trace-event-desc">${e.event}</div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    selectLifeTraceEvent(idx);
+                });
+                
+                eventsList.appendChild(item);
+            });
+        }
+
+        // 选中行迹图事件
+        function selectLifeTraceEvent(index) {
+            const marker = lifeTraceMarkers[index];
+            const eventItem = document.querySelector(`.life-trace-event-item[data-index="${index}"]`);
+            
+            if (!marker) return;
+            
+            // 高亮地图标记
+            const highlightColor = '#FFD700';
+            const baseRadius = marker._originalRadius;
+            const targetRadius = baseRadius + 8;
+            
+            marker.setStyle({
+                color: highlightColor,
+                weight: 5,
+                fillOpacity: 0.95,
+                opacity: 1
+            });
+            marker.setRadius(targetRadius);
+            marker.openPopup();
+            
+            // 地图中心移动到标记
+            lifeTraceMap.panTo(marker.getLatLng(), {animate: true, duration: 1});
+            
+            // 高亮列表项
+            document.querySelectorAll('.life-trace-event-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (eventItem) {
+                eventItem.classList.add('active');
+                eventItem.scrollIntoView({behavior: 'smooth', block: 'center'});
+            }
+            
+            // 更新滑块位置
+            lifeTraceSlider.value = lifeTraceEvents[index].year;
+            updateLifeTraceMarkers(lifeTraceEvents[index].year);
+            
+            // 1.5 秒后恢复
+            setTimeout(() => {
+                marker.setStyle({
+                    color: marker._originalColor,
+                    weight: marker._type === '出生' || marker._type === '逝世' ? 3 : 2,
+                    fillOpacity: 0.8,
+                    opacity: 1
+                });
+                marker.setRadius(baseRadius);
+                marker.closePopup();
+            }, 1500);
+        }
+
+        function showAll() {
+            lifeTraceSlider.value = 1693;
+            lifeTraceDisplay.textContent = '显示全部';
+            lifeTraceDisplay.style.color = 'var(--lt-cinnabar)';
+            lifeTraceMarkers.forEach(m => {
+                m.setStyle({opacity: 1, fillOpacity: 0.8});
+                m.setRadius(m._type === '出生' || m._type === '逝世' ? 11 : 7);
+            });
+            document.getElementById('btnAll').classList.add('active');
+            clearTimeout(window._labelTimer);
+            lifeTraceStageLabel.classList.remove('show');
+        }
+
+        function filterPeriod(start, end) {
+            lifeTraceSlider.value = end;
+            lifeTraceDisplay.textContent = `${start}—${end}年`;
+            lifeTraceDisplay.style.color = 'var(--lt-cinnabar)';
+            lifeTraceMarkers.forEach(m => {
+                if (m._year >= start && m._year <= end) {
+                    m.setStyle({opacity: 1, fillOpacity: 0.95});
+                    m.setRadius(m._type === '出生' || m._type === '逝世' ? 13 : 9);
+                } else {
+                    m.setStyle({opacity: 0.08, fillOpacity: 0.03});
+                    m.setRadius(3);
+                }
+            });
+            document.getElementById('btnAll').classList.remove('active');
+            
+            // 显示阶段名称
+            lifeTraceStageLabel.textContent = getLifeTracePeriodName(end);
+            lifeTraceStageLabel.classList.add('show');
+            clearTimeout(window._labelTimer);
+            window._labelTimer = setTimeout(() => lifeTraceStageLabel.classList.remove('show'), 3000);
+        }
+
+        // 缓动函数
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        // 高亮当前播放年份的事件标记
+        function highlightCurrentEvent(year, duration) {
+            clearTimeout(lifeTraceHighlightTimer);
+            lifeTraceMarkers.forEach(m => {
+                if (m._year === year) {
+                    const highlightColor = '#FFD700';
+                    const baseRadius = m._originalRadius;
+                    const targetRadius = baseRadius + 8;
+                    const startTime = Date.now();
+                    
+                    m.openPopup();
+                    
+                    function animateHighlight() {
+                        const elapsed = Date.now() - startTime;
+                        const progress = Math.min(elapsed / (duration * 0.3), 1);
+                        const eased = easeInOutCubic(progress);
+                        const currentRadius = baseRadius + (targetRadius - baseRadius) * eased;
+                        
+                        m.setStyle({
+                            color: highlightColor,
+                            weight: 5,
+                            fillOpacity: 0.9 + 0.1 * eased,
+                            opacity: 1
+                        });
+                        m.setRadius(currentRadius);
+                        
+                        if (progress < 1) {
+                            requestAnimationFrame(animateHighlight);
+                        }
+                    }
+                    animateHighlight();
+                    
+                    lifeTraceHighlightTimer = setTimeout(() => {
+                        const restoreStartTime = Date.now();
+                        const restoreDuration = duration * 0.2;
+                        
+                        function animateRestore() {
+                            const elapsed = Date.now() - restoreStartTime;
+                            const progress = Math.min(elapsed / restoreDuration, 1);
+                            const eased = easeInOutCubic(progress);
+                            const currentRadius = targetRadius - (targetRadius - baseRadius) * eased;
+                            
+                            m.setStyle({
+                                color: m._originalColor,
+                                weight: m._type === '出生' || m._type === '逝世' ? 3 : 2,
+                                fillOpacity: 0.8,
+                                opacity: 1
+                            });
+                            m.setRadius(currentRadius);
+                            
+                            if (progress < 1) {
+                                requestAnimationFrame(animateRestore);
+                            } else {
+                                m.closePopup();
+                            }
+                        }
+                        animateRestore();
+                    }, duration * 0.5);
+                }
+            });
+        }
+
+        function playAnimation() {
+            if (lifeTraceAnimationTimer) { 
+                clearInterval(lifeTraceAnimationTimer); 
+                lifeTraceAnimationTimer = null; 
+                document.getElementById('btnPlay').textContent = '▶ 动态播放';
+                return; 
+            }
+            
+            document.getElementById('btnPlay').textContent = '⏸ 暂停播放';
+            let currentIndex = 0;
+            let year = lifeTraceEvents[0].year;
+            lifeTraceSlider.value = year;
+            updateLifeTraceMarkers(year);
+            lifeTraceDisplay.textContent = year + '年';
+            document.getElementById('btnAll').classList.remove('active');
+
+            const eventDuration = 3000;
+
+            lifeTraceAnimationTimer = setInterval(() => {
+                currentIndex++;
+                if (currentIndex >= lifeTraceEvents.length) { 
+                    clearInterval(lifeTraceAnimationTimer); 
+                    lifeTraceAnimationTimer = null; 
+                    document.getElementById('btnPlay').textContent = '▶ 动态播放';
+                    return; 
+                }
+                
+                const currentEvent = lifeTraceEvents[currentIndex];
+                year = currentEvent.year;
+                lifeTraceSlider.value = year;
+                updateLifeTraceMarkers(year);
+                lifeTraceDisplay.textContent = year + '年 · ' + currentEvent.loc;
+                
+                highlightCurrentEvent(year, eventDuration);
+                
+                document.querySelectorAll('.life-trace-event-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                const currentItem = document.querySelector(`.life-trace-event-item[data-index="${currentIndex}"]`);
+                if (currentItem) {
+                    currentItem.classList.add('active');
+                    currentItem.scrollIntoView({behavior: 'smooth', block: 'center'});
+                }
+                
+                lifeTraceMap.panTo([currentEvent.lat, currentEvent.lng], {animate: true, duration: 2});
+                
+            }, eventDuration);
+        }
+
+        // 启动行迹图数据加载
+        loadLifeTraceData();
+    </script>
+</body>
+</html>
