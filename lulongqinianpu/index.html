@@ -1820,6 +1820,8 @@
     <script src="assets/js/modules/dataService.js"></script>
     <script src="assets/js/modules/errorHandler.js"></script>
     <script src="assets/js/modules/loadingManager.js"></script>
+    <script src="assets/js/modules/apiService.js"></script>
+    <script src="assets/js/modules/interactionManager.js"></script>
     <header class="header">
         <div class="header-bg-calligraphy"></div>
         <div class="header-content">
@@ -3141,37 +3143,50 @@
             '1690-1693': '御史与晚年归里（1690—1693）'
         };
 
-        // 使用 DataService 加载行迹图数据
+        // 加载行迹图数据
         async function loadLifeTraceData() {
             try {
-                const rawData = await dataService.loadData('lulonqgqilife/陆陇其年谱结构化数据.json');
+                console.log('开始加载行迹图数据...');
+                const response = await fetch('lulonqgqilife/陆陇其年谱结构化数据.json');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const rawData = await response.json();
+                console.log('行迹图数据加载成功，共', rawData.length, '条记录');
                 lifeTraceEvents = mapEventData(rawData);
+                console.log('数据映射完成，初始化地图...');
                 initLifeTraceMap();
-                errorHandler.showSuccessToast('行迹图数据加载完成', 2000);
+                console.log('地图初始化完成');
             } catch (error) {
-                errorHandler.handleError({
-                    type: 'DATA_LOAD_ERROR',
-                    userMessage: '行迹图数据加载失败',
-                    originalError: error.message,
-                    url: 'lulonqgqilife/陆陇其年谱结构化数据.json'
-                });
+                console.error('行迹图数据加载失败:', error);
             }
         }
 
         // 初始化行迹图地图
         function initLifeTraceMap() {
-            lifeTraceMap = L.map('lifeTraceMap', { zoomControl: false }).setView([33.5, 117.5], 6);
+            console.log('initLifeTraceMap 开始执行');
+            
+            const mapContainer = document.getElementById('lifeTraceMap');
+            console.log('地图容器:', mapContainer, '尺寸:', mapContainer ? mapContainer.offsetWidth + 'x' + mapContainer.offsetHeight : '不存在');
+            
+            if (!mapContainer) {
+                console.error('地图容器未找到！');
+                return;
+            }
+            
+            lifeTraceMap = L.map('lifeTraceMap').setView([33.5, 117.5], 6);
+            console.log('地图实例创建成功:', lifeTraceMap);
+
+            // 添加缩放控件
             L.control.zoom({ position: 'topright' }).addTo(lifeTraceMap);
 
-            // 底图 - Esri World Physical（自然地理底图，无政治边界）
-            const physicalLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '&copy; Esri &mdash; Natural Earth',
-                maxZoom: 8
-            });
+            // 底图 - ArcGIS World_Topo_Map（与第二部分一致）
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Topo Map',
+                maxZoom: 18,
+                minZoom: 3
+            }).addTo(lifeTraceMap);
+            console.log('底图图层添加完成');
 
-            // 默认加载自然地理底图
-            physicalLayer.addTo(lifeTraceMap);
-
+            // 比例尺
             L.control.scale({position: 'bottomright', imperial: false}).addTo(lifeTraceMap);
 
             // 绘制行迹连线
@@ -3477,66 +3492,78 @@
             return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         }
 
-        // 高亮当前播放年份的事件标记
-        function highlightCurrentEvent(year, duration) {
+        // 高亮当前播放索引的事件标记
+        function highlightCurrentEvent(index, duration) {
             clearTimeout(lifeTraceHighlightTimer);
-            lifeTraceMarkers.forEach(m => {
-                if (m._year === year) {
-                    const highlightColor = '#FFD700';
-                    const baseRadius = m._originalRadius;
-                    const targetRadius = baseRadius + 8;
-                    const startTime = Date.now();
-                    
-                    m.openPopup();
-                    
-                    function animateHighlight() {
-                        const elapsed = Date.now() - startTime;
-                        const progress = Math.min(elapsed / (duration * 0.3), 1);
-                        const eased = easeInOutCubic(progress);
-                        const currentRadius = baseRadius + (targetRadius - baseRadius) * eased;
-                        
-                        m.setStyle({
-                            color: highlightColor,
-                            weight: 5,
-                            fillOpacity: 0.9 + 0.1 * eased,
-                            opacity: 1
-                        });
-                        m.setRadius(currentRadius);
-                        
-                        if (progress < 1) {
-                            requestAnimationFrame(animateHighlight);
-                        }
-                    }
-                    animateHighlight();
-                    
-                    lifeTraceHighlightTimer = setTimeout(() => {
-                        const restoreStartTime = Date.now();
-                        const restoreDuration = duration * 0.2;
-                        
-                        function animateRestore() {
-                            const elapsed = Date.now() - restoreStartTime;
-                            const progress = Math.min(elapsed / restoreDuration, 1);
-                            const eased = easeInOutCubic(progress);
-                            const currentRadius = targetRadius - (targetRadius - baseRadius) * eased;
-                            
-                            m.setStyle({
-                                color: m._originalColor,
-                                weight: m._type === '出生' || m._type === '逝世' ? 3 : 2,
-                                fillOpacity: 0.8,
-                                opacity: 1
-                            });
-                            m.setRadius(currentRadius);
-                            
-                            if (progress < 1) {
-                                requestAnimationFrame(animateRestore);
-                            } else {
-                                m.closePopup();
-                            }
-                        }
-                        animateRestore();
-                    }, duration * 0.5);
+            
+            const marker = lifeTraceMarkers[index];
+            if (!marker) return;
+            
+            const event = lifeTraceEvents[index];
+            const highlightColor = '#FFD700';
+            const baseRadius = marker._originalRadius;
+            const targetRadius = baseRadius + 8;
+            const startTime = Date.now();
+            
+            // 更新 popup 内容
+            const color = lifeTraceColorMap[event.type] || '#555';
+            const popupHtml = `<div class="life-trace-popup-content">
+                <h4 style="border-color:${color}">${event.year}年 · ${event.loc}</h4>
+                <div class="meta">
+                    <span>${event.age}岁</span>
+                    <span style="color:${color};font-weight:500;">${event.type}</span>
+                </div>
+                <p class="desc">${event.event}</p>
+            </div>`;
+            marker.setPopupContent(popupHtml);
+            marker.openPopup();
+            
+            function animateHighlight() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / (duration * 0.3), 1);
+                const eased = easeInOutCubic(progress);
+                const currentRadius = baseRadius + (targetRadius - baseRadius) * eased;
+                
+                marker.setStyle({
+                    color: highlightColor,
+                    weight: 5,
+                    fillOpacity: 0.9 + 0.1 * eased,
+                    opacity: 1
+                });
+                marker.setRadius(currentRadius);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateHighlight);
                 }
-            });
+            }
+            animateHighlight();
+            
+            lifeTraceHighlightTimer = setTimeout(() => {
+                const restoreStartTime = Date.now();
+                const restoreDuration = duration * 0.2;
+                
+                function animateRestore() {
+                    const elapsed = Date.now() - restoreStartTime;
+                    const progress = Math.min(elapsed / restoreDuration, 1);
+                    const eased = easeInOutCubic(progress);
+                    const currentRadius = targetRadius - (targetRadius - baseRadius) * eased;
+                    
+                    marker.setStyle({
+                        color: marker._originalColor,
+                        weight: marker._type === '出生' || marker._type === '逝世' ? 3 : 2,
+                        fillOpacity: 0.8,
+                        opacity: 1
+                    });
+                    marker.setRadius(currentRadius);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animateRestore);
+                    } else {
+                        marker.closePopup();
+                    }
+                }
+                animateRestore();
+            }, duration * 0.5);
         }
 
         function playAnimation() {
@@ -3572,7 +3599,7 @@
                 updateLifeTraceMarkers(year);
                 lifeTraceDisplay.textContent = year + '年 · ' + currentEvent.loc;
                 
-                highlightCurrentEvent(year, eventDuration);
+                highlightCurrentEvent(currentIndex, eventDuration);
                 
                 document.querySelectorAll('.life-trace-event-item').forEach(item => {
                     item.classList.remove('active');
