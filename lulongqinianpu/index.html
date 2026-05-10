@@ -1868,6 +1868,106 @@
                 padding: 0.5rem 1rem;
             }
         }
+
+        /* 七部分导航栏 */
+        .section-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(245, 240, 232, 0.45);
+            border-top: 1px solid rgba(160, 128, 96, 0.18);
+            border-bottom: 1px solid rgba(160, 128, 96, 0.18);
+            backdrop-filter: blur(2px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-nav::before,
+        .section-nav::after {
+            content: '◆';
+            color: rgba(160, 128, 96, 0.35);
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 0.85rem;
+            text-decoration: none;
+            color: var(--ink-gray);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 52px;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--cinnabar);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--cinnabar);
+            background: rgba(196, 30, 58, 0.06);
+        }
+
+        .nav-item:hover::after {
+            width: 60%;
+        }
+
+        .nav-item.active {
+            color: var(--cinnabar);
+            background: rgba(196, 30, 58, 0.08);
+        }
+
+        .nav-item.active::after {
+            width: 60%;
+        }
+
+        .nav-num {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .nav-label {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .section-nav {
+                gap: 0.25rem;
+                padding: 0.5rem;
+            }
+            .nav-item {
+                padding: 0.4rem 0.5rem;
+                min-width: 44px;
+            }
+            .nav-num {
+                font-size: 1rem;
+            }
+            .nav-label {
+                font-size: 0.65rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1885,11 +1985,43 @@
             <p class="subtitle">陆陇其（1630-1693），浙江平湖人，清初学者，清代首个从祀孔庙的儒者。</p>
             <p class="source">陆陇其一生的可视化呈现</p>
         </div>
+
+        <!-- 七部分导航 -->
+        <nav class="section-nav">
+            <a href="#part1" class="nav-item active" data-target="part1">
+                <span class="nav-num">一</span>
+                <span class="nav-label">行迹图</span>
+            </a>
+            <a href="#part2" class="nav-item" data-target="part2">
+                <span class="nav-num">二</span>
+                <span class="nav-label">地理分布</span>
+            </a>
+            <a href="#part3" class="nav-item" data-target="part3">
+                <span class="nav-num">三</span>
+                <span class="nav-label">师徒网络</span>
+            </a>
+            <a href="#part4" class="nav-item" data-target="part4">
+                <span class="nav-num">四</span>
+                <span class="nav-label">弟子统计</span>
+            </a>
+            <a href="#part5" class="nav-item" data-target="part5">
+                <span class="nav-num">五</span>
+                <span class="nav-label">文献记录</span>
+            </a>
+            <a href="#part6" class="nav-item" data-target="part6">
+                <span class="nav-num">六</span>
+                <span class="nav-label">年谱叙述</span>
+            </a>
+            <a href="#part7" class="nav-item" data-target="part7">
+                <span class="nav-num">七</span>
+                <span class="nav-label">参考文献</span>
+            </a>
+        </nav>
     </header>
 
     <main class="container">
         <!-- 第一部分：陆陇其行迹图 -->
-        <section class="life-trace-section">
+        <section id="part1" class="life-trace-section">
             <h2 class="section-title">第一部分 陆陇其行迹图 · 1630—1693</h2>
             <div class="life-trace-wrapper">
                 <div id="lifeTraceMap"></div>
@@ -1956,7 +2088,7 @@
         </section>
 
         <!-- 第二部分：地图 - 弟子地理分布 -->
-        <section class="section-block">
+        <section id="part2" class="section-block">
             <h2 class="section-title">第二部分 不同时代弟子的地理分布</h2>
             <section class="map-wrapper">
                 <h3>🗺️ 弟子地理分布</h3>
@@ -2019,7 +2151,7 @@
         </section>
 
         <!-- 第三部分：师徒关系网络 -->
-        <section class="section-block">
+        <section id="part3" class="section-block">
             <h2 class="section-title">第三部分 师徒关系网络</h2>
             <div class="map-description">
                 <p>本网络图展示了陆陇其与其弟子之间的师承关系，以及弟子之间的家族关系（父子、兄弟）。节点大小代表该弟子在文献中的重要性，实线表示师徒关系，虚线表示家族关系。</p>
@@ -2101,7 +2233,7 @@
         </section>
 
         <!-- 第四部分：弟子统计 -->
-        <section class="section-block">
+        <section id="part4" class="section-block">
             <h2 class="section-title">第四部分 弟子统计</h2>
             <div class="map-description">
                 <p>陆陇其的弟子，大多为下层不知名者，具有进士功名只只寥寥数人。其子数量和分布皆与江南市镇网络重合，可以说其思想在他本人从祀孔庙之前，一直在市镇传播。不过他们在抄录陆氏文献、刊刻著作中发挥了重要作用。</p>
@@ -2208,7 +2340,7 @@
         </section>
 
         <!-- 第五部分：日记和年谱等文献中的弟子记录 -->
-        <section class="section-block">
+        <section id="part5" class="section-block">
             <h2 class="section-title">第五部分 日记和年谱等文献中的弟子记录</h2>
             <section class="table-card">
                 <h3>📜 文献记载</h3>
@@ -2225,7 +2357,7 @@
         </section>
 
         <!-- 第六部分：年谱——身后的多元叙述 -->
-        <section class="section-block">
+        <section id="part6" class="section-block">
             <h2 class="section-title">第六部分 年谱——身后的多元叙述</h2>
 
             <section class="table-card">
@@ -2252,7 +2384,7 @@
         </section>
 
         <!-- 第七部分：参考文献 -->
-        <section class="section-block">
+        <section id="part7" class="section-block">
             <h2 class="section-title">第七部分 参考文献</h2>
             <section class="table-card">
                 <h3>📚 参考文献</h3>
@@ -3699,6 +3831,50 @@
 
         // 启动行迹图数据加载
         loadLifeTraceData();
+
+        // 七部分导航交互
+        (function initSectionNav() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('section[id^="part"]');
+
+            // 点击导航平滑滚动
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        const offset = 100; // 导航栏高度预留
+                        const top = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
+                        window.scrollTo({ top: top, behavior: 'smooth' });
+
+                        // 更新激活状态
+                        navItems.forEach(n => n.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+
+            // 滚动时自动高亮对应导航
+            const observerOptions = {
+                root: null,
+                rootMargin: '-100px 0px -60% 0px',
+                threshold: 0
+            };
+
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        navItems.forEach(item => {
+                            item.classList.toggle('active', item.getAttribute('data-target') === id);
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => sectionObserver.observe(section));
+        })();
     </script>
 </body>
 </html>
