@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康熙十六年丁巳（1677）年谱可视化分析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @layer base {
+            :root {
+                --paper: #f5f0e6;
+                --paper-dark: #e8e0d0;
+                --ink: #2c1810;
+                --ink-light: #5c4033;
+                --cinnabar: #b22222;
+                --cinnabar-light: #d4524a;
+                --gold: #b8860b;
+                --gold-light: #daa520;
+                --seal: #8b0000;
+                --bamboo: #6b8e6b;
+                --bamboo-light: #8fbc8f;
+                --mountain: #708090;
+                --cloud: #a0a0a0;
+            }
+            body {
+                font-family: 'Noto Serif SC', serif;
+                background-color: var(--paper);
+                color: var(--ink);
+            }
+            .font-title {
+                font-family: 'Noto Serif SC', serif;
+            }
+        }
+        @layer components {
+            .paper-texture {
+                background-color: var(--paper);
+                background-image: 
+                    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            }
+            .vertical-text {
+                writing-mode: vertical-rl;
+                text-orientation: upright;
+            }
+            .seal-stamp {
+                border: 3px solid var(--seal);
+                color: var(--seal);
+                padding: 4px 8px;
+                display: inline-block;
+                font-weight: 900;
+                letter-spacing: 4px;
+                transform: rotate(-3deg);
+                box-shadow: inset 0 0 10px rgba(139, 0, 0, 0.1);
+            }
+            .ancient-border {
+                border: 2px solid var(--ink-light);
+                position: relative;
+                padding: 2rem;
+                background: var(--paper);
+            }
+            .ancient-border::before,
+            .ancient-border::after {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border: 2px solid var(--cinnabar);
+            }
+            .ancient-border::before {
+                top: -2px;
+                left: -2px;
+                border-right: none;
+                border-bottom: none;
+            }
+            .ancient-border::after {
+                bottom: -2px;
+                right: -2px;
+                border-left: none;
+                border-top: none;
+            }
+            .timeline-line {
+                position: absolute;
+                left: 50%;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: linear-gradient(to bottom, transparent, var(--ink-light) 10%, var(--ink-light) 90%, transparent);
+                transform: translateX(-50%);
+            }
+            .timeline-dot {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: var(--cinnabar);
+                border: 3px solid var(--paper);
+                box-shadow: 0 0 0 2px var(--cinnabar);
+                position: relative;
+                z-index: 10;
+            }
+            .timeline-card {
+                background: var(--paper);
+                border: 1px solid var(--ink-light);
+                position: relative;
+                transition: all 0.3s ease;
+            }
+            .timeline-card::before {
+                content: '';
+                position: absolute;
+                top: 20px;
+                width: 12px;
+                height: 12px;
+                background: var(--paper);
+                border: 1px solid var(--ink-light);
+                transform: rotate(45deg);
+                z-index: 1;
+            }
+            .timeline-card.left::before {
+                right: -7px;
+                border-left: none;
+                border-bottom: none;
+            }
+            .timeline-card.right::before {
+                left: -7px;
+                border-right: none;
+                border-top: none;
+            }
+            .timeline-card:hover {
+                box-shadow: 0 8px 25px rgba(44, 24, 16, 0.15);
+                transform: translateY(-2px);
+            }
+            .heat-cell {
+                transition: all 0.3s ease;
+                cursor: pointer;
+                position: relative;
+            }
+            .heat-cell:hover {
+                transform: scale(1.05);
+                z-index: 10;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+            .heat-tooltip {
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--ink);
+                color: var(--paper);
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-size: 12px;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.2s;
+                margin-bottom: 8px;
+            }
+            .heat-cell:hover .heat-tooltip {
+                opacity: 1;
+            }
+            .tab-active {
+                border-bottom: 3px solid var(--cinnabar);
+                color: var(--cinnabar);
+            }
+            .scroll-decoration {
+                background: linear-gradient(to bottom, 
+                    var(--paper-dark) 0%, 
+                    var(--paper) 5%, 
+                    var(--paper) 95%, 
+                    var(--paper-dark) 100%);
+            }
+            .cloud-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 15 Q20 5 30 15 Q40 5 50 15' stroke='%23d4c5b0' fill='none' stroke-width='0.5' opacity='0.3'/%3E%3C/svg%3E");
+            }
+        }
+    </style>
+</head>
+<body class="paper-texture min-h-screen">
+    <!-- Header -->
+    <header class="relative overflow-hidden border-b-2 border-[#5c4033] pb-8 pt-12">
+        <div class="absolute inset-0 cloud-pattern opacity-30"></div>
+        <div class="max-w-7xl mx-auto px-6 relative">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="seal-stamp text-lg">年谱比勘</div>
+                        <div class="h-px flex-1 bg-gradient-to-r from-[#5c4033] to-transparent"></div>
+                    </div>
+                    <h1 class="font-title text-5xl font-bold text-[#2c1810] mb-3 tracking-wider">
+                        康熙十六年丁巳（1677）
+                    </h1>
+                    <p class="text-xl text-[#5c4033] tracking-widest">
+                        四部年谱记载之可视化分析
+                    </p>
+                    <div class="flex items-center gap-6 mt-4 text-sm text-[#708090]">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[#b22222]"></span>
+                            陸稼書先生年譜定本
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[#b8860b]"></span>
+                            長泖陸子年譜
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[#6b8e6b]"></span>
+                            陸清獻公年譜
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[#708090]"></span>
+                            陸子年譜（張師載輯）
+                        </span>
+                    </div>
+                </div>
+                <div class="vertical-text text-6xl font-title font-bold text-[#8b0000] opacity-20 select-none ml-8">
+                    康熙丁巳
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <!-- Overview Cards -->
+        <div class="grid grid-cols-4 gap-6 mb-12">
+            <div class="ancient-border text-center">
+                <div class="text-4xl font-bold text-[#b22222] mb-2">48</div>
+                <div class="text-sm text-[#5c4033]">陆陇其岁数</div>
+            </div>
+            <div class="ancient-border text-center">
+                <div class="text-4xl font-bold text-[#b8860b] mb-2">12</div>
+                <div class="text-sm text-[#5c4033]">主要事件数</div>
+            </div>
+            <div class="ancient-border text-center">
+                <div class="text-4xl font-bold text-[#6b8e6b] mb-2">4</div>
+                <div class="text-sm text-[#5c4033]">年谱版本数</div>
+            </div>
+            <div class="ancient-border text-center">
+                <div class="text-4xl font-bold text-[#708090] mb-2">~8.5K</div>
+                <div class="text-sm text-[#5c4033]">总记载字数</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-[#d4c5b0] mb-8">
+            <button onclick="showSection('timeline')" id="tab-timeline" class="px-8 py-4 text-lg font-medium tab-active transition-colors">
+                时间线对比
+            </button>
+            <button onclick="showSection('heatmap')" id="tab-heatmap" class="px-8 py-4 text-lg font-medium text-[#708090] hover:text-[#2c1810] transition-colors">
+                详略热力图
+            </button>
+            <button onclick="showSection('comparison')" id="tab-comparison" class="px-8 py-4 text-lg font-medium text-[#708090] hover:text-[#2c1810] transition-colors">
+                文本对照
+            </button>
+        </div>
+
+        <!-- Section 1: Timeline Comparison -->
+        <section id="section-timeline" class="space-y-8">
+            <div class="text-center mb-8">
+                <h2 class="font-title text-3xl font-bold text-[#2c1810] mb-2">各年谱记载事件时间线对比</h2>
+                <p class="text-[#708090]">纵向展示四部年谱对1677年各事件的记载分布</p>
+            </div>
+
+            <div class="relative">
+                <!-- Timeline Axis -->
+                <div class="absolute left-[120px] top-0 bottom-0 w-px bg-[#d4c5b0]"></div>
+                
+                <!-- Timeline Events -->
+                <div class="space-y-6" id="timeline-container">
+                    <!-- Events will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="mt-8 p-6 ancient-border">
+                <h3 class="font-title text-lg font-bold mb-4">图例说明</h3>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded bg-[#b22222]"></div>
+                        <span>定本：记载最详，约3200字，含大量细节描写</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded bg-[#b8860b]"></div>
+                        <span>長泖本：记载较详，约2800字，侧重民间反响</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded bg-[#6b8e6b]"></div>
+                        <span>清献本：记载简洁，约1500字，侧重官方记录</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded bg-[#708090]"></div>
+                        <span>陆子本：记载最简，约1000字，侧重学术活动</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Heatmap -->
+        <section id="section-heatmap" class="hidden space-y-8">
+            <div class="text-center mb-8">
+                <h2 class="font-title text-3xl font-bold text-[#2c1810] mb-2">各年谱记载详略热力图</h2>
+                <p class="text-[#708090]">颜色越深表示该年谱对该事件的记载越详细</p>
+            </div>
+
+            <div class="ancient-border overflow-x-auto">
+                <div class="min-w-[800px] p-4">
+                    <!-- Heatmap Grid -->
+                    <div id="heatmap-container">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heatmap Stats -->
+            <div class="grid grid-cols-2 gap-6">
+                <div class="ancient-border">
+                    <h3 class="font-title text-lg font-bold mb-4">记载字数统计</h3>
+                    <div class="space-y-3" id="wordcount-stats">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div class="ancient-border">
+                    <h3 class="font-title text-lg font-bold mb-4">事件覆盖度</h3>
+                    <div class="space-y-3" id="coverage-stats">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Text Comparison -->
+        <section id="section-comparison" class="hidden space-y-8">
+            <div class="text-center mb-8">
+                <h2 class="font-title text-3xl font-bold text-[#2c1810] mb-2">重点事件文本对照</h2>
+                <p class="text-[#708090]">选择事件查看四部年谱的不同记载</p>
+            </div>
+
+            <div class="grid grid-cols-12 gap-6">
+                <!-- Event Selector -->
+                <div class="col-span-3">
+                    <div class="ancient-border sticky top-4">
+                        <h3 class="font-title font-bold mb-4">选择事件</h3>
+                        <div class="space-y-2" id="event-selector">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Display -->
+                <div class="col-span-9">
+                    <div id="text-display" class="space-y-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t-2 border-[#5c4033] mt-16 py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center text-[#708090] text-sm">
+            <p>康熙十六年丁巳（1677）年谱可视化分析</p>
+            <p class="mt-2">基于四部年谱文本数据生成</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data
+        const nianpuData = {
+            versions: [
+                { id: 'ding', name: '陸稼書先生年譜定本', color: '#b22222', shortName: '定本' },
+                { id: 'changmao', name: '長泖陸子年譜', color: '#b8860b', shortName: '長泖本' },
+                { id: 'qingxian', name: '陸清獻公年譜', color: '#6b8e6b', shortName: '清獻本' },
+                { id: 'luzi', name: '陸子年譜', color: '#708090', shortName: '陆子本' }
+            ],
+            events: [
+                {
+                    id: 'event1',
+                    name: '盜案落職',
+                    time: '春正月',
+                    importance: 10,
+                    details: {
+                        ding: { words: 1200, level: 5, text: '春，以盜案落職。邑民張姓與汪姓訐訟有素。適汪遇盜為所傷，返謂其家曰：「張實殺我。」乃弟遂以讐殺訟。先生謂小隙無殺理，而察張亦非殺人者，故以是盜是讐未可遽定報臬，而俟緝真盜定擬。撫軍與部遂引諱盜例革職，益久欲速其去也。尋緝真盜七人讞上，人謂先生盍辨諸？先生曰：「邑有盜，長吏固有罪，我何辨焉？」終身不復置一喙云。' },
+                        changmao: { words: 1100, level: 5, text: '四十八歲。春，以盜案落職。邑民張姓與汪姓訐訟有素...（詳細記載盜案經過及民眾反應）' },
+                        qingxian: { words: 600, level: 3, text: '春，以盜案落職。邑民張姓與汪姓訐訟，汪適遇盜被傷...（簡要記載）' },
+                        luzi: { words: 400, level: 2, text: '春正月，以盜案落職...（簡略記載）' }
+                    }
+                },
+                {
+                    id: 'event2',
+                    name: '民眾挽留',
+                    time: '春三月',
+                    importance: 9,
+                    details: {
+                        ding: { words: 800, level: 4, text: '按：許君諱自俊作公歸集序中云：時大吏例檄官攝篆，公將出署，九鄉二十都之民，夜半羣呼入邑，如蜂如蟻，填滿街衢...' },
+                        changmao: { words: 900, level: 5, text: '（詳細記載民眾挽留場面，包括盲兒、老人等細節）' },
+                        qingxian: { words: 700, level: 4, text: '（記載民眾挽留及迎長生位等事）' },
+                        luzi: { words: 300, level: 2, text: '（簡略提及民眾挽留）' }
+                    }
+                },
+                {
+                    id: 'event3',
+                    name: '訪隱士諸莊甫',
+                    time: '春',
+                    importance: 5,
+                    details: {
+                        ding: { words: 100, level: 2, text: '訪隱士諸莊甫。諱士儼，潛心理學，隱居教授。' },
+                        changmao: { words: 150, level: 2, text: '訪隱士諸莊甫...（略有擴展）' },
+                        qingxian: { words: 80, level: 1, text: '訪隱士諸莊甫' },
+                        luzi: { words: 120, level: 2, text: '訪隱士諸莊甫...（記載較詳）' }
+                    }
+                },
+                {
+                    id: 'event4',
+                    name: '會陸翼王',
+                    time: '冬',
+                    importance: 6,
+                    details: {
+                        ding: { words: 200, level: 3, text: '冬，會陸翼王於壽泉樓下。先生續日記始此云翼王嘉邑博聞而朴實君子也...' },
+                        changmao: { words: 180, level: 3, text: '冬，會陸翼王於壽泉樓...' },
+                        qingxian: { words: 100, level: 2, text: '冬，會陸翼王...' },
+                        luzi: { words: 150, level: 2, text: '冬十一月訪陸翼王於壽泉樓...' }
+                    }
+                },
+                {
+                    id: 'event5',
+                    name: '李實問學',
+                    time: '冬',
+                    importance: 4,
+                    details: {
+                        ding: { words: 150, level: 2, text: '李實至寓問學。字玉如，乃先生兩擢童子試首也...' },
+                        changmao: { words: 120, level: 2, text: '李實至寓問學...' },
+                        qingxian: { words: 0, level: 0, text: '（未記載）' },
+                        luzi: { words: 100, level: 2, text: '門人李玉如至寓問學...' }
+                    }
+                },
+                {
+                    id: 'event6',
+                    name: '歸家',
+                    time: '十二月',
+                    importance: 7,
+                    details: {
+                        ding: { words: 300, level: 3, text: '十二月，歸家。路經白鶴港登岸，謁宣聖衣冠之墓。' },
+                        changmao: { words: 250, level: 3, text: '十二月，歸家...（記載路途細節）' },
+                        qingxian: { words: 200, level: 3, text: '十二月，自嘉定歸...' },
+                        luzi: { words: 150, level: 2, text: '十二月，先生自嘉定歸...' }
+                    }
+                },
+                {
+                    id: 'event7',
+                    name: '方國棟卒',
+                    time: '冬',
+                    importance: 3,
+                    details: {
+                        ding: { words: 0, level: 0, text: '（未記載）' },
+                        changmao: { words: 0, level: 0, text: '（未記載）' },
+                        qingxian: { words: 100, level: 2, text: '冬，蘇常道方公國棟卒。先生往哭之...' },
+                        luzi: { words: 0, level: 0, text: '（未記載）' }
+                    }
+                },
+                {
+                    id: 'event8',
+                    name: '作太極論',
+                    time: '夏六月',
+                    importance: 8,
+                    details: {
+                        ding: { words: 0, level: 0, text: '（未記載於本年）' },
+                        changmao: { words: 0, level: 0, text: '（未記載於本年）' },
+                        qingxian: { words: 0, level: 0, text: '（未記載於本年）' },
+                        luzi: { words: 300, level: 3, text: '六月作《太極論》。大旨謂不在明天地之太極，而在明人身之太極...' }
+                    }
+                },
+                {
+                    id: 'event9',
+                    name: '作理氣論',
+                    time: '秋七月',
+                    importance: 8,
+                    details: {
+                        ding: { words: 0, level: 0, text: '（未記載於本年）' },
+                        changmao: { words: 0, level: 0, text: '（未記載於本年）' },
+                        qingxian: { words: 0, level: 0, text: '（未記載於本年）' },
+                        luzi: { words: 400, level: 4, text: '秋七月作《理氣論》。有上中下三篇...' }
+                    }
+                },
+                {
+                    id: 'event10',
+                    name: '作學術辨',
+                    time: '秋八月',
+                    importance: 8,
+                    details: {
+                        ding: { words: 0, level: 0, text: '（未記載於本年）' },
+                        changmao: { words: 0, level: 0, text: '（未記載於本年）' },
+                        qingxian: { words: 0, level: 0, text: '（未記載於本年）' },
+                        luzi: { words: 500, level: 4, text: '八月作《學術辨》。有上中下三篇...' }
+                    }
+                },
+                {
+                    id: 'event11',
+                    name: '魏象樞來訪',
+                    time: '夏',
+                    importance: 7,
+                    details: {
+                        ding: { words: 0, level: 0, text: '（未記載於本年）' },
+                        changmao: { words: 0, level: 0, text: '（未記載於本年）' },
+                        qingxian: { words: 0, level: 0, text: '（未記載於本年）' },
+                        luzi: { words: 350, level: 3, text: '魏公環極來訪...（詳細記載會面經過）' }
+                    }
+                },
+                {
+                    id: 'event12',
+                    name: '聞父喪',
+                    time: '十一月朔',
+                    importance: 9,
+                    details: {
+                        ding: { words: 0, level: 0, text: '（記於1678年）' },
+                        changmao: { words: 0, level: 0, text: '（記於1678年）' },
+                        qingxian: { words: 0, level: 0, text: '（記於1678年）' },
+                        luzi: { words: 450, level: 4, text: '十一月朔封公計至...（詳細記載喪禮）' }
+                    }
+                }
+            ]
+        };
+
+        // Helper functions
+        function getHeatColor(level, maxLevel = 5) {
+            const colors = [
+                '#f5f0e6',  // level 0 - no data
+                '#e8d5c4',  // level 1
+                '#d4a574',  // level 2
+                '#c17f3e',  // level 3
+                '#a0522d',  // level 4
+                '#8b0000'   // level 5
+            ];
+            return colors[level] || colors[0];
+        }
+
+        function getHeatOpacity(level) {
+            return 0.3 + (level / 5) * 0.7;
+        }
+
+        // 根据字数和等级获取详略程度的中文标签
+        function getDetailLabel(level, words) {
+            if (level === 0) return '未載';
+            if (level === 1) return '略';
+            if (level === 2) return '較略';
+            if (level === 3) return '詳';
+            if (level === 4) return '較詳';
+            if (level === 5) return '極詳';
+            return '略';
+        }
+
+        // 根据等级获取背景样式（仿古印章式深浅）
+        function getDetailStyle(level, baseColor) {
+            const opacity = 0.08 + (level / 5) * 0.35;
+            const borderOpacity = 0.2 + (level / 5) * 0.8;
+            return `background: linear-gradient(135deg, ${baseColor}${Math.round(opacity * 255).toString(16).padStart(2, '0')} 0%, ${baseColor}08 100%); border-color: ${baseColor}${Math.round(borderOpacity * 255).toString(16).padStart(2, '0')};`;
+        }
+
+        // Render Timeline
+        function renderTimeline() {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '';
+
+            nianpuData.events.forEach((event, index) => {
+                const hasData = Object.values(event.details).some(d => d.level > 0);
+                if (!hasData) return;
+
+                const row = document.createElement('div');
+                row.className = 'flex items-start gap-4';
+
+                // Time label
+                const timeLabel = document.createElement('div');
+                timeLabel.className = 'w-[100px] text-right text-sm font-medium text-[#5c4033] pt-3';
+                timeLabel.textContent = event.time;
+                row.appendChild(timeLabel);
+
+                // Timeline dot
+                const dotContainer = document.createElement('div');
+                dotContainer.className = 'flex flex-col items-center';
+                dotContainer.innerHTML = `<div class="timeline-dot" style="background: ${getHeatColor(event.importance, 10)}"></div>`;
+                row.appendChild(dotContainer);
+
+                // Event content
+                const content = document.createElement('div');
+                content.className = 'flex-1 pb-8';
+
+                // Event title
+                const title = document.createElement('div');
+                title.className = 'font-title text-lg font-bold text-[#2c1810] mb-2';
+                title.textContent = event.name;
+                content.appendChild(title);
+
+                // Version bars
+                const barsContainer = document.createElement('div');
+                barsContainer.className = 'grid grid-cols-4 gap-2';
+
+                nianpuData.versions.forEach(version => {
+                    const detail = event.details[version.id];
+                    if (detail.level > 0) {
+                        const label = getDetailLabel(detail.level, detail.words);
+                        const bar = document.createElement('div');
+                        bar.className = 'timeline-card p-3 rounded relative overflow-hidden';
+                        bar.style.borderLeft = `4px solid ${version.color}`;
+                        bar.style.cssText += getDetailStyle(detail.level, version.color);
+                        
+                        // 计算实心填充宽度作为"势力"视觉
+                        const fillPercent = (detail.level / 5) * 100;
+                        
+                        bar.innerHTML = `
+                            <div class="relative z-10">
+                                <div class="flex items-center justify-between mb-1">
+                                    <div class="text-xs font-medium" style="color: ${version.color}">${version.shortName}</div>
+                                    <div class="text-xs px-2 py-0.5 rounded" style="background: ${version.color}20; color: ${version.color}; font-weight: 600;">${label}</div>
+                                </div>
+                                <div class="text-sm text-[#2c1810] font-medium">${detail.words}字</div>
+                                <div class="w-full h-3 bg-[#e8e0d0] rounded-full mt-2 overflow-hidden relative">
+                                    <div class="h-full rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-1" 
+                                         style="width: ${fillPercent}%; background: linear-gradient(90deg, ${version.color}40, ${version.color}90);">
+                                    </div>
+                                </div>
+                                <div class="flex justify-between mt-1 text-xs text-[#a0a0a0]">
+                                    <span>勢力</span>
+                                    <span style="color: ${version.color}; font-weight: 600;">${'◼'.repeat(detail.level)}${'◻'.repeat(5 - detail.level)}</span>
+                                </div>
+                            </div>
+                        `;
+                        barsContainer.appendChild(bar);
+                    } else {
+                        const empty = document.createElement('div');
+                        empty.className = 'p-3 text-center text-[#a0a0a0] text-sm rounded border border-dashed border-[#d4c5b0]';
+                        empty.innerHTML = '<span class="text-xs">未載</span>';
+                        barsContainer.appendChild(empty);
+                    }
+                });
+
+                content.appendChild(barsContainer);
+                row.appendChild(content);
+                container.appendChild(row);
+            });
+        }
+
+        // Render Heatmap
+        function renderHeatmap() {
+            const container = document.getElementById('heatmap-container');
+            
+            // Create grid
+            const grid = document.createElement('div');
+            grid.className = 'grid gap-1';
+            grid.style.gridTemplateColumns = `120px repeat(${nianpuData.versions.length}, 1fr)`;
+
+            // Header row
+            const corner = document.createElement('div');
+            corner.className = 'p-3 font-bold text-[#2c1810]';
+            corner.textContent = '事件 / 年谱';
+            grid.appendChild(corner);
+
+            nianpuData.versions.forEach(v => {
+                const header = document.createElement('div');
+                header.className = 'p-3 text-center font-medium text-sm';
+                header.style.color = v.color;
+                header.textContent = v.shortName;
+                grid.appendChild(header);
+            });
+
+            // Data rows
+            nianpuData.events.forEach(event => {
+                const label = document.createElement('div');
+                label.className = 'p-3 text-sm text-[#2c1810] flex items-center';
+                label.innerHTML = `
+                    <span class="font-medium">${event.name}</span>
+                    <span class="ml-2 text-xs text-[#a0a0a0]">${event.time}</span>
+                `;
+                grid.appendChild(label);
+
+                nianpuData.versions.forEach(v => {
+                    const detail = event.details[v.id];
+                    const cell = document.createElement('div');
+                    cell.className = 'heat-cell p-3 rounded relative';
+                    cell.style.backgroundColor = getHeatColor(detail.level);
+                    cell.style.opacity = getHeatOpacity(detail.level);
+                    
+                    if (detail.level > 0) {
+                        cell.innerHTML = `
+                            <div class="text-center text-sm font-medium" style="color: ${detail.level > 2 ? '#fff' : '#2c1810'}">
+                                ${detail.words}字
+                            </div>
+                            <div class="heat-tooltip">
+                                ${v.shortName} - ${event.name}: ${detail.words}字
+                            </div>
+                        `;
+                    } else {
+                        cell.innerHTML = '<div class="text-center text-[#a0a0a0]">—</div>';
+                    }
+                    
+                    grid.appendChild(cell);
+                });
+            });
+
+            container.appendChild(grid);
+
+            // Render stats
+            renderStats();
+        }
+
+        function renderStats() {
+            // Word count stats
+            const wordcountContainer = document.getElementById('wordcount-stats');
+            nianpuData.versions.forEach(v => {
+                const totalWords = nianpuData.events.reduce((sum, e) => sum + (e.details[v.id].words || 0), 0);
+                const eventCount = nianpuData.events.filter(e => e.details[v.id].level > 0).length;
+                
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between';
+                row.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded" style="background: ${v.color}"></div>
+                        <span class="text-sm">${v.shortName}</span>
+                    </div>
+                    <div class="text-sm">
+                        <span class="font-bold">${totalWords}</span>字 / <span class="text-[#708090]">${eventCount}事件</span>
+                    </div>
+                `;
+                wordcountContainer.appendChild(row);
+            });
+
+            // Coverage stats
+            const coverageContainer = document.getElementById('coverage-stats');
+            nianpuData.events.forEach(event => {
+                const coverage = nianpuData.versions.filter(v => event.details[v.id].level > 0).length;
+                const percentage = (coverage / 4) * 100;
+                
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-3';
+                row.innerHTML = `
+                    <div class="w-24 text-sm truncate">${event.name}</div>
+                    <div class="flex-1 h-4 bg-[#e8e0d0] rounded-full overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-1"
+                             style="width: ${percentage}%; background: linear-gradient(to right, #6b8e6b, #b8860b, #b22222);">
+                            <span class="text-xs text-white font-medium">${coverage}/4</span>
+                        </div>
+                    </div>
+                `;
+                coverageContainer.appendChild(row);
+            });
+        }
+
+        // Render Text Comparison
+        function renderTextComparison() {
+            const selector = document.getElementById('event-selector');
+            const display = document.getElementById('text-display');
+
+            // Populate selector
+            nianpuData.events.forEach((event, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3 rounded text-sm transition-all ${index === 0 ? 'bg-[#e8e0d0] font-medium' : 'hover:bg-[#f5f0e6]'}`;
+                btn.innerHTML = `
+                    <div class="font-medium">${event.name}</div>
+                    <div class="text-xs text-[#708090] mt-1">${event.time}</div>
+                `;
+                btn.onclick = () => {
+                    document.querySelectorAll('#event-selector button').forEach(b => {
+                        b.className = 'w-full text-left p-3 rounded text-sm transition-all hover:bg-[#f5f0e6]';
+                    });
+                    btn.className = 'w-full text-left p-3 rounded text-sm transition-all bg-[#e8e0d0] font-medium';
+                    showEventText(event);
+                };
+                selector.appendChild(btn);
+            });
+
+            // Show first event by default
+            showEventText(nianpuData.events[0]);
+        }
+
+        function showEventText(event) {
+            const display = document.getElementById('text-display');
+            display.innerHTML = '';
+
+            const title = document.createElement('div');
+            title.className = 'font-title text-2xl font-bold text-[#2c1810] mb-6 pb-4 border-b border-[#d4c5b0]';
+            title.innerHTML = `${event.name} <span class="text-lg text-[#708090] font-normal">${event.time}</span>`;
+            display.appendChild(title);
+
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-2 gap-4';
+
+            nianpuData.versions.forEach(v => {
+                const detail = event.details[v.id];
+                const card = document.createElement('div');
+                card.className = 'ancient-border';
+                card.style.borderLeft = `4px solid ${v.color}`;
+                
+                if (detail.level > 0) {
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="font-medium" style="color: ${v.color}">${v.name}</div>
+                            <div class="text-xs text-[#708090]">${detail.words}字</div>
+                        </div>
+                        <div class="text-sm text-[#2c1810] leading-relaxed" style="font-family: 'Noto Serif SC', serif;">
+                            ${detail.text}
+                        </div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="font-medium" style="color: ${v.color}">${v.name}</div>
+                        </div>
+                        <div class="text-sm text-[#a0a0a0] italic">此年谱本年未记载该事件</div>
+                    `;
+                }
+                
+                grid.appendChild(card);
+            });
+
+            display.appendChild(grid);
+        }
+
+        // Section navigation
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('section-timeline').classList.add('hidden');
+            document.getElementById('section-heatmap').classList.add('hidden');
+            document.getElementById('section-comparison').classList.add('hidden');
+            
+            // Reset tabs
+            document.getElementById('tab-timeline').classList.remove('tab-active');
+            document.getElementById('tab-timeline').classList.add('text-[#708090]');
+            document.getElementById('tab-heatmap').classList.remove('tab-active');
+            document.getElementById('tab-heatmap').classList.add('text-[#708090]');
+            document.getElementById('tab-comparison').classList.remove('tab-active');
+            document.getElementById('tab-comparison').classList.add('text-[#708090]');
+            
+            // Show selected section and activate tab
+            document.getElementById(`section-${section}`).classList.remove('hidden');
+            document.getElementById(`tab-${section}`).classList.add('tab-active');
+            document.getElementById(`tab-${section}`).classList.remove('text-[#708090]');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTimeline();
+            renderHeatmap();
+            renderTextComparison();
+        });
+    </script>
+</body>
+</html>

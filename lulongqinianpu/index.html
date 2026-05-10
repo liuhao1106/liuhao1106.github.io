@@ -1813,6 +1813,61 @@
                 font-size: 0.9rem;
             }
         }
+
+        /* 年谱 iframe 嵌入样式 */
+        .nianpu-iframe-wrapper {
+            width: 100%;
+            height: 80vh;
+            min-height: 600px;
+            border: 2px solid var(--paper-dark);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+            position: relative;
+            background: #f5f0e6;
+        }
+
+        .nianpu-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .nianpu-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--accent-teal);
+            color: #fff;
+            padding: 0.6rem 1.3rem;
+            border-radius: 2px;
+            text-decoration: none;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(45, 90, 90, 0.2);
+            white-space: nowrap;
+        }
+
+        .nianpu-link-btn:hover {
+            background: var(--accent-burgundy);
+            box-shadow: 0 4px 16px rgba(139, 58, 58, 0.3);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .nianpu-iframe-wrapper {
+                height: 60vh;
+                min-height: 450px;
+            }
+            .nianpu-link-btn {
+                font-size: 0.85rem;
+                padding: 0.5rem 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2169,9 +2224,36 @@
             </section>
         </section>
 
-        <!-- 第六部分：参考文献 -->
+        <!-- 第六部分：年谱——身后的多元叙述 -->
         <section class="section-block">
-            <h2 class="section-title">第六部分 参考文献</h2>
+            <h2 class="section-title">第六部分 年谱——身后的多元叙述</h2>
+
+            <section class="table-card">
+                <h3>📖 年谱——身后的多元叙述</h3>
+                <div style="text-align: center; padding: 1rem 0;">
+                    <img src="ChatGPT Image 2026年5月10日 11_15_19.png" alt="年谱——身后的多元叙述" style="max-width: 100%; height: auto; border-radius: 2px; box-shadow: 0 4px 20px rgba(26, 26, 26, 0.15);">
+                </div>
+            </section>
+
+            <section class="table-card" style="margin-top: 1.5rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+                    <h3 style="margin: 0; padding: 0; border: none;">📜 康熙十六年丁巳（1677）年谱比勘</h3>
+                    <a href="1677nianpu.html" target="_blank" class="nianpu-link-btn">
+                        🔗 在新标签页中完整查看
+                    </a>
+                </div>
+                <div class="nianpu-iframe-wrapper">
+                    <iframe src="1677nianpu.html" class="nianpu-iframe" title="1677年谱比勘"
+                        sandbox="allow-scripts allow-same-origin"
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </section>
+        </section>
+
+        <!-- 第七部分：参考文献 -->
+        <section class="section-block">
+            <h2 class="section-title">第七部分 参考文献</h2>
             <section class="table-card">
                 <h3>📚 参考文献</h3>
                 <div class="references-list">

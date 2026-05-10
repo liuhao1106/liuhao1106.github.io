@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import autoprefixer from 'autoprefixer';
+import cssnano from 'cssnano';
 
 export default defineConfig({
   // 基础配置
@@ -103,8 +105,8 @@ export default defineConfig({
     // PostCSS配置
     postcss: {
       plugins: [
-        require('autoprefixer'),
-        require('cssnano')({
+        autoprefixer,
+        cssnano({
           preset: ['default', {
             discardComments: { removeAll: true },
           }],
