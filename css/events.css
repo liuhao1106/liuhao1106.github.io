@@ -23,19 +23,13 @@
 
 /* 活动容器 */
 .events-container {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 0 var(--space-6);
+  width: 100%;
 }
 
 /* 活动区块 */
 .event-section {
   margin-bottom: var(--space-10);
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: var(--space-8);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: var(--space-8) 0;
 }
 
 .event-section:last-child {
@@ -100,9 +94,7 @@
 
 /* 活动卡片 */
 .event-card {
-  padding: var(--space-5);
-  background: var(--gradient-soft);
-  border-radius: var(--radius-md);
+  padding: var(--space-5) 0;
   border-left: 4px solid var(--accent-primary);
   transition: all var(--duration-normal) var(--ease-out);
 }
@@ -240,11 +232,11 @@
   }
   
   .events-container {
-    padding: 0 var(--space-4);
+    padding: 0;
   }
   
   .event-section {
-    padding: var(--space-6);
+    padding: var(--space-6) 0;
   }
   
   .section-header {
@@ -260,7 +252,7 @@
   }
   
   .event-card {
-    padding: var(--space-4);
+    padding: var(--space-4) 0;
   }
   
   .event-title {
@@ -290,7 +282,7 @@
   }
   
   .event-section {
-    padding: var(--space-4);
+    padding: var(--space-4) 0;
     margin-bottom: var(--space-6);
   }
   
