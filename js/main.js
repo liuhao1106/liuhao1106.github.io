@@ -106,5 +106,36 @@ async function renderCoursePage(courseId) {
   }
 }
 
-// ===== 页面加载后自动初始化导航 =====
-document.addEventListener('DOMContentLoaded', initNavToggle);
+// ===== 滚动入场动画系统 =====
+// 为带有 data-reveal 属性的元素添加滚动入场动画
+// 动效克制：fade + translateY(16px)，0.5s，cubic-bezier(0.16,1,0.3,1)
+function initScrollReveal() {
+  const revealElements = document.querySelectorAll('[data-reveal]');
+  if (revealElements.length === 0) return;
+
+  // 如果浏览器不支持 IntersectionObserver，直接显示所有元素
+  if (!('IntersectionObserver' in window)) {
+    revealElements.forEach(el => el.classList.add('is-visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.08,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  revealElements.forEach(el => observer.observe(el));
+}
+
+// ===== 页面加载后自动初始化 =====
+document.addEventListener('DOMContentLoaded', function() {
+  initNavToggle();
+  initScrollReveal();
+});

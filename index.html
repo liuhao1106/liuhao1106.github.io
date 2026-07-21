@@ -34,9 +34,13 @@
   <div class="container">
 
     <!-- Hero 区域：左侧文字 + 右侧照片 -->
-    <section class="home-hero">
+    <section class="home-hero" data-reveal>
       <div class="hero-main">
-        <h1>刘昊</h1>
+        <div class="hero-name-row">
+          <h1>刘昊</h1>
+          <span class="hero-name-en">LIU HAO</span>
+        </div>
+        <div class="hero-divider"></div>
         <p class="hero-subtitle">同济大学哲学系 · 助理教授 · 副系主任</p>
         <p class="hero-intro">
           欢迎来到我的个人主页！我的研究方向为宋明理学、明清思想史。本网站收录了我的简历、学术成果以及我开设的课程资料，以及媒体报道、学术会议、项目（利用 vibe coding 的数字人文项目）等。同时也记录了一些"足迹"。Email: <a href="mailto:liuhao1106@tongji.edu.cn">liuhao1106@tongji.edu.cn</a>
@@ -51,7 +55,7 @@
     </section>
 
     <!-- 项目展示 -->
-    <section class="section-block" id="projects">
+    <section class="section-block" id="projects" data-reveal>
       <h2 class="section-title">项目</h2>
       <p class="section-subtitle">数字人文 · 知识图谱 · 可视化</p>
       <div id="projects-container">
@@ -60,7 +64,7 @@
     </section>
 
     <!-- 相关链接 -->
-    <section class="section-block" id="links">
+    <section class="section-block" id="links" data-reveal>
       <h2 class="section-title">相关链接</h2>
       <ul class="resource-list">
         <li class="resource-item">
@@ -79,7 +83,7 @@
     </section>
 
     <!-- 联系方式 -->
-    <section class="section-block" id="contact">
+    <section class="section-block" id="contact" data-reveal>
       <h2 class="section-title">联系方式</h2>
       <ul class="info-list">
         <li><span class="label">电子邮箱</span><span class="value"><a href="mailto:liuhao1106@tongji.edu.cn">liuhao1106@tongji.edu.cn</a></span></li>
@@ -105,11 +109,11 @@
         const isExternal = p.url && (p.url.startsWith('http://') || p.url.startsWith('https://'));
         const targetAttr = isExternal ? 'target="_blank" rel="noopener"' : '';
         const thumbHtml = p.thumbnail
-          ? `<div class="project-thumb" style="width: 200px; height: 140px; overflow: hidden; border-radius: 3px;">
+          ? `<div class="project-thumb" style="width: 200px; height: 140px; overflow: hidden; border-radius: 2px;">
                <img src="${p.thumbnail}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
              </div>`
-          : `<div class="project-thumb" style="width: 200px; height: 140px; overflow: hidden; border-radius: 3px; display: flex; align-items: center; justify-content: center; background: #f8f7f5;">
-               <span style="font-size: 3rem; color: var(--accent-color);">⚛</span>
+          : `<div class="project-thumb" style="width: 200px; height: 140px; overflow: hidden; border-radius: 2px; display: flex; align-items: center; justify-content: center; background: var(--accent-warm-bg);">
+               <span style="font-size: 3rem; color: var(--accent-warm);">⚛</span>
              </div>`;
         const linkHtml = p.url2
           ? `<div class="project-links-group">
@@ -117,11 +121,12 @@
                <a href="${p.url2}" class="project-link">查看展示二 →</a>
              </div>`
           : `<a href="${p.url}" ${targetAttr} class="project-link">查看项目 →</a>`;
+        const num = String(i + 1).padStart(2, '0');
         return `
           <div class="project-card">
             ${thumbHtml}
             <div class="project-info">
-              <h3>${i + 1}. ${p.title}</h3>
+              <h3><span class="project-num">${num}</span> ${p.title}</h3>
               <p>${p.description}</p>
               ${linkHtml}
             </div>

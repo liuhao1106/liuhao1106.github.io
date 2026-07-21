@@ -32,12 +32,12 @@
 
   <div class="container">
 
-    <header class="page-header">
+    <header class="page-header" data-reveal>
       <h1>学术成果</h1>
       <p class="page-meta">刘昊 · 同济大学哲学系</p>
     </header>
 
-    <div class="two-col-layout">
+    <div class="two-col-layout" data-reveal>
       <aside class="layout-sidebar">
         <nav class="sidebar-nav" id="pub-nav">
           <!-- 侧边导航将通过 JS 动态生成 -->
@@ -75,7 +75,7 @@
       if (item.note) metaParts.push(item.note);
       return `
         <div class="pub-entry">
-          <p class="pub-title">${index}. ${item.title}</p>
+          <p class="pub-title"><span class="pub-num">${index}.</span>${item.title}</p>
           <p class="pub-meta">${metaParts.join(' · ')}</p>
         </div>
       `;
