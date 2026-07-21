@@ -15,23 +15,26 @@
   </script>
 </head>
 <body>
-  <div class="container">
-    <!-- 导航栏 -->
-    <nav class="nav-bar">
-      <a href="index.html" class="nav-brand">← 返回主页</a>
-      <div class="nav-links">
-        <a href="cv.html">个人简历</a>
-        <a href="publications.html">学术成果</a>
-        <a href="index.html#course-grid">开设课程</a>
-        <a href="index.html#contact">联系方式</a>
-        <a href="history.html" style="color: var(--morandi-blue); background: rgba(139, 157, 195, 0.12);">更新历史</a>
+  <nav class="global-nav">
+    <div class="container" style="position: relative;">
+      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单">☰</button>
+      <div class="global-nav-inner" id="global-nav-inner">
+        <a href="/" class="nav-link">首页</a>
+        <a href="/cv.html" class="nav-link">简历</a>
+        <a href="/publications.html" class="nav-link">成果</a>
+        <a href="/courses.html" class="nav-link">课程</a>
+        <a href="/gallery.html" class="nav-link">足迹</a>
+        <a href="/events.html" class="nav-link">活动</a>
       </div>
-    </nav>
+    </div>
+  </nav>
+
+  <div class="container">
 
     <!-- 页面标题 -->
-    <header style="text-align: center; margin: 48px 0;">
-      <h1 class="page-title">更新历史</h1>
-      <p class="page-subtitle">网站发展历程与版本记录</p>
+    <header class="page-header">
+      <h1>更新历史</h1>
+      <p class="page-meta">网站发展历程与版本记录</p>
     </header>
 
     <!-- 更新历史时间线 -->
@@ -101,10 +104,12 @@
       </div>
     </section>
 
-    <footer style="margin-top: 48px;">
+    <footer>
       <p>同济大学哲学系 · 刘昊</p>
       <p>联系邮箱：<a href="mailto:liuhao1106@tongji.edu.cn">liuhao1106@tongji.edu.cn</a></p>
     </footer>
   </div>
+
+  <script src="/js/main.js"></script>
 </body>
 </html>

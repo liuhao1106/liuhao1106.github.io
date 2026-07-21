@@ -1,206 +1,131 @@
-# 刘昊 · 个人主页与课程网站
+# 刘昊 · 个人主页与数字人文项目
 
-## 项目简介
+同济大学哲学系刘昊老师的个人主页、课程网站与数字人文可视化项目集合。站点以纯静态 HTML/CSS/JavaScript 为主体，并包含若干独立的专题可视化子项目（年谱、知识图谱、思想结构叙事等）。
 
-这是一个纯静态的个人主页与课程展示网站，用于呈现同济大学哲学系刘昊老师的个人信息、学术成果以及各门哲学课程信息。网站采用HTML/CSS/JavaScript技术栈，无需后端服务器，可直接部署在任何静态托管服务上。
-
-## 文件夹结构
+## 项目结构
 
 ```
 chph/
-├── index.html              # 首页 - 个人主页与课程门户
-├── cv.html                 # 个人简历页面
-├── publications.html       # 学术成果页面
-├── history.html            # 网站更新历史页面
-├── css/
-│   └── style.css           # 全局样式文件
+├── index.html                # 首页：个人简介、项目卡片、相关链接
+├── cv.html                   # 个人简历
+├── courses.html              # 课程总览（fetch data/courses.json）
+├── events.html               # 学术活动与媒体报道
+├── gallery.html              # 足迹（照片画廊）
+├── history.html              # 网站更新历史
+├── lixuegraph.html           # 宋明理学史知识图谱（D3.js 力导向图）
+├── article-template.html     # 文章页模板
+├── check_json.py             # JSON 数据校验脚本
+├── COVER.jpg                 # 全站底纹背景图
+│
+├── css/                      # 全局样式
+│   ├── style.css             # 主样式（设计系统、导航、卡片、布局）
+│   ├── events.css            # 活动页样式
+│   └── gallery.css           # 画廊页样式
 ├── js/
-│   └── main.js             # JavaScript功能文件
-├── data/
-│   └── courses.json        # 课程数据文件
-├── images/                 # 图片资源文件夹
-│   ├── banner-lighthouse.jpg
-│   ├── profile-logo.png
-│   └── profile-photo.png
-├── philosophy-history-ii/  # 中国哲学史（下）课程
-│   ├── index.html          # 课程详情页
-│   └── lectures/           # 讲义文件夹
-│       ├── lecture-01.html
-│       ├── lecture-02.html
-│       └── lecture-03.html
-├── neo-confucian-classics/ # 宋明理学经典课程
-│   ├── index.html
-│   └── 2024-fall/          # 2024秋季学期归档
-├── ethics-classics/        # 伦理学经典课程
-│   └── index.html
-├── chinese-tradition/      # 中国传统文化通识课
-│   └── index.html
-├── chinese-history/        # 中国历史概论通识课
-│   └── index.html
-├── graduate-neo-confucianism/  # 研究生宋明理学课程
-│   └── index.html
-└── graduate-classics/      # 研究生中国思想原典选读
-    ├── index.html
-    └── 2024-fall/          # 2024秋季学期归档
+│   ├── main.js               # 全局脚本（导航、数据加载等）
+│   └── markdown.js           # Markdown 渲染工具
+├── data/                     # 站点数据（JSON）
+│   ├── courses.json          # 课程信息与教学大纲
+│   ├── publications.json     # 学术成果（著作、论文、译文、报纸）
+│   ├── profile.json          # 简历数据（教育、履历、荣誉、项目等）
+│   ├── events.json           # 活动记录与项目信息
+│   ├── photos.json           # 画廊照片元数据
+│   ├── nodes.json            # 理学图谱节点
+│   ├── links.json            # 理学图谱关系边
+│   └── config.json           # 理学图谱配色配置
+├── images/                   # 图片资源（头像、横幅、画廊照片等）
+│
+├── lulongqinianpu/           # 寻踪陆陇其（年谱可视化，独立 Vite 项目）
+├── daoliguimoessay/          # 道理规模与工夫次第（PDF 图册查看器）
+├── daoliguimoessay2/         # 道理规模与工夫次第（长滚动叙事页）
+├── chinese-history/          # 中国历史概论（通识课）
+├── chinese-tradition/        # 中国传统文化（通识课）
+├── ethics-classics/          # 伦理学经典
+├── graduate-classics/        # 研究生·中国思想原典选读
+└── graduate-neo-confucianism/# 研究生·宋明理学
 ```
 
-## 页面说明
+## 技术栈
 
-### 主要页面
+### 主站点
 
-| 页面 | 文件 | 说明 |
-|------|------|------|
-| 首页 | `index.html` | 个人主页，展示简介、快速导航和课程列表 |
-| 简历 | `cv.html` | 详细个人简历 |
-| 成果 | `publications.html` | 学术论文、著作等成果展示 |
-| 历史 | `history.html` | 网站更新历史记录 |
+主站点为纯静态页面，无需构建工具，可直接用任意静态服务器托管。
 
-### 课程页面
+- **样式**：原生 CSS，通过 CSS 变量统一管理配色与字体；正文使用 Noto Serif SC，楷体使用 LXGW WenKai
+- **数据加载**：所有内容数据存放于 `data/*.json`，页面通过 `fetch` 动态加载（`js/main.js` 提供统一的 `fetchJSON` 工具函数）
+- **公共脚本**：`js/main.js` 提供全局导航栏移动端切换（`initNavToggle`）、数据加载工具（`fetchJSON`）与课程详情页渲染函数，所有页面共享，无需在各页面内重复编写导航脚本
+- **分析**：集成 Google Analytics（ID: `G-0E1K9BJLZK`）
+- **背景效果**：`COVER.jpg` 作为固定底纹（opacity 0.06），叠加 SVG 噪点纹理模拟纸质质感
 
-每门课程都有独立的文件夹，包含：
-- `index.html` - 课程详情页（课程简介、大纲、讲义、教材等）
-- `lectures/` - 讲义文件夹（可选）
-- `20XX-fall/` 或 `20XX-spring/` - 学期归档文件夹（可选）
+### 专题子项目
 
-## 快速开始
+| 子项目 | 入口 | 可视化技术 | 数据来源 | 后端 |
+|---|---|---|---|---|
+| 寻踪陆陇其 | `lulongqinianpu/index.html` | Leaflet + OpenLayers + Chart.js + vis-network | 年谱 JSON、弟子记录 JSON、师承网络 JSON | FastAPI（可选，端口 8001） |
+| 宋明理学史知识图谱 | `lixuegraph.html` | D3.js v7（力导向图） | `data/nodes.json`、`data/links.json`、`data/config.json` | 无 |
+| 道理规模 v1 | `daoliguimoessay/pdf_viewer.html` | 原生 JS（PDF 转图片逐页展示） | `pdf_images/*.png` | 无 |
+| 道理规模 v2 | `daoliguimoessay2/index.html` | Tailwind CSS + GSAP ScrollTrigger | 内嵌（无外部数据） | 无 |
 
-### 本地开发
+## 本地开发
+
+### 主站点
+
+主站点使用相对根路径（如 `/css/style.css`），需以项目根目录作为 Web 根启动服务器，否则路径会失效。
 
 ```bash
-# 使用 Python 启动本地服务器
+# 在项目根目录执行
 python -m http.server 8080
-
-# 或使用 npx serve
+# 或
 npx serve -l 8080
 ```
 
-然后访问 `http://localhost:8080`
+访问 `http://localhost:8080`。
 
-### 部署
+### 寻踪陆陇其（lulongqinianpu）
 
-将整个项目文件夹上传到您的静态托管服务（如Netlify、Vercel、GitHub Pages等）即可。
-
-## 如何添加新课程
-
-### 步骤1：在 data/courses.json 中添加课程数据
-
-课程数据直接内嵌在 `index.html` 中，编辑首页文件中的 `coursesData` 对象：
-
-```javascript
-{
-  "id": "course-id",           // 课程唯一标识
-  "category": "undergraduate-major",  // 分类：undergraduate-major/undergraduate-general/graduate
-  "title": "课程名称",
-  "shortDesc": "简短描述（用于首页卡片）",
-  "semester": "2026春季学期",  // 开课学期
-  "schedule": "1-16周 周一3-4节 南321",  // 上课时间地点
-  "credits": "2学分",          // 学分
-  "link": "course-folder/index.html"  // 课程页面链接
-}
-```
-
-### 步骤2：创建课程文件夹
+该子项目为独立 Vite 项目，包含前端可视化与可选的 FastAPI 后端。
 
 ```bash
-mkdir course-folder
+cd lulongqinianpu
+npm install        # 安装依赖（首次）
+npm run dev        # 启动 Vite 开发服务器（默认端口 3000）
 ```
 
-### 步骤3：创建课程详情页
+如需启用后端 API（弟子数据、年谱、师承网络等接口）：
 
-复制 `philosophy-history-ii/index.html` 到新课程文件夹，然后修改：
-- 页面标题
-- 课程信息内容
-- 课程大纲
-- 每周讲义列表
-- 教材和参考资源
-
-### 步骤4：创建讲义页面（可选）
-
-在课程文件夹下创建 `lectures/` 文件夹，添加讲义HTML文件。
-
-## 如何更新课程内容
-
-### 更新课程信息
-
-编辑 `index.html` 中的 `coursesData` 对象即可更新首页课程卡片信息。
-
-### 更新课程详情
-
-直接编辑对应课程文件夹中的 `index.html` 文件。
-
-### 添加新的讲义
-
-1. 在课程详情页的"每周讲义"部分添加新讲义条目
-2. 在 `lectures/` 文件夹中创建新的HTML文件
-3. 更新前后讲义的导航链接
-
-### 修改样式
-
-所有页面的样式都引用 `/css/style.css`，修改此文件即可全局生效。
-
-## 样式定制
-
-网站采用**莫兰迪色系**的复古简约风格，主要设计元素包括：
-
-- **配色方案**：
-  - 背景色：`#faf8f5`（米白）
-  - 主文字色：`#2c2c2c`（深褐）
-  - 强调色：`#8b7355`（棕色）
-  - 莫兰迪蓝：`#8b9dc3`
-  - 莫兰迪玫瑰：`#c4a4a4`
-  - 莫兰迪鼠尾草：`#9caf88`
-
-- **字体**：Georgia, Times New Roman, 宋体
-- **布局**：便当盒网格布局（Bento Grid）
-- **装饰**：圆角卡片、细边框、柔和阴影
-
-如需修改配色，编辑 `css/style.css` 中的 CSS 变量：
-
-```css
-:root {
-  --bg-color: #faf8f5;
-  --text-primary: #2c2c2c;
-  --text-secondary: #5a5a5a;
-  --accent-color: #8b7355;
-  --morandi-blue: #8b9dc3;
-  --morandi-rose: #c4a4a4;
-  --morandi-sage: #9caf88;
-  /* ... */
-}
+```bash
+cd lulongqinianpu/backend
+python main.py     # 启动 FastAPI，端口 8001
 ```
 
-## 部署指南
+后端 API 前缀为 `/api`，提供 `/disciples`、`/chronicle`、`/network`、`/statistics` 等端点。前端在不启用后端时也可直接 fetch 同目录下的 JSON 文件运行。
 
-### Netlify
+## 设计系统
 
-1. 将整个项目文件夹拖拽到Netlify部署页面
-2. 或连接GitHub仓库自动部署
-3. 访问地址：https://your-site.netlify.app
+全站采用极简主义学术风格，核心设计变量定义在 `css/style.css` 的 `:root` 中：
 
-### GitHub Pages
+- **配色**：页面背景 `#faf9f7`（米白），主文字 `#1a1a1a`，强调色同主文字色，整体呈黑白灰调
+- **字体**：正文 Noto Serif SC（思源宋体），楷体 LXGW WenKai（霞鹜文楷），系统字体作为无衬线回退
+- **布局**：单栏为主，最大宽度 920px，居中排版
+- **质感**：底纹背景 + 纸质噪点纹理，半透明内容卡片配 `backdrop-filter` 毛玻璃效果
+- **动效**：统一使用 `cubic-bezier(0.16, 1, 0.3, 1)` 缓动曲线
 
-1. 将代码推送到GitHub仓库
-2. 在仓库设置中启用GitHub Pages
-3. 选择主分支作为发布源
+如需调整配色或字体，编辑 `css/style.css` 中的 CSS 变量即可全局生效。
 
-### 其他静态托管
+## 课程页面约定
 
-直接将项目文件夹内容上传到服务器即可。
+每门课程拥有独立文件夹，结构一致：
 
-## 技术特点
+- `index.html`：课程详情页，引用 `/css/style.css`，包含全局顶部导航
+- `2024-fall/` 等子文件夹：学期归档（可选）
 
-- **纯静态**：无需后端服务器，部署简单
-- **响应式设计**：适配桌面和移动设备
-- **模块化样式**：使用CSS变量统一管理配色
-- **语义化HTML**：良好的可访问性
-- **内嵌数据**：课程数据直接写在HTML中，无需额外请求
+新增课程时，在 `data/courses.json` 中添加课程数据，并创建对应的课程文件夹与 `index.html`。课程分类取值为 `undergraduate-major`（专业基础课）、`undergraduate-general`（通识课）、`graduate`（研究生课）。
 
-## 注意事项
+## 部署
 
-1. **文件路径**：所有路径使用相对路径（如 `/css/style.css`），确保文件夹结构正确
-2. **字符编码**：所有HTML文件使用UTF-8编码
-3. **浏览器兼容**：支持现代浏览器（Chrome、Firefox、Safari、Edge）
-4. **图片资源**：建议压缩图片以优化加载速度
+主站点为纯静态文件，将整个项目文件夹上传至任意静态托管服务即可（Netlify、Vercel、GitHub Pages 等）。注意所有页面使用绝对根路径（`/css/...`），需部署在根域名下，或部署到子路径时调整路径前缀。
+
+寻踪陆陇其子项目可通过 `npm run build` 构建产物后单独部署，亦可直接作为静态文件由主站服务器提供。
 
 ## 维护信息
 
@@ -208,7 +133,3 @@ mkdir course-folder
 - **单位**：同济大学哲学系
 - **邮箱**：liuhao1106@tongji.edu.cn
 - **个人主页**：https://liuhao1106.netlify.app/
-
----
-
-*本网站由刘昊老师维护更新*
