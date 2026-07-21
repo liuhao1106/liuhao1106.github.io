@@ -122,11 +122,13 @@
              </div>`
           : `<a href="${p.url}" ${targetAttr} class="project-link">查看项目 →</a>`;
         const num = String(i + 1).padStart(2, '0');
+        const yearHtml = p.date ? `<span class="project-year">${p.date}</span>` : '';
         return `
           <div class="project-card" data-reveal data-reveal-delay="${i * 70}">
             ${thumbHtml}
             <div class="project-info">
               <h3><span class="project-num">${num}</span> ${p.title}</h3>
+              ${yearHtml}
               <p>${p.description}</p>
               ${linkHtml}
             </div>

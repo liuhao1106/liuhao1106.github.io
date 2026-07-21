@@ -80,7 +80,7 @@
       "id": 1,
       "title": "寻踪陆陇其",
       "description": "关于清初学者陆陇其的可视化项目，展示其一生的经历。",
-      "date": "",
+      "date": "2025",
       "role": "",
       "url": "lulongqinianpu/index.html",
       "thumbnail": "lulongqinianpu/lujiashu.png"
@@ -89,7 +89,7 @@
       "id": 2,
       "title": "宋明理学史知识图谱",
       "description": "利用 vibe coding 生成的数字人文项目，可视化展示宋明理学发展脉络与人物关系网络。",
-      "date": "",
+      "date": "2025",
       "role": "",
       "url": "lixuegraph.html",
       "thumbnail": "images/lixuegraph-thumb.png"
@@ -98,7 +98,7 @@
       "id": 3,
       "title": "道理规模与工夫次第：朱子学思想结构可视化",
       "description": "基于论文《道理规模与工夫次第：朱子学类编文本的思想结构及其张力》的可视化呈现。",
-      "date": "",
+      "date": "2024",
       "role": "",
       "url": "daoliguimoessay/pdf_viewer.html",
       "url2": "daoliguimoessay2/index.html",
@@ -108,7 +108,7 @@
       "id": 4,
       "title": "中国哲学史（下）—IMA课程知识库",
       "description": "欢迎加入【ima知识库】中国哲学史（下）知识库，扫码或点击链接访问。",
-      "date": "",
+      "date": "2025",
       "role": "",
       "url": "https://ima.qq.com/wiki/?shareId=f5124422a2d74e03b60bd0c4fcb1a95c9e1db89bf3ce180bbaa372fc5a082d7d",
       "thumbnail": "images/【中国哲学史（下）知识库】知识码.png"
@@ -117,7 +117,7 @@
       "id": 5,
       "title": "理气论分析器 (Li-Qi Analyzer)",
       "description": "一个用于分析宋明理学理气论或天道论究竟属于理本论还是气本论（气学）的 AI Skill / 智能体工具。基于刘昊提出的经典诠释分析方法，通过识别文本对《易传》两个核心命题的处理方式，判断理气论或天道论的思想归属。",
-      "date": "",
+      "date": "2026",
       "role": "",
       "url": "https://github.com/liuhao1106/liqi-analyzer",
       "thumbnail": ""

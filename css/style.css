@@ -1,6 +1,6 @@
 /* ===== 刘昊学术主页 - 极简主义风格 ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap');
 @import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css');
 
 :root {
@@ -91,7 +91,7 @@ body::before {
   pointer-events: none;
 }
 
-/* 纸质纹理叠加 */
+/* 纸质纹理叠加 + 中心暖光（暗角反向：从中心向边缘微亮，让中央内容更聚焦）*/
 body::after {
   content: '';
   position: fixed;
@@ -99,7 +99,10 @@ body::after {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgba(255, 248, 230, 0.035) 0%, transparent 55%),
+    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, repeat;
   z-index: -1;
   pointer-events: none;
 }
@@ -243,6 +246,8 @@ a:hover {
   margin: 0;
   line-height: 1.2;
   color: var(--text-primary);
+  /* 字距渐入：从 0.55em 展开到 0.22em，1.4s 缓慢收敛 */
+  animation: hero-letter-spacing 1.4s var(--ease-out) both;
 }
 
 .hero-name-en {
@@ -251,6 +256,32 @@ a:hover {
   letter-spacing: 0.22em;
   font-style: italic;
   font-weight: 400;
+  /* 英文名稍晚出现，与中文名字距动效形成节奏 */
+  animation: hero-fade-in 1.2s 0.3s var(--ease-out) both;
+}
+
+@keyframes hero-letter-spacing {
+  0% {
+    letter-spacing: 0.55em;
+    opacity: 0;
+  }
+  100% {
+    letter-spacing: 0.22em;
+    opacity: 1;
+  }
+}
+
+@keyframes hero-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* 尊重用户的减少动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .home-hero h1,
+  .hero-name-en {
+    animation: none;
+  }
 }
 
 .hero-divider {
@@ -310,14 +341,19 @@ a:hover {
 
 /* ===== 内容区块 ===== */
 .section-block {
-  padding: var(--space-12) 0;
+  padding: var(--space-16) 0;
   border-top: 1px solid var(--border-light);
+  position: relative;
+}
+
+.section-block:first-of-type {
+  border-top-color: transparent;
 }
 
 .section-title {
   font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
+  font-weight: 300;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: var(--space-3);
@@ -481,6 +517,17 @@ a:hover {
   font-weight: 600;
   font-size: 0.9rem;
   margin-right: var(--space-2);
+}
+
+.project-year {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-light);
+  font-variant-numeric: oldstyle-nums;
+  letter-spacing: 0.12em;
+  margin-top: -2px;
+  margin-bottom: var(--space-3);
+  font-weight: 400;
 }
 
 .project-links-group {
