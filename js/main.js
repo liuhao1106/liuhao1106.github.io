@@ -109,6 +109,7 @@ async function renderCoursePage(courseId) {
 // ===== 滚动入场动画系统 =====
 // 为带有 data-reveal 属性的元素添加滚动入场动画
 // 动效克制：fade + translateY(16px)，0.5s，cubic-bezier(0.16,1,0.3,1)
+// 支持 data-reveal-delay 属性（毫秒）用于错位波浪式入场
 function initScrollReveal() {
   const revealElements = document.querySelectorAll('[data-reveal]');
   if (revealElements.length === 0) return;
@@ -122,6 +123,10 @@ function initScrollReveal() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.getAttribute('data-reveal-delay') || '0', 10);
+        if (delay > 0) {
+          entry.target.style.transitionDelay = delay + 'ms';
+        }
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       }
