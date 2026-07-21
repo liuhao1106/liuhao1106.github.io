@@ -36,7 +36,7 @@
     <!-- 页面标题 -->
     <header class="page-header" data-reveal>
       <h1 class="page-title">活动</h1>
-      <p class="page-subtitle">学术活动 · 媒体采访 · 研究项目</p>
+      <p class="page-subtitle">学术活动 · 媒体采访</p>
     </header>
 
     <!-- 活动内容区域 -->
@@ -61,18 +61,6 @@
         </div>
         <div class="event-list" id="media-list">
           <!-- 媒体内容将通过 JavaScript 动态加载 -->
-        </div>
-      </section>
-
-      <!-- 研究项目 -->
-      <section class="event-section">
-        <div class="section-header">
-          <h2 class="section-icon">📊</h2>
-          <h2 class="section-title">项目</h2>
-        </div>
-        
-        <div class="event-list" id="project-list">
-          <!-- 项目将通过 JavaScript 动态加载 -->
         </div>
       </section>
 
@@ -126,15 +114,6 @@
             "date": "2024-01",
             "location": "活动地点"
           }
-        ],
-        "projects": [
-          {
-            "id": 1,
-            "title": "项目标题示例",
-            "description": "项目内容描述...",
-            "date": "2024-01",
-            "role": "主持人"
-          }
         ]
       };
     }
@@ -143,7 +122,7 @@
     function renderEvents() {
       // 渲染媒体
       const mediaList = document.getElementById('media-list');
-      if (eventsData.media && eventsData.media.length > 0) {
+      if (mediaList && eventsData.media && eventsData.media.length > 0) {
         mediaList.innerHTML = eventsData.media.map((item, index) => `
           <div class="event-card">
             <div class="event-date">${item.date}</div>
@@ -154,13 +133,13 @@
             <span class="event-source">${item.source}</span>
           </div>
         `).join('');
-      } else {
+      } else if (mediaList) {
         mediaList.innerHTML = '<p class="empty-text">暂无媒体采访</p>';
       }
 
       // 渲染学术活动
       const academicList = document.getElementById('academic-list');
-      if (eventsData.academic && eventsData.academic.length > 0) {
+      if (academicList && eventsData.academic && eventsData.academic.length > 0) {
         academicList.innerHTML = eventsData.academic.map((item, index) => `
           <div class="event-card">
             <div class="event-date">${item.date}</div>
@@ -171,37 +150,8 @@
             <span class="event-location">📍 ${item.location}</span>
           </div>
         `).join('');
-      } else {
+      } else if (academicList) {
         academicList.innerHTML = '<p class="empty-text">暂无学术活动</p>';
-      }
-
-      // 渲染项目
-      const projectList = document.getElementById('project-list');
-      if (eventsData.projects && eventsData.projects.length > 0) {
-        projectList.innerHTML = eventsData.projects.map((item, index) => {
-          const isExternal = item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'));
-          const targetAttr = isExternal ? 'target="_blank"' : '';
-          return `
-          <div class="event-card project-card" style="display: flex; gap: 24px; align-items: flex-start;">
-            ${item.thumbnail ? `
-            <div class="project-thumbnail" style="flex-shrink: 0;">
-              <a href="${item.url}" ${targetAttr}>
-                <img src="${item.thumbnail}" alt="${item.title}" onerror="this.style.display='none'" style="width: 200px; height: 140px; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
-              </a>
-            </div>
-            ` : ''}
-            <div class="project-content" style="flex: 1;">
-              <div class="project-date">${item.date}</div>
-              <h3 class="project-title">
-                ${index + 1}. ${item.url ? `<a href="${item.url}" ${targetAttr} class="event-link">${item.title}</a>` : item.title}
-              </h3>
-              <p class="project-desc">${item.description}</p>
-              ${item.url ? `<a href="${item.url}" ${targetAttr} class="btn" style="padding: 8px 16px; font-size: 0.85rem; margin-top: 12px;">查看项目 →</a>` : ''}
-            </div>
-          </div>
-        `}).join('');
-      } else {
-        projectList.innerHTML = '<p class="empty-text">暂无项目</p>';
       }
     }
 
