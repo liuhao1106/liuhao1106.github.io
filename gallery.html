@@ -34,8 +34,9 @@
   <div class="container">
 
     <!-- 页面标题 -->
-    <header class="gallery-header">
+    <header class="gallery-header" data-reveal>
       <h1 class="page-title">足迹</h1>
+      <p class="gallery-count" id="gallery-count"></p>
     </header>
 
     <!-- 相册网格 -->
@@ -75,13 +76,7 @@
     // 从 JSON 文件加载照片数据
     async function loadPhotos() {
       try {
-        const response = await fetch('data/photos.json');
-        if (!response.ok) {
-          // 如果文件不存在，使用默认数据
-          photosData = getDefaultPhotos();
-        } else {
-          photosData = await response.json();
-        }
+        photosData = await fetchJSON('data/photos.json', []);
         renderGallery();
       } catch (error) {
         console.log('使用默认照片数据');
@@ -107,27 +102,43 @@
     // 渲染相册
     function renderGallery() {
       const grid = document.getElementById('gallery-grid');
-      
+      const countEl = document.getElementById('gallery-count');
+
       if (photosData.length === 0) {
         grid.innerHTML = '<p class="gallery-empty">暂无照片，敬请期待...</p>';
+        if (countEl) countEl.textContent = '';
         return;
       }
 
+      if (countEl) {
+        countEl.textContent = `${photosData.length} 张影像`;
+      }
+
       grid.innerHTML = photosData.map((photo, index) => `
-        <div class="gallery-item" onclick="openLightbox(${index})">
+        <div class="gallery-item" data-reveal data-reveal-delay="${Math.min(index, 8) * 60}" onclick="openLightbox(${index})">
           <div class="gallery-image-wrapper">
             <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+            <div class="gallery-image-overlay">
+              <span class="gallery-overlay-date">${photo.date}</span>
+              <span class="gallery-overlay-location">${photo.location}</span>
+            </div>
           </div>
           <div class="gallery-info">
             <h3 class="gallery-title">${photo.title}</h3>
             <p class="gallery-desc">${photo.description}</p>
             <div class="gallery-meta">
               <span class="gallery-date">${photo.date}</span>
+              <span class="meta-sep">·</span>
               <span class="gallery-location">${photo.location}</span>
             </div>
           </div>
         </div>
       `).join('');
+
+      // 触发新加载的卡片入场观察
+      if (typeof initScrollReveal === 'function') {
+        initScrollReveal();
+      }
     }
 
     // 打开图片详情
@@ -135,12 +146,18 @@
       currentPhotoIndex = index;
       const photo = photosData[index];
       const lightbox = document.getElementById('lightbox');
-      
-      document.getElementById('lightbox-img').src = photo.src;
+      const lightboxImg = document.getElementById('lightbox-img');
+
+      lightboxImg.classList.add('changing');
+      setTimeout(() => {
+        lightboxImg.src = photo.src;
+        lightboxImg.classList.remove('changing');
+      }, 150);
+
       document.getElementById('lightbox-title').textContent = photo.title;
       document.getElementById('lightbox-desc').textContent = photo.description;
       document.getElementById('lightbox-date').textContent = `${photo.date} · ${photo.location}`;
-      
+
       lightbox.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
