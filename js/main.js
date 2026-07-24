@@ -477,30 +477,43 @@ function initViewTransitions() {
 
 // ===== 项目图 clip-path 揭示 =====
 // 缩略图随滚动入视口时从遮罩中"揭开"，杂志编辑感
+// 使用 getBoundingClientRect + scroll 事件，兼容 Lenis 接管滚动
 function initClipReveal() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (!('IntersectionObserver' in window)) return;
 
   const targets = document.querySelectorAll('.project-thumb img, .gallery-image-wrapper img');
   if (targets.length === 0) return;
 
+  const pending = [];
   targets.forEach(img => {
     if (img.dataset.clipReveal === '1') return;
     img.dataset.clipReveal = '1';
     img.style.clipPath = 'inset(100% 0 0 0)';
     img.style.transition = 'clip-path 1s var(--ease-out)';
+    pending.push(img);
   });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.clipPath = 'inset(0 0 0 0)';
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
+  if (pending.length === 0) return;
 
-  targets.forEach(img => observer.observe(img));
+  function checkReveal() {
+    const vh = window.innerHeight;
+    for (let i = pending.length - 1; i >= 0; i--) {
+      const img = pending[i];
+      const rect = img.getBoundingClientRect();
+      // 元素 15% 进入视口时触发
+      if (rect.top < vh * 0.85 && rect.bottom > vh * 0.15) {
+        img.style.clipPath = 'inset(0 0 0 0)';
+        pending.splice(i, 1);
+      }
+    }
+    if (pending.length === 0) {
+      window.removeEventListener('scroll', checkReveal, { passive: true });
+    }
+  }
+
+  window.addEventListener('scroll', checkReveal, { passive: true });
+  // 首屏立即检查（图片可能在视口内）
+  requestAnimationFrame(checkReveal);
 }
 
 // ===== 磁吸链接 =====
