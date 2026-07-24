@@ -139,8 +139,116 @@ function initScrollReveal() {
   revealElements.forEach(el => observer.observe(el));
 }
 
+// ===== 章节标题逐字入位 =====
+// 将 .section-title 的纯文字部分拆分为逐字节点，
+// 由 IntersectionObserver 触发后逐字淡入（书法感"书"字落地）
+function initSectionTitleCharAnim() {
+  if (!('IntersectionObserver' in window)) return;
+
+  const titles = document.querySelectorAll('.section-title');
+  titles.forEach(title => {
+    // 跳过已经处理过的（防止重复绑定）
+    if (title.dataset.charSplit === '1') return;
+    title.dataset.charSplit = '1';
+
+    // 保留 ::before 装饰条，只拆分文字节点
+    const textNodes = Array.from(title.childNodes).filter(n => n.nodeType === Node.TEXT_NODE);
+    textNodes.forEach(node => {
+      const text = node.textContent;
+      if (!text.trim()) return;
+      const frag = document.createDocumentFragment();
+      // 用 Array.from 确保正确处理 surrogate pair
+      Array.from(text).forEach((ch, i) => {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = ch;
+        // 中文字符 22ms 错峰，英文字母/数字 12ms，整体节奏不会拖沓
+        const step = /[\u4e00-\u9fa5\u3000-\u303f\uff00-\uffef]/.test(ch) ? 22 : 12;
+        span.style.transitionDelay = (i * step) + 'ms';
+        frag.appendChild(span);
+      });
+      title.replaceChild(frag, node);
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  titles.forEach(t => observer.observe(t));
+}
+
+// ===== 回到顶部按钮 =====
+function initBackToTop() {
+  // 按钮由 HTML 注入到 <body> 末尾
+  let btn = document.getElementById('back-to-top');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'back-to-top';
+    btn.className = 'back-to-top';
+    btn.setAttribute('aria-label', '回到顶部');
+    btn.innerHTML = '↑';
+    document.body.appendChild(btn);
+  }
+
+  let visible = false;
+  function update() {
+    const shouldShow = window.scrollY > window.innerHeight * 0.8;
+    if (shouldShow !== visible) {
+      visible = shouldShow;
+      btn.classList.toggle('visible', visible);
+    }
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+
+  btn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+// ===== 顶部导航滚动态 + 链接入场 =====
+function initGlobalNav() {
+  const nav = document.querySelector('.global-nav');
+  if (!nav) return;
+
+  // 滚动后切换 is-scrolled 状态（基于文档滚动距离而非窗口高度）
+  let scrolled = false;
+  function updateNav() {
+    const shouldScroll = window.scrollY > 12;
+    if (shouldScroll !== scrolled) {
+      scrolled = shouldScroll;
+      nav.classList.toggle('is-scrolled', scrolled);
+    }
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  // 导航链接错峰淡入：每项延迟 60ms，营造章节感
+  const links = nav.querySelectorAll('.nav-link');
+  links.forEach((link, i) => {
+    link.style.opacity = '0';
+    link.style.transform = 'translateY(-4px)';
+    link.style.transition = 'opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out), color 0.3s var(--ease-out)';
+    // 首屏触发
+    setTimeout(() => {
+      link.style.transitionDelay = (i * 60) + 'ms';
+      link.style.opacity = '1';
+      link.style.transform = 'translateY(0)';
+    }, 80);
+  });
+}
+
 // ===== 页面加载后自动初始化 =====
 document.addEventListener('DOMContentLoaded', function() {
   initNavToggle();
+  initGlobalNav();
   initScrollReveal();
+  initSectionTitleCharAnim();
+  initBackToTop();
 });

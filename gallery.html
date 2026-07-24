@@ -117,7 +117,7 @@
       grid.innerHTML = photosData.map((photo, index) => `
         <div class="gallery-item" data-reveal data-reveal-delay="${Math.min(index, 8) * 60}" onclick="openLightbox(${index})">
           <div class="gallery-image-wrapper">
-            <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+            <img src="${photo.src}" alt="${photo.title}" loading="lazy" onload="this.classList.add('is-loaded')">
             <div class="gallery-image-overlay">
               <span class="gallery-overlay-date">${photo.date}</span>
               <span class="gallery-overlay-location">${photo.location}</span>
@@ -134,6 +134,15 @@
           </div>
         </div>
       `).join('');
+
+      // 兜底：缓存中的图片可能不触发 onload，立即标记为已加载
+      requestAnimationFrame(() => {
+        grid.querySelectorAll('img').forEach(img => {
+          if (img.complete && img.naturalWidth > 0) {
+            img.classList.add('is-loaded');
+          }
+        });
+      });
 
       // 触发新加载的卡片入场观察
       if (typeof initScrollReveal === 'function') {
