@@ -212,30 +212,126 @@ function initBackToTop() {
   });
 }
 
-// ===== 顶部滚动进度条 =====
-// 注入一条 2px 茶色细线，随阅读进度生长；页面不可滚动时保持隐藏
-function initScrollProgress() {
-  const bar = document.createElement('div');
-  bar.className = 'scroll-progress';
-  bar.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(bar);
+// ===== 滚动视差 + Hero 形变 =====
+// Hero 照片随滚动视差位移，标题随滚动缩小淡出——让首屏"持续呼吸"而非触发一次就静止
+function initScrollParallax() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  let ticking = false;
-  function update() {
-    ticking = false;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
-    bar.style.transform = `scaleX(${progress})`;
+  const hero = document.querySelector('.home-hero');
+  if (!hero) return;
+
+  const heroPhoto = hero.querySelector('.hero-photo-wrapper');
+  const heroName = hero.querySelector('.home-hero h1');
+  const heroNameEn = hero.querySelector('.hero-name-en');
+  const heroDivider = hero.querySelector('.hero-divider');
+  const heroSubtitle = hero.querySelector('.hero-subtitle');
+  const heroIntro = hero.querySelector('.hero-intro');
+  const fadeEls = [heroNameEn, heroDivider, heroSubtitle, heroIntro];
+
+  // 入场动画结束后移除 animation，让滚动视差的 inline style 能生效
+  let parallaxReady = false;
+  if (heroName) {
+    setTimeout(() => {
+      heroName.style.animation = 'none';
+      parallaxReady = true;
+    }, 1600);
+  } else {
+    parallaxReady = true;
   }
 
-  window.addEventListener('scroll', function() {
+  let ticking = false;
+
+  function update() {
+    ticking = false;
+    const scrollY = window.scrollY;
+    const heroHeight = hero.offsetHeight;
+    if (scrollY > heroHeight + 100) return;
+
+    const progress = Math.min(scrollY / heroHeight, 1);
+
+    // 照片视差：向下位移，产生深度感（入场期间也生效）
+    if (heroPhoto) {
+      heroPhoto.style.transform = `translateY(${progress * 36}px)`;
+    }
+
+    // 标题缩小淡出：入场动画结束后才接管
+    if (parallaxReady) {
+      if (heroName) {
+        heroName.style.transform = `scale(${1 - progress * 0.08})`;
+        heroName.style.opacity = String(1 - progress * 0.6);
+      }
+      fadeEls.forEach(el => {
+        if (el) el.style.opacity = String(1 - progress * 0.85);
+      });
+    }
+  }
+
+  window.addEventListener('scroll', () => {
     if (!ticking) {
       ticking = true;
       requestAnimationFrame(update);
     }
   }, { passive: true });
-  window.addEventListener('resize', update, { passive: true });
+
   update();
+}
+
+// ===== 鼠标 3D 倾斜 =====
+// Hero 照片跟随鼠标 3D 倾斜，增加交互生命感
+function initTilt3D() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(hover: none)').matches) return; // 触屏设备跳过
+
+  const heroWrapper = document.querySelector('.hero-photo-wrapper');
+  if (!heroWrapper) return;
+  const img = heroWrapper.querySelector('img');
+  if (!img) return;
+
+  heroWrapper.addEventListener('mousemove', (e) => {
+    const rect = heroWrapper.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    img.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 14}deg)`;
+  });
+
+  heroWrapper.addEventListener('mouseleave', () => {
+    img.style.transform = '';
+  });
+}
+
+// ===== 通用卡片 3D 倾斜 + 光泽跟随 =====
+// 为项目卡片和相册卡片绑定 mousemove 3D 倾斜，光泽高光跟随光标位置
+// 用 dataset.tiltBound 防止重复绑定，支持动态加载后重复调用
+function initCardTilt() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  document.querySelectorAll('.project-card, .gallery-item').forEach(card => {
+    if (card.dataset.tiltBound === '1') return;
+    card.dataset.tiltBound = '1';
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+      // 光泽位置（CSS 变量驱动 ::after 径向高光）
+      card.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width * 100) + '%');
+      card.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100) + '%');
+
+      // 3D 倾斜 + 上浮
+      const maxTilt = card.classList.contains('gallery-item') ? 5 : 8;
+      card.classList.add('tilting');
+      card.style.transform = `perspective(800px) rotateY(${x * maxTilt}deg) rotateX(${-y * maxTilt}deg) translateY(-6px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.classList.remove('tilting');
+      card.style.transform = '';
+      card.style.removeProperty('--mx');
+      card.style.removeProperty('--my');
+    });
+  });
 }
 
 // ===== 侧边栏 Scrollspy =====
@@ -299,18 +395,21 @@ function initGlobalNav() {
   updateNav();
 
   // 导航链接错峰淡入：每项延迟 60ms，营造章节感
-  const links = nav.querySelectorAll('.nav-link');
-  links.forEach((link, i) => {
-    link.style.opacity = '0';
-    link.style.transform = 'translateY(-4px)';
-    link.style.transition = 'opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out), color 0.3s var(--ease-out)';
-    // 首屏触发
-    setTimeout(() => {
-      link.style.transitionDelay = (i * 60) + 'ms';
-      link.style.opacity = '1';
-      link.style.transform = 'translateY(0)';
-    }, 80);
-  });
+  // 仅桌面端执行（移动端由 CSS animation navItemFadeIn 处理，避免 inline 样式冲突）
+  if (window.matchMedia('(min-width: 641px)').matches) {
+    const links = nav.querySelectorAll('.nav-link');
+    links.forEach((link, i) => {
+      link.style.opacity = '0';
+      link.style.transform = 'translateY(-4px)';
+      link.style.transition = 'opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out), color 0.3s var(--ease-out)';
+      // 首屏触发
+      setTimeout(() => {
+        link.style.transitionDelay = (i * 60) + 'ms';
+        link.style.opacity = '1';
+        link.style.transform = 'translateY(0)';
+      }, 80);
+    });
+  }
 }
 
 // ===== 页面加载后自动初始化 =====
@@ -320,6 +419,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initScrollReveal();
   initSectionTitleCharAnim();
   initBackToTop();
-  initScrollProgress();
   initScrollSpy();
+  initScrollParallax();
+  initTilt3D();
 });

@@ -155,8 +155,8 @@ a:hover {
 /* ===== 滚动入场动画 ===== */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
   will-change: opacity, transform;
 }
 
@@ -293,8 +293,10 @@ a:hover {
   margin: 0;
   line-height: 1.2;
   color: var(--text-primary);
-  /* 字距渐入：从 0.55em 展开到 0.22em，1.4s 缓慢收敛 */
-  animation: hero-letter-spacing 1.4s var(--ease-out) both;
+  /* 字距渐入 + clip-path 从下揭开：双重质感入场 */
+  animation:
+    hero-letter-spacing 1.4s var(--ease-out) both,
+    hero-clip-reveal 1.2s var(--ease-out) 0.15s both;
 }
 
 .hero-name-en {
@@ -321,6 +323,11 @@ a:hover {
 @keyframes hero-fade-in {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+@keyframes hero-clip-reveal {
+  0% { clip-path: inset(0 0 100% 0); }
+  100% { clip-path: inset(0 0 0 0); }
 }
 
 /* 尊重用户的减少动效偏好 */
@@ -362,6 +369,8 @@ a:hover {
 
 .hero-photo-wrapper {
   margin-bottom: var(--space-3);
+  perspective: 600px;
+  will-change: transform;
 }
 
 .hero-photo-wrapper img {
@@ -372,11 +381,15 @@ a:hover {
   box-shadow: var(--shadow-photo);
   border: 1px solid var(--accent-warm-border);
   filter: sepia(0.15) contrast(0.97) saturate(0.92);
-  transition: filter 0.5s var(--ease-out);
+  /* transform 无 transition：3D 倾斜由 mousemove 即时驱动 */
+  transition: filter 0.5s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .hero-photo-wrapper:hover img {
   filter: sepia(0.05) contrast(1) saturate(1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06), 0 20px 48px rgba(60, 40, 20, 0.14);
 }
 
 .photo-caption {
@@ -389,13 +402,34 @@ a:hover {
 /* ===== 内容区块 ===== */
 .section-block {
   padding: var(--space-12) 0;
-  border-top: 1px solid var(--border-light);
+  border-top: none;
   position: relative;
 }
 
+/* 章节分隔线：随滚动入位从左向右绘制 */
+.section-block::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--border-light);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.section-block.is-visible::after {
+  transform: scaleX(1);
+}
+
 .section-block:first-of-type {
-  border-top-color: transparent;
   padding-top: var(--space-8);
+}
+
+.section-block:first-of-type::after {
+  display: none;
 }
 
 .section-title {
@@ -415,13 +449,15 @@ a:hover {
   display: inline-block;
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
-  will-change: opacity, transform;
+  filter: blur(6px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out), filter 0.5s var(--ease-out);
+  will-change: opacity, transform, filter;
 }
 
 .section-title.is-visible .char {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
 }
 
 .section-title::before {
@@ -491,6 +527,8 @@ a:hover {
   position: relative;
   overflow: hidden;
   transition: transform 0.45s var(--ease-out), box-shadow 0.45s var(--ease-out), border-top-color 0.45s var(--ease-out);
+  transform-style: preserve-3d;
+  perspective: 800px;
 }
 
 /* 墨晕：hover 时从右上角晕开的茶色径向光晕 */
@@ -508,7 +546,26 @@ a:hover {
   z-index: 0;
 }
 
+/* 光泽跟随：径向高光跟随鼠标位置移动 */
+.project-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle 220px at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.18) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+
 .project-card:hover::before {
+  opacity: 1;
+}
+
+.project-card:hover::after {
   opacity: 1;
 }
 
@@ -525,6 +582,11 @@ a:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-card-hover);
   border-top-color: var(--accent-warm);
+}
+
+/* 3D 倾斜进行中：移除 transform 的 transition，让 mousemove 即时响应 */
+.project-card.tilting {
+  transition: box-shadow 0.45s var(--ease-out), border-top-color 0.45s var(--ease-out);
 }
 
 .project-thumb {
@@ -1236,11 +1298,16 @@ footer a:hover {
 
   .global-nav {
     padding: var(--space-3) 0;
+    /* 移除 backdrop-filter：它会为 position:fixed 子元素创建包含块，
+       导致移动端全屏菜单被限制在导航栏高度内 */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .global-nav-inner {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
     position: fixed;
     top: 0;
     left: 0;
@@ -1249,7 +1316,7 @@ footer a:hover {
     background: rgba(250, 249, 247, 0.97);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    padding: var(--space-16) var(--space-6) var(--space-8);
+    padding: 0 var(--space-6) var(--space-8);
     gap: 0;
     z-index: 99;
     opacity: 0;

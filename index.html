@@ -140,6 +140,10 @@
       if (typeof initScrollReveal === 'function') {
         initScrollReveal();
       }
+      // 绑定卡片 3D 倾斜
+      if (typeof initCardTilt === 'function') {
+        initCardTilt();
+      }
     }
 
     document.addEventListener('DOMContentLoaded', loadProjects);
