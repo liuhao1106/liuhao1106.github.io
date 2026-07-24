@@ -59,10 +59,30 @@
 
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
+  /* scroll-behavior 交由 Lenis 接管，CSS 层面设为 auto 避免冲突 */
+  scroll-behavior: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-padding-top: 88px;
+}
+
+/* ===== Lenis 平滑滚动必需 CSS ===== */
+/* Lenis 通过 JS 接管滚动，必须禁用 CSS smooth scroll，否则两者冲突导致滚动卡顿 */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 body {

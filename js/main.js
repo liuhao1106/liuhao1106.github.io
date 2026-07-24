@@ -208,7 +208,12 @@ function initBackToTop() {
   update();
 
   btn.addEventListener('click', function() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 优先使用 Lenis 滚动，避免与 Lenis 冲突
+    if (window._lenis) {
+      window._lenis.scrollTo(0, { duration: 1.2 });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   });
 }
 
@@ -431,12 +436,6 @@ function initLenis() {
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
-
-  // 回到顶部按钮使用 Lenis 滚动
-  const backBtn = document.getElementById('back-to-top');
-  if (backBtn) {
-    backBtn.addEventListener('click', () => lenis.scrollTo(0, { duration: 1.2 }));
-  }
 
   // 锚点链接使用 Lenis 滚动
   document.querySelectorAll('a[href^="#"]').forEach(link => {
