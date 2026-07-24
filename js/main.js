@@ -212,6 +212,75 @@ function initBackToTop() {
   });
 }
 
+// ===== 顶部滚动进度条 =====
+// 注入一条 2px 茶色细线，随阅读进度生长；页面不可滚动时保持隐藏
+function initScrollProgress() {
+  const bar = document.createElement('div');
+  bar.className = 'scroll-progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+    bar.style.transform = `scaleX(${progress})`;
+  }
+
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
+}
+
+// ===== 侧边栏 Scrollspy =====
+// 简历/成果页的侧边导航随滚动自动高亮当前章节。
+// 因侧栏由各页面 fetch 后动态渲染，改为每次滚动时现查节点，兼容异步注入。
+function initScrollSpy() {
+  let ticking = false;
+
+  function update() {
+    ticking = false;
+    const items = document.querySelectorAll('.sidebar-nav-item[href^="#"]');
+    if (items.length === 0) return;
+
+    const offset = 120; // 与 .content-section 的 scroll-margin-top 对齐
+    let currentId = null;
+
+    items.forEach(item => {
+      const section = document.getElementById(item.getAttribute('href').slice(1));
+      if (section && section.getBoundingClientRect().top <= offset) {
+        currentId = section.id;
+      }
+    });
+
+    // 尚未滚到第一节时高亮第一项；滚到页面底部时高亮最后一项
+    if (!currentId) {
+      currentId = items[0].getAttribute('href').slice(1);
+    }
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+      currentId = items[items.length - 1].getAttribute('href').slice(1);
+    }
+
+    items.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + currentId);
+    });
+  }
+
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }, { passive: true });
+  update();
+}
+
 // ===== 顶部导航滚动态 + 链接入场 =====
 function initGlobalNav() {
   const nav = document.querySelector('.global-nav');
@@ -251,4 +320,6 @@ document.addEventListener('DOMContentLoaded', function() {
   initScrollReveal();
   initSectionTitleCharAnim();
   initBackToTop();
+  initScrollProgress();
+  initScrollSpy();
 });

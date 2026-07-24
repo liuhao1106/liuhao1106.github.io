@@ -72,6 +72,13 @@ body {
   min-height: 100vh;
   background: var(--bg-page);
   position: relative;
+  /* 页面加载淡入：消除页面间切换的生硬感 */
+  animation: page-fade-in 0.45s var(--ease-out) both;
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* 全局底纹背景 - COVER.jpg */
@@ -1402,6 +1409,68 @@ footer a:hover {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.2);
+}
+
+/* ===== 回到顶部按钮（由 main.js 注入） ===== */
+.back-to-top {
+  position: fixed;
+  right: var(--space-6);
+  bottom: var(--space-8);
+  z-index: 90;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-warm);
+  background: var(--bg-content);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.4s var(--ease-out),
+              transform 0.4s var(--ease-out),
+              visibility 0.4s var(--ease-out),
+              color 0.3s var(--ease-out),
+              border-color 0.3s var(--ease-out);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  color: var(--accent-warm);
+  border-color: var(--accent-warm);
+}
+
+@media (max-width: 640px) {
+  .back-to-top {
+    right: var(--space-4);
+    bottom: var(--space-6);
+  }
+}
+
+/* ===== 顶部滚动进度条（由 main.js 注入） ===== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-warm);
+  opacity: 0.85;
+  transform: scaleX(0);
+  transform-origin: left;
+  z-index: 150;
+  pointer-events: none;
 }
 
 /* ===== 焦点状态 (无障碍) ===== */
