@@ -131,8 +131,7 @@ a:hover {
   background-size: 100% 1px;
 }
 
-/* 导航链接的流光在文字中间横扫 */
-.nav-link,
+/* 链接的流光在文字中间横扫（导航栏不使用，仅保留下划线） */
 .project-link,
 .event-link,
 .pub-title a,
@@ -145,7 +144,6 @@ a:hover {
   padding-bottom: 0;
 }
 
-.nav-link:hover,
 .project-link:hover,
 .event-link:hover,
 .pub-title a:hover,
