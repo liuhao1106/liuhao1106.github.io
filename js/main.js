@@ -412,14 +412,161 @@ function initGlobalNav() {
   }
 }
 
+// ===== Lenis 平滑滚动 =====
+// CDN 引入 Lenis，为全站添加惯性丝滑滚动
+function initLenis() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (typeof Lenis === 'undefined') return;
+
+  const lenis = new Lenis({
+    duration: 1.1,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+    smoothTouch: false,
+  });
+
+  // 与 requestAnimationFrame 同步
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // 回到顶部按钮使用 Lenis 滚动
+  const backBtn = document.getElementById('back-to-top');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => lenis.scrollTo(0, { duration: 1.2 }));
+  }
+
+  // 锚点链接使用 Lenis 滚动
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const targetId = link.getAttribute('href');
+      if (targetId === '#' || targetId.length < 2) return;
+      const target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        lenis.scrollTo(target, { offset: -80, duration: 1.2 });
+      }
+    });
+  });
+
+  // 暴露到全局，供 View Transitions 重初始化
+  window._lenis = lenis;
+}
+
+// ===== View Transitions 页面转场 =====
+// 为导航链接添加跨页面淡入淡出转场（浏览器原生 API，零依赖）
+function initViewTransitions() {
+  if (!document.startViewTransition) return;
+
+  document.querySelectorAll('a[href]').forEach(link => {
+    const href = link.getAttribute('href');
+    // 仅处理同源、非锚点、非新窗口链接
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('http')) return;
+    if (link.target === '_blank') return;
+
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      // 触发转场
+      document.startViewTransition(() => {
+        window.location.href = href;
+      });
+    });
+  });
+}
+
+// ===== 项目图 clip-path 揭示 =====
+// 缩略图随滚动入视口时从遮罩中"揭开"，杂志编辑感
+function initClipReveal() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;
+
+  const targets = document.querySelectorAll('.project-thumb img, .gallery-image-wrapper img');
+  if (targets.length === 0) return;
+
+  targets.forEach(img => {
+    if (img.dataset.clipReveal === '1') return;
+    img.dataset.clipReveal = '1';
+    img.style.clipPath = 'inset(100% 0 0 0)';
+    img.style.transition = 'clip-path 1s var(--ease-out)';
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.clipPath = 'inset(0 0 0 0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  targets.forEach(img => observer.observe(img));
+}
+
+// ===== 磁吸链接 =====
+// 核心链接/按钮轻微跟随光标偏移，精密交互感
+function initMagneticLinks() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  const selectors = '.project-link, .lightbox-nav, .lightbox-close';
+  document.querySelectorAll(selectors).forEach(el => {
+    if (el.dataset.magnetic === '1') return;
+    el.dataset.magnetic = '1';
+
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  });
+}
+
+// ===== 骨架屏加载占位 =====
+// 数据加载区域在 fetch 完成前显示微光闪烁占位
+function initSkeletonLoading() {
+  // 为动态加载容器添加骨架屏
+  const containers = [
+    { selector: '#projects-container', count: 3, template: 'project' },
+    { selector: '#gallery-grid', count: 6, template: 'gallery' },
+  ];
+
+  containers.forEach(({ selector, count, template }) => {
+    const container = document.querySelector(selector);
+    if (!container) return;
+    if (container.children.length > 0) return;
+
+    let html = '';
+    for (let i = 0; i < count; i++) {
+      if (template === 'project') {
+        html += `<div class="skeleton-card"><div class="skeleton-line skeleton-w60"></div><div class="skeleton-line skeleton-w90"></div><div class="skeleton-line skeleton-w40"></div></div>`;
+      } else {
+        html += `<div class="skeleton-gallery"><div class="skeleton-image"></div><div class="skeleton-line skeleton-w60"></div></div>`;
+      }
+    }
+    container.innerHTML = html;
+  });
+}
+
 // ===== 页面加载后自动初始化 =====
 document.addEventListener('DOMContentLoaded', function() {
+  initLenis();
   initNavToggle();
   initGlobalNav();
+  initSkeletonLoading();
   initScrollReveal();
   initSectionTitleCharAnim();
   initBackToTop();
   initScrollSpy();
   initScrollParallax();
   initTilt3D();
+  initViewTransitions();
+  initClipReveal();
+  initMagneticLinks();
 });

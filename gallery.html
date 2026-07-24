@@ -67,6 +67,7 @@
     </footer>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
   <script src="/js/main.js"></script>
   <script>
     // 加载照片数据
@@ -153,6 +154,14 @@
       // 绑定卡片 3D 倾斜
       if (typeof initCardTilt === 'function') {
         initCardTilt();
+      }
+      // 图片 clip-path 揭示
+      if (typeof initClipReveal === 'function') {
+        initClipReveal();
+      }
+      // 磁吸链接
+      if (typeof initMagneticLinks === 'function') {
+        initMagneticLinks();
       }
     }
 
