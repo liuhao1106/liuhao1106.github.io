@@ -109,11 +109,11 @@
         const isExternal = p.url && (p.url.startsWith('http://') || p.url.startsWith('https://'));
         const targetAttr = isExternal ? 'target="_blank" rel="noopener"' : '';
         const thumbHtml = p.thumbnail
-          ? `<div class="project-thumb" style="width: 200px; height: 140px; overflow: hidden; border-radius: 2px;">
-               <img src="${p.thumbnail}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+          ? `<div class="project-thumb">
+               <img src="${p.thumbnail}" alt="${p.title}">
              </div>`
-          : `<div class="project-thumb" style="width: 200px; height: 140px; overflow: hidden; border-radius: 2px; display: flex; align-items: center; justify-content: center; background: var(--accent-warm-bg);">
-               <span style="font-size: 3rem; color: var(--accent-warm);">⚛</span>
+          : `<div class="project-thumb project-thumb-placeholder">
+               <span class="project-thumb-icon">⚛</span>
              </div>`;
         const linkHtml = p.url2
           ? `<div class="project-links-group">

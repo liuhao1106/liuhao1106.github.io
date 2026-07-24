@@ -77,6 +77,8 @@
     async function loadPhotos() {
       try {
         photosData = await fetchJSON('data/photos.json', []);
+        // 按时间倒序排列（newest first），日期格式为 YYYY-MM 或 YYYY-MM-DD
+        photosData.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
         renderGallery();
       } catch (error) {
         console.log('使用默认照片数据');
