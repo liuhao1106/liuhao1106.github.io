@@ -1,61 +1,81 @@
-# 刘昊 · 个人主页与数字人文项目
+# 刘昊 · 学术个人主页与数字人文项目
 
-同济大学哲学系刘昊老师的个人主页、课程网站与数字人文可视化项目集合。站点以纯静态 HTML/CSS/JavaScript 为主体，并包含若干独立的专题可视化子项目（年谱、知识图谱、思想结构叙事等）。
+> 一套面向人文学者的**数据驱动型静态站点模板**——零构建工具、JSON 即内容、动效克制、即拿即用。
+
+同济大学哲学系刘昊老师的个人主页、课程网站与数字人文可视化项目集合。主站点以纯静态 HTML/CSS/JavaScript 构建，所有内容通过 JSON 文件管理，改数据即更新页面，无需触碰 HTML。另含多个独立的专题可视化子项目（年谱、知识图谱、思想结构叙事等）。
+
+## 为什么复用性高
+
+这个项目不是"个人主页"，而是一套**可复用的学者站点框架**。任何人文学者只需替换 `data/` 目录下的 JSON 文件和几张图片，即可拥有一个完整的学术主页。
+
+| 特性 | 说明 |
+|---|---|
+| **零构建工具** | 主站点无需 npm/webpack/vite，一个 `python -m http.server` 即可运行 |
+| **JSON 即内容** | 简历、论文、课程、活动、照片全部存为 JSON，页面通过 `fetchJSON` 动态加载 |
+| **数据复用** | `publications.json` 被 `cv.html` 和 `publications.html` 共享，一处修改两处同步 |
+| **CSS 变量驱动** | 配色、字体、间距全部定义为 `:root` 变量，改一处即全站生效 |
+| **响应式开箱即用** | 桌面/平板/手机三档适配，移动端导航自动切换 |
+| **动效克制** | 0.4–0.5s 过渡、8–20px 位移、`prefers-reduced-motion` 支持，符合学术气质 |
+| **子项目解耦** | 每个数字人文子项目独立目录、独立技术栈，不污染主站 |
 
 ## 项目结构
 
 ```
 chph/
 ├── index.html                # 首页：个人简介、项目卡片、相关链接
-├── cv.html                   # 个人简历
-├── courses.html              # 课程总览（fetch data/courses.json）
-├── events.html               # 学术活动与媒体报道
-├── gallery.html              # 足迹（照片画廊）
-├── history.html              # 网站更新历史
+├── cv.html                   # 个人简历（fetch profile.json + publications.json）
+├── publications.html         # 学术成果（fetch publications.json）
+├── courses.html              # 课程总览（fetch courses.json）
+├── events.html               # 学术活动与媒体报道（fetch events.json）
+├── gallery.html              # 足迹照片画廊（fetch photos.json）
 ├── lixuegraph.html           # 宋明理学史知识图谱（D3.js 力导向图）
+├── history.html              # 网站更新历史
 ├── article-template.html     # 文章页模板
 ├── check_json.py             # JSON 数据校验脚本
 ├── COVER.jpg                 # 全站底纹背景图
 │
-├── css/                      # 全局样式
-│   ├── style.css             # 主样式（设计系统、导航、卡片、布局）
-│   ├── events.css            # 活动页样式
-│   └── gallery.css           # 画廊页样式
+├── css/
+│   ├── style.css             # 设计系统（变量、导航、卡片、布局、动效）
+│   ├── events.css            # 活动页专用样式
+│   └── gallery.css           # 画廊页专用样式
 ├── js/
-│   ├── main.js               # 全局脚本（导航、数据加载等）
+│   ├── main.js               # 全局脚本（导航、数据加载、动效、课程渲染）
 │   └── markdown.js           # Markdown 渲染工具
-├── data/                     # 站点数据（JSON）
+├── data/                     # 站点数据（改这里即更新全站）
+│   ├── profile.json          # 简历：教育、履历、荣誉、项目、会议
+│   ├── publications.json     # 成果：著作、论文、译文、报纸
 │   ├── courses.json          # 课程信息与教学大纲
-│   ├── publications.json     # 学术成果（著作、论文、译文、报纸）
-│   ├── profile.json          # 简历数据（教育、履历、荣誉、项目等）
-│   ├── events.json           # 活动记录与项目信息
+│   ├── events.json           # 活动记录与项目卡片
 │   ├── photos.json           # 画廊照片元数据
 │   ├── nodes.json            # 理学图谱节点
 │   ├── links.json            # 理学图谱关系边
 │   └── config.json           # 理学图谱配色配置
-├── images/                   # 图片资源（头像、横幅、画廊照片等）
+├── images/                   # 图片资源（头像、缩略图、画廊照片）
 │
 ├── lulongqinianpu/           # 寻踪陆陇其（年谱可视化，独立 Vite 项目）
-├── daoliguimoessay/          # 道理规模与工夫次第（PDF 图册查看器）
-├── daoliguimoessay2/         # 道理规模与工夫次第（长滚动叙事页）
-├── chinese-history/          # 中国历史概论（通识课）
-├── chinese-tradition/        # 中国传统文化（通识课）
-├── ethics-classics/          # 伦理学经典
-├── graduate-classics/        # 研究生·中国思想原典选读
-└── graduate-neo-confucianism/# 研究生·宋明理学
+├── daoliguimoessay/          # 道理规模 v1（PDF 图册查看器）
+├── daoliguimoessay2/         # 道理规模 v2（长滚动叙事，Tailwind + GSAP）
+├── chinese-history/          # 课程：中国历史概论
+├── chinese-tradition/        # 课程：中国传统文化
+├── ethics-classics/          # 课程：伦理学经典
+├── graduate-classics/        # 课程：研究生·中国思想原典选读
+├── graduate-neo-confucianism/# 课程：研究生·宋明理学
+├── neo-confucian-classics/   # 课程：宋明理学经典
+└── philosophy-history-ii/    # 课程：中国哲学史（下）
 ```
 
 ## 技术栈
 
-### 主站点
+### 主站点（零依赖核心）
 
-主站点为纯静态页面，无需构建工具，可直接用任意静态服务器托管。
-
-- **样式**：原生 CSS，通过 CSS 变量统一管理配色与字体；正文使用 Noto Serif SC，楷体使用 LXGW WenKai
-- **数据加载**：所有内容数据存放于 `data/*.json`，页面通过 `fetch` 动态加载（`js/main.js` 提供统一的 `fetchJSON` 工具函数）
-- **公共脚本**：`js/main.js` 提供全局导航栏移动端切换（`initNavToggle`）、数据加载工具（`fetchJSON`）与课程详情页渲染函数，所有页面共享，无需在各页面内重复编写导航脚本
-- **分析**：集成 Google Analytics（ID: `G-0E1K9BJLZK`）
-- **背景效果**：`COVER.jpg` 作为固定底纹（opacity 0.06），叠加 SVG 噪点纹理模拟纸质质感
+| 层 | 技术 | 说明 |
+|---|---|---|
+| 样式 | 原生 CSS | CSS 变量统一管理配色/字体/间距；Noto Serif SC 正文，LXGW WenKai 楷体 |
+| 脚本 | 原生 JS | 无框架，`js/main.js` 提供导航、数据加载、动效、课程渲染等全部功能 |
+| 数据 | JSON | 所有内容存于 `data/*.json`，页面通过 `fetchJSON` 动态加载 |
+| 动效 | CSS + JS | Lenis 平滑滚动、View Transitions 转场、clip-path 揭示、磁吸链接、骨架屏 |
+| 分析 | Google Analytics | ID: `G-0E1K9BJLZK` |
+| 质感 | CSS | `COVER.jpg` 底纹 + SVG 噪点纹理，模拟纸质质感 |
 
 ### 专题子项目
 
@@ -66,51 +86,156 @@ chph/
 | 道理规模 v1 | `daoliguimoessay/pdf_viewer.html` | 原生 JS（PDF 转图片逐页展示） | `pdf_images/*.png` | 无 |
 | 道理规模 v2 | `daoliguimoessay2/index.html` | Tailwind CSS + GSAP ScrollTrigger | 内嵌（无外部数据） | 无 |
 
-## 本地开发
+## 快速开始
 
 ### 主站点
 
-主站点使用相对根路径（如 `/css/style.css`），需以项目根目录作为 Web 根启动服务器，否则路径会失效。
-
 ```bash
-# 在项目根目录执行
+# 在项目根目录执行（必须以根目录为 Web 根，因为页面使用绝对路径 /css/...）
 python -m http.server 8080
-# 或
-npx serve -l 8080
 ```
 
-访问 `http://localhost:8080`。
+访问 `http://localhost:8080`。直接用 `file://` 打开会导致路径失效。
 
 ### 寻踪陆陇其（lulongqinianpu）
 
-该子项目为独立 Vite 项目，包含前端可视化与可选的 FastAPI 后端。
-
 ```bash
 cd lulongqinianpu
-npm install        # 安装依赖（首次）
-npm run dev        # 启动 Vite 开发服务器（默认端口 3000）
+npm install        # 首次安装依赖
+npm run dev        # 启动 Vite 开发服务器（端口 3000）
 ```
 
-如需启用后端 API（弟子数据、年谱、师承网络等接口）：
+可选后端：
 
 ```bash
 cd lulongqinianpu/backend
-python main.py     # 启动 FastAPI，端口 8001
+python main.py     # 启动 FastAPI，端口 8001，API 前缀 /api
 ```
 
-后端 API 前缀为 `/api`，提供 `/disciples`、`/chronicle`、`/network`、`/statistics` 等端点。前端在不启用后端时也可直接 fetch 同目录下的 JSON 文件运行。
+前端不启用后端时也可直接 fetch 同目录 JSON 运行，后端为可选增强。
+
+## 数据驱动：改 JSON 即更新全站
+
+所有页面内容均从 `data/` 目录的 JSON 文件加载。修改数据无需触碰 HTML。
+
+| 页面 | 数据文件 | 说明 |
+|---|---|---|
+| `index.html` | `data/events.json` | 首页项目卡片，复用 `projects` 数组 |
+| `cv.html` | `data/profile.json` + `data/publications.json` | 简历 + 成果（成果数据与 `publications.html` 共享） |
+| `publications.html` | `data/publications.json` | 著作、论文、译文、报纸，分类编号自动生成 |
+| `courses.html` | `data/courses.json` | 课程信息与教学大纲 |
+| `events.html` | `data/events.json` | 学术活动与媒体报道 |
+| `gallery.html` | `data/photos.json` | 照片元数据，按日期倒序排列 |
+| `lixuegraph.html` | `data/nodes.json` + `data/links.json` + `data/config.json` | D3 力导向图节点与边 |
+
+修改后建议运行校验：
+
+```bash
+python check_json.py
+```
+
+### JSON 数据结构速览
+
+**`profile.json`** — 简历数据：
+
+```jsonc
+{
+  "lastUpdated": "2026.07.21",
+  "basicInfo": { "title": "...", "department": "...", "email": "..." },
+  "education": [{ "period": "...", "institution": "...", "status": "..." }],
+  "work": [{ "period": "...", "position": "...", "note": "..." }],
+  "research": ["研究方向一", "研究方向二"],
+  "honors": [{ "year": "...", "title": "..." }],
+  "projects": [{ "year": "...", "title": "...", "note": "..." }],
+  "conferences": [{ "title": "...", "date": "...", "location": "..." }]
+}
+```
+
+**`publications.json`** — 成果数据（`cv.html` 与 `publications.html` 共享）：
+
+```jsonc
+{
+  "books": [{ "title": "...", "publisher": "...", "date": "..." }],
+  "papers": [{ "title": "...", "journal": "...", "date": "...", "cssci": true }],
+  "translations": [{ "title": "...", "journal": "...", "date": "..." }],
+  "newspapers": [{ "title": "...", "publisher": "...", "date": "..." }]
+}
+```
+
+**`events.json`** — 活动与项目：
+
+```jsonc
+{
+  "media": [{ "id": 1, "title": "...", "description": "...", "date": "...", "source": "...", "url": "..." }],
+  "academic": [{ "id": 1, "title": "...", "description": "...", "date": "...", "location": "...", "url": "..." }],
+  "projects": [{ "title": "...", "description": "...", "url": "...", "thumbnail": "...", "url2": "..." }]
+}
+```
+
+**`courses.json`** — 课程数据：
+
+```jsonc
+{
+  "professor": { "name": "...", "title": "...", "email": "..." },
+  "categories": [
+    { "id": "undergraduate-major", "name": "本科生·专业课" },
+    { "id": "undergraduate-general", "name": "本科生·通识课" },
+    { "id": "graduate", "name": "研究生课程" }
+  ],
+  "courses": [{ "id": "...", "category": "...", "title": "...", "syllabus": [{ "week": 1, "topic": "...", "content": "..." }] }]
+}
+```
+
+**`photos.json`** — 照片元数据：
+
+```jsonc
+[{ "id": 1, "src": "images/gallery/photo.jpg", "title": "...", "description": "...", "date": "YYYY-MM-DD", "location": "..." }]
+```
 
 ## 设计系统
 
-全站采用极简主义学术风格，核心设计变量定义在 `css/style.css` 的 `:root` 中：
+全站视觉风格定义在 `css/style.css` 的 `:root` 中，修改变量即可全局生效。
 
-- **配色**：页面背景 `#faf9f7`（米白），主文字 `#1a1a1a`，强调色同主文字色，整体呈黑白灰调
-- **字体**：正文 Noto Serif SC（思源宋体），楷体 LXGW WenKai（霞鹜文楷），系统字体作为无衬线回退
-- **布局**：单栏为主，最大宽度 920px，居中排版
-- **质感**：底纹背景 + 纸质噪点纹理，半透明内容卡片配 `backdrop-filter` 毛玻璃效果
-- **动效**：统一使用 `cubic-bezier(0.16, 1, 0.3, 1)` 缓动曲线
+### 配色
 
-如需调整配色或字体，编辑 `css/style.css` 中的 CSS 变量即可全局生效。
+```css
+--text-primary: #1a1a1a;        /* 主文字 */
+--text-secondary: #4a4a4a;      /* 次级文字 */
+--bg-page: #faf9f7;             /* 页面背景（米白） */
+--accent-warm: #8b6f47;         /* 茶色赭石点缀色（全站唯一点缀） */
+```
+
+### 字体
+
+```css
+--font-serif: "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+--font-kai: "LXGW WenKai", "KaiTi", serif;
+```
+
+### 布局与动效
+
+- 最大宽度 `920px`，单栏居中为主
+- 统一缓动曲线 `cubic-bezier(0.16, 1, 0.3, 1)`
+- 过渡时间 0.4–0.5s，位移 8–20px
+- 全部动效兼容 `prefers-reduced-motion`
+
+### 质感
+
+`body::before` 加载 `COVER.jpg` 作为固定底纹（opacity 0.06），`body::after` 叠加 SVG 噪点纹理。这两层是全站纸质质感的来源。
+
+## 动效系统
+
+主站点内置五组动效，均为渐进增强，不影响内容可读性：
+
+| 动效 | 触发方式 | 说明 |
+|---|---|---|
+| Lenis 平滑滚动 | 全局 | 惯性丝滑滚动，回顶按钮与锚点链接均走 Lenis |
+| View Transitions | 页面跳转 | 浏览器原生 API，同源链接淡入淡出转场 |
+| clip-path 揭示 | 滚动入视口 | 项目/画廊图片从遮罩中揭开，杂志编辑感 |
+| 磁吸链接 | 鼠标悬停 | 核心按钮轻微跟随光标偏移 |
+| 骨架屏 | 数据加载 | `fetch` 完成前显示微光闪烁占位 |
+
+此外还有：滚动入场（`data-reveal`）、章节标题逐字入位、卡片 3D 倾斜 + 光泽跟随、Hero 视差形变、导航滚动增强等。
 
 ## 课程页面约定
 
@@ -119,17 +244,41 @@ python main.py     # 启动 FastAPI，端口 8001
 - `index.html`：课程详情页，引用 `/css/style.css`，包含全局顶部导航
 - `2024-fall/` 等子文件夹：学期归档（可选）
 
-新增课程时，在 `data/courses.json` 中添加课程数据，并创建对应的课程文件夹与 `index.html`。课程分类取值为 `undergraduate-major`（专业基础课）、`undergraduate-general`（通识课）、`graduate`（研究生课）。
+新增课程步骤：
+
+1. 在 `data/courses.json` 的 `courses` 数组中添加课程对象
+2. 创建课程文件夹与 `index.html`（可复制现有课程页作为模板）
+3. 确保新页面引用 `/css/style.css` 并包含全局导航
+
+## 复用指南：用这套模板搭建你自己的学术主页
+
+1. **Fork 或克隆本仓库**
+2. **替换数据**：编辑 `data/` 下的 JSON 文件，填入你的简历、论文、课程、活动、照片
+3. **替换图片**：将 `images/profile-photo.png`、`COVER.jpg`、`images/gallery/` 替换为你自己的图片
+4. **调整配色**（可选）：编辑 `css/style.css` 的 `:root` 变量
+5. **修改导航**：在各 HTML 文件的 `.global-nav-inner` 中调整导航项
+6. **部署**：上传至 GitHub Pages / Netlify / Vercel 等任意静态托管服务
+
+> 注意：主站点使用绝对根路径（`/css/...`），需部署在根域名下。部署到子路径时需批量替换路径前缀。
 
 ## 部署
 
-主站点为纯静态文件，将整个项目文件夹上传至任意静态托管服务即可（Netlify、Vercel、GitHub Pages 等）。注意所有页面使用绝对根路径（`/css/...`），需部署在根域名下，或部署到子路径时调整路径前缀。
+主站点为纯静态文件，将整个项目文件夹上传至任意静态托管服务即可：
 
-寻踪陆陇其子项目可通过 `npm run build` 构建产物后单独部署，亦可直接作为静态文件由主站服务器提供。
+- **GitHub Pages**：推送至 `gh-pages` 分支或设置 `main` 分支为 Pages 源
+- **Netlify / Vercel**：连接仓库，构建命令留空，输出目录为项目根目录
+- **传统服务器**：上传至 Web 服务器根目录
+
+寻踪陆陇其子项目可通过 `npm run build` 构建产物后单独部署。
 
 ## 维护信息
 
 - **作者**：刘昊
 - **单位**：同济大学哲学系
 - **邮箱**：liuhao1106@tongji.edu.cn
-- **个人主页**：https://liuhao1106.netlify.app/
+- **主页**：https://liuhao1106.netlify.app/
+- **GitHub**：https://github.com/liuhao1106/liuhao1106.github.io
+
+## License
+
+MIT
