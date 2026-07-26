@@ -1,8 +1,8 @@
-# 刘昊 · 学术个人主页与数字人文项目
+# 刘昊 · 学术个人主页模板
 
 > 一套面向人文学者的**数据驱动型静态站点模板**——零构建工具、JSON 即内容、动效克制、即拿即用。
 
-同济大学哲学系刘昊老师的个人主页、课程网站与数字人文可视化项目集合。主站点以纯静态 HTML/CSS/JavaScript 构建，所有内容通过 JSON 文件管理，改数据即更新页面，无需触碰 HTML。另含多个独立的专题可视化子项目（年谱、知识图谱、思想结构叙事等）。
+同济大学哲学系刘昊老师的个人主页与课程网站。以纯静态 HTML/CSS/JavaScript 构建，所有内容通过 JSON 文件管理，改数据即更新页面，无需触碰 HTML。
 
 ## 为什么复用性高
 
@@ -16,7 +16,6 @@
 | **CSS 变量驱动** | 配色、字体、间距全部定义为 `:root` 变量，改一处即全站生效 |
 | **响应式开箱即用** | 桌面/平板/手机三档适配，移动端导航自动切换 |
 | **动效克制** | 0.4–0.5s 过渡、8–20px 位移、`prefers-reduced-motion` 支持，符合学术气质 |
-| **子项目解耦** | 每个数字人文子项目独立目录、独立技术栈，不污染主站 |
 
 ## 项目结构
 
@@ -52,16 +51,7 @@ chph/
 │   └── config.json           # 理学图谱配色配置
 ├── images/                   # 图片资源（头像、缩略图、画廊照片）
 │
-├── lulongqinianpu/           # 寻踪陆陇其（年谱可视化，独立 Vite 项目）
-├── daoliguimoessay/          # 道理规模 v1（PDF 图册查看器）
-├── daoliguimoessay2/         # 道理规模 v2（长滚动叙事，Tailwind + GSAP）
-├── chinese-history/          # 课程：中国历史概论
-├── chinese-tradition/        # 课程：中国传统文化
-├── ethics-classics/          # 课程：伦理学经典
-├── graduate-classics/        # 课程：研究生·中国思想原典选读
-├── graduate-neo-confucianism/# 课程：研究生·宋明理学
-├── neo-confucian-classics/   # 课程：宋明理学经典
-└── philosophy-history-ii/    # 课程：中国哲学史（下）
+└── [课程文件夹]/              # 各课程独立目录，结构一致
 ```
 
 ## 技术栈
@@ -77,18 +67,7 @@ chph/
 | 分析 | Google Analytics | ID: `G-0E1K9BJLZK` |
 | 质感 | CSS | `COVER.jpg` 底纹 + SVG 噪点纹理，模拟纸质质感 |
 
-### 专题子项目
-
-| 子项目 | 入口 | 可视化技术 | 数据来源 | 后端 |
-|---|---|---|---|---|
-| 寻踪陆陇其 | `lulongqinianpu/index.html` | Leaflet + OpenLayers + Chart.js + vis-network | 年谱 JSON、弟子记录 JSON、师承网络 JSON | FastAPI（可选，端口 8001） |
-| 宋明理学史知识图谱 | `lixuegraph.html` | D3.js v7（力导向图） | `data/nodes.json`、`data/links.json`、`data/config.json` | 无 |
-| 道理规模 v1 | `daoliguimoessay/pdf_viewer.html` | 原生 JS（PDF 转图片逐页展示） | `pdf_images/*.png` | 无 |
-| 道理规模 v2 | `daoliguimoessay2/index.html` | Tailwind CSS + GSAP ScrollTrigger | 内嵌（无外部数据） | 无 |
-
 ## 快速开始
-
-### 主站点
 
 ```bash
 # 在项目根目录执行（必须以根目录为 Web 根，因为页面使用绝对路径 /css/...）
@@ -96,23 +75,6 @@ python -m http.server 8080
 ```
 
 访问 `http://localhost:8080`。直接用 `file://` 打开会导致路径失效。
-
-### 寻踪陆陇其（lulongqinianpu）
-
-```bash
-cd lulongqinianpu
-npm install        # 首次安装依赖
-npm run dev        # 启动 Vite 开发服务器（端口 3000）
-```
-
-可选后端：
-
-```bash
-cd lulongqinianpu/backend
-python main.py     # 启动 FastAPI，端口 8001，API 前缀 /api
-```
-
-前端不启用后端时也可直接 fetch 同目录 JSON 运行，后端为可选增强。
 
 ## 数据驱动：改 JSON 即更新全站
 
@@ -268,8 +230,6 @@ python check_json.py
 - **GitHub Pages**：推送至 `gh-pages` 分支或设置 `main` 分支为 Pages 源
 - **Netlify / Vercel**：连接仓库，构建命令留空，输出目录为项目根目录
 - **传统服务器**：上传至 Web 服务器根目录
-
-寻踪陆陇其子项目可通过 `npm run build` 构建产物后单独部署。
 
 ## 维护信息
 
