@@ -97,13 +97,14 @@
   border-top-color: var(--accent-warm);
 }
 
-/* 图片包装器 —— 不固定比例，保留照片原始长宽比 */
+/* 图片包装器 —— 不固定比例，保留照片原始长宽比；设最小高度防 CLS */
 .gallery-image-wrapper {
   position: relative;
   width: 100%;
   overflow: hidden;
   background: var(--accent-warm-bg);
   line-height: 0;
+  min-height: 180px;
 }
 
 .gallery-image-wrapper img {

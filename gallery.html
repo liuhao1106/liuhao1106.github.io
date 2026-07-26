@@ -16,10 +16,15 @@
   </script>
 </head>
 <body>
+  <!-- Skip Link（无障碍） -->
+  <a href="#main-content" class="skip-link">跳到主内容</a>
+
   <!-- 全局顶部导航栏 -->
   <nav class="global-nav">
     <div class="container" style="position: relative;">
-      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单">☰</button>
+      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单" aria-expanded="false">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
       <div class="global-nav-inner" id="global-nav-inner">
         <a href="/" class="nav-link">首页</a>
         <a href="/cv.html" class="nav-link">简历</a>
@@ -31,7 +36,7 @@
     </div>
   </nav>
 
-  <div class="container">
+  <div class="container" id="main-content">
 
     <!-- 页面标题 -->
     <header class="gallery-header" data-reveal>
@@ -47,11 +52,17 @@
     </main>
 
     <!-- 图片详情模态框 -->
-    <div id="lightbox" class="lightbox">
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="图片详情">
       <div class="lightbox-content">
-        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-        <button class="lightbox-nav lightbox-prev" onclick="navigatePhoto(-1)">&#8249;</button>
-        <button class="lightbox-nav lightbox-next" onclick="navigatePhoto(1)">&#8250;</button>
+        <button class="lightbox-close" onclick="closeLightbox()" aria-label="关闭">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M6 18L18 6"/></svg>
+        </button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigatePhoto(-1)" aria-label="上一张">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="lightbox-nav lightbox-next" onclick="navigatePhoto(1)" aria-label="下一张">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
         <img id="lightbox-img" src="" alt="">
         <div class="lightbox-caption">
           <h3 id="lightbox-title"></h3>
@@ -118,9 +129,9 @@
       }
 
       grid.innerHTML = photosData.map((photo, index) => `
-        <div class="gallery-item" data-reveal data-reveal-delay="${Math.min(index, 8) * 60}" onclick="openLightbox(${index})">
+        <div class="gallery-item" data-reveal data-reveal-delay="${Math.min(index, 8) * 60}" onclick="openLightbox(${index})" tabindex="0" role="button" aria-label="查看照片：${photo.title}">
           <div class="gallery-image-wrapper">
-            <img src="${photo.src}" alt="${photo.title}" loading="lazy" onload="this.classList.add('is-loaded')">
+            <img src="${photo.src}" alt="${photo.title}" loading="lazy" decoding="async" width="400" height="300" onload="this.classList.add('is-loaded')">
             <div class="gallery-image-overlay">
               <span class="gallery-overlay-date">${photo.date}</span>
               <span class="gallery-overlay-location">${photo.location}</span>
@@ -163,14 +174,29 @@
       if (typeof initMagneticLinks === 'function') {
         initMagneticLinks();
       }
+
+      // 画廊项键盘支持：Enter / Space 打开 lightbox
+      grid.querySelectorAll('.gallery-item').forEach((item, idx) => {
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openLightbox(idx);
+          }
+        });
+      });
     }
 
     // 打开图片详情
+    let lastFocusedElement = null; // 记录打开 lightbox 前的焦点元素
+
     function openLightbox(index) {
       currentPhotoIndex = index;
       const photo = photosData[index];
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightbox-img');
+
+      // 记录当前焦点，关闭后归还
+      lastFocusedElement = document.activeElement;
 
       // 重置手势变换状态
       resetLightboxTransform();
@@ -184,9 +210,14 @@
       document.getElementById('lightbox-title').textContent = photo.title;
       document.getElementById('lightbox-desc').textContent = photo.description;
       document.getElementById('lightbox-date').textContent = `${photo.date} · ${photo.location}`;
+      lightboxImg.setAttribute('alt', photo.title);
 
       lightbox.classList.add('active');
       document.body.style.overflow = 'hidden';
+
+      // 焦点移到关闭按钮
+      const closeBtn = lightbox.querySelector('.lightbox-close');
+      if (closeBtn) closeBtn.focus();
     }
 
     // ===== Lightbox 手势：缩放 + 拖拽 =====
@@ -340,6 +371,12 @@
       const lightbox = document.getElementById('lightbox');
       lightbox.classList.remove('active');
       document.body.style.overflow = '';
+
+      // 归还焦点到打开 lightbox 前的元素
+      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+      }
     }
 
     // 导航照片
@@ -363,6 +400,21 @@
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowLeft') navigatePhoto(-1);
       if (e.key === 'ArrowRight') navigatePhoto(1);
+
+      // Tab 焦点陷阱：在 lightbox 内循环
+      if (e.key === 'Tab') {
+        const focusable = lightbox.querySelectorAll('.lightbox-close, .lightbox-prev, .lightbox-next, #lightbox-img');
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     });
 
     // 点击背景关闭

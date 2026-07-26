@@ -15,11 +15,15 @@
   </script>
 </head>
 <body>
+  <!-- Skip Link（无障碍） -->
+  <a href="#main-content" class="skip-link">跳到主内容</a>
 
   <!-- 全局顶部导航栏 -->
   <nav class="global-nav">
     <div class="container" style="position: relative;">
-      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单">☰</button>
+      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单" aria-expanded="false">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
       <div class="global-nav-inner" id="global-nav-inner">
         <a href="/" class="nav-link active">首页</a>
         <a href="/cv.html" class="nav-link">简历</a>
@@ -31,7 +35,7 @@
     </div>
   </nav>
 
-  <div class="container">
+  <div class="container" id="main-content">
 
     <!-- Hero 区域：左侧文字 + 右侧照片 -->
     <section class="home-hero" data-reveal>
@@ -114,7 +118,7 @@
                <img src="${p.thumbnail}" alt="${p.title}">
              </div>`
           : `<div class="project-thumb project-thumb-placeholder">
-               <span class="project-thumb-icon">⚛</span>
+               <svg class="icon project-thumb-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg>
              </div>`;
         const linkHtml = p.url2
           ? `<div class="project-links-group">

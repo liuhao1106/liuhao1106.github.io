@@ -16,10 +16,15 @@
   </script>
 </head>
 <body>
+  <!-- Skip Link（无障碍） -->
+  <a href="#main-content" class="skip-link">跳到主内容</a>
+
   <!-- 全局顶部导航栏 -->
   <nav class="global-nav">
     <div class="container" style="position: relative;">
-      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单">☰</button>
+      <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="打开菜单" aria-expanded="false">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
       <div class="global-nav-inner" id="global-nav-inner">
         <a href="/" class="nav-link">首页</a>
         <a href="/cv.html" class="nav-link">简历</a>
@@ -31,7 +36,7 @@
     </div>
   </nav>
 
-  <div class="container">
+  <div class="container" id="main-content">
 
     <!-- 页面标题 -->
     <header class="page-header" data-reveal>
@@ -45,7 +50,7 @@
       <!-- 学术活动 -->
       <section class="event-section">
         <div class="section-header">
-          <h2 class="section-icon">🎤</h2>
+          <svg class="icon section-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10v4M7 5v14M11 8v8M15 5v14M19 10v4"/></svg>
           <h2 class="section-title">学术活动</h2>
         </div>
         <div class="event-list" id="academic-list">
@@ -56,7 +61,7 @@
       <!-- 媒体采访 -->
       <section class="event-section">
         <div class="section-header">
-          <h2 class="section-icon">📺</h2>
+          <svg class="icon section-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
           <h2 class="section-title">媒体</h2>
         </div>
         <div class="event-list" id="media-list">
@@ -148,7 +153,7 @@
               ${index + 1}. ${item.url ? `<a href="${item.url}" target="_blank" class="event-link">${item.title}</a>` : item.title}
             </h3>
             <p class="event-desc">${item.description}</p>
-            <span class="event-location">📍 ${item.location}</span>
+            <span class="event-location"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" style="width:0.85em;height:0.85em;vertical-align:-0.05em;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${item.location}</span>
           </div>
         `).join('');
       } else if (academicList) {

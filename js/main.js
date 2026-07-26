@@ -9,19 +9,35 @@ function initNavToggle() {
   const nav = document.getElementById('global-nav-inner');
   if (!toggle || !nav) return;
 
+  // SVG 图标：菜单 / 关闭
+  const menuIcon = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>';
+  const closeIcon = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M6 18L18 6"/></svg>';
+
   toggle.addEventListener('click', function(e) {
     e.stopPropagation();
     nav.classList.toggle('open');
     const isOpen = nav.classList.contains('open');
-    toggle.textContent = isOpen ? '✕' : '☰';
+    toggle.innerHTML = isOpen ? closeIcon : menuIcon;
     toggle.setAttribute('aria-label', isOpen ? '关闭菜单' : '打开菜单');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   });
 
   document.addEventListener('click', function(e) {
     if (!toggle.contains(e.target) && !nav.contains(e.target)) {
       nav.classList.remove('open');
-      toggle.textContent = '☰';
+      toggle.innerHTML = menuIcon;
       toggle.setAttribute('aria-label', '打开菜单');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // ESC 键关闭移动菜单
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && nav.classList.contains('open')) {
+      nav.classList.remove('open');
+      toggle.innerHTML = menuIcon;
+      toggle.setAttribute('aria-label', '打开菜单');
+      toggle.setAttribute('aria-expanded', 'false');
     }
   });
 }
@@ -192,7 +208,7 @@ function initBackToTop() {
     btn.id = 'back-to-top';
     btn.className = 'back-to-top';
     btn.setAttribute('aria-label', '回到顶部');
-    btn.innerHTML = '↑';
+    btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
     document.body.appendChild(btn);
   }
 

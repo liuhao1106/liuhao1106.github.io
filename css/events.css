@@ -47,8 +47,10 @@
 }
 
 .section-icon {
-  font-size: 1.8rem;
-  margin: 0;
+  width: 24px;
+  height: 24px;
+  color: var(--accent-primary);
+  flex-shrink: 0;
 }
 
 .section-title {
