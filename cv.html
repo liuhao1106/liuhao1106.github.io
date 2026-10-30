@@ -90,7 +90,7 @@
     async function loadCV() {
       const [profile, pubs] = await Promise.all([
         fetchJSON('data/profile.json', null),
-        fetchJSON('data/publications.json', { books: [], papers: [], translations: [], newspapers: [] })
+        fetchJSON('data/publications.json', { books: [], papers: [], conference: [], translations: [], newspapers: [] })
       ]);
 
       if (!profile) {
@@ -130,13 +130,18 @@
           let html = '<h3>一. 中文论文</h3><ul>';
           html += pubs.papers.map((p, i) => renderPubEntry(p, i + 1)).join('');
           html += '</ul>';
+          if (pubs.conference.length > 0) {
+            html += '<h3>二. 会议论文集</h3><ul>';
+            html += pubs.conference.map((p, i) => renderPubEntry(p, i + 1)).join('');
+            html += '</ul>';
+          }
           if (pubs.translations.length > 0) {
-            html += '<h3>二. 译文</h3><ul>';
+            html += '<h3>三. 译文</h3><ul>';
             html += pubs.translations.map((p, i) => renderPubEntry(p, i + 1)).join('');
             html += '</ul>';
           }
           if (pubs.newspapers.length > 0) {
-            html += '<h3>三. 报纸</h3><ul>';
+            html += '<h3>四. 报纸</h3><ul>';
             html += pubs.newspapers.map((p, i) => renderPubEntry(p, i + 1)).join('');
             html += '</ul>';
           }

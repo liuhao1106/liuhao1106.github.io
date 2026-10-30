@@ -80,7 +80,7 @@
 
 主站点所有内容均数据驱动，页面通过 `fetchJSON`（定义在 `js/main.js`）动态加载 JSON：
 
-- `publications.html` → `data/publications.json`（著作、期刊论文、译文、报纸）
+- `publications.html` → `data/publications.json`（著作、期刊论文、会议论文集、译文、报纸）
 - `cv.html` → `data/profile.json`（简历）+ `data/publications.json`（复用成果数据，避免重复维护）
 - `courses.html` → `data/courses.json`（课程信息与教学大纲）
 - `index.html` → `data/events.json`（首页项目卡片，复用 `projects` 数组）
@@ -92,7 +92,7 @@
 
 `data/courses.json` 的课程分类字段 `category` 取值为：`undergraduate-major`、`undergraduate-general`、`graduate`。
 
-`data/publications.json` 的结构为 `{ books: [], papers: [], translations: [], newspapers: [] }`，每条记录含 `title`、`journal`/`publisher`、`date`、`cssci`（布尔）、`note`（可选）等字段。`cv.html` 和 `publications.html` 共用此文件，在任一处添加论文即两处同步更新。
+`data/publications.json` 的结构为 `{ books: [], papers: [], conference: [], translations: [], newspapers: [] }`，每条记录含 `title`、`journal`/`publisher`、`date`、`cssci`（布尔）、`note`（可选）等字段。`cv.html` 和 `publications.html` 共用此文件，在任一处添加论文即两处同步更新。
 
 ## 陆陇其年谱子项目（lulongqinianpu）
 
@@ -141,7 +141,7 @@ npm run dev      # Vite 开发服务器，端口 3000
 
 ### 新增论文/成果
 
-编辑 `data/publications.json`，在对应分类数组（`books`/`papers`/`translations`/`newspapers`）中添加记录。`publications.html` 和 `cv.html` 均从此文件加载，一次修改两处同步。
+编辑 `data/publications.json`，在对应分类数组（`books`/`papers`/`conference`/`translations`/`newspapers`）中添加记录。`publications.html` 和 `cv.html` 均从此文件加载，一次修改两处同步。
 
 ### 更新简历
 

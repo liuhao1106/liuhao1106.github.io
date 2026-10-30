@@ -65,6 +65,7 @@
     const PUB_SECTIONS = [
       { key: 'books',       id: 'books',       label: '著作' },
       { key: 'papers',      id: 'papers',      label: '期刊论文' },
+      { key: 'conference',  id: 'conference',  label: '会议论文集' },
       { key: 'translations', id: 'translations', label: '译文' },
       { key: 'newspapers',  id: 'newspapers',  label: '报纸' }
     ];
@@ -87,7 +88,7 @@
     }
 
     async function loadPublications() {
-      const data = await fetchJSON('data/publications.json', { books: [], papers: [], translations: [], newspapers: [] });
+      const data = await fetchJSON('data/publications.json', { books: [], papers: [], conference: [], translations: [], newspapers: [] });
 
       // 渲染侧边导航
       const nav = document.getElementById('pub-nav');
